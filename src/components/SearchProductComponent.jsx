@@ -3,7 +3,7 @@ import axios from 'axios';
 
 const { VITE_BASE_URL: baseUrl, VITE_API_PATH: apiPath } = import.meta.env;
 
-function SearchProduct() {
+function SearchProductComponent() {
   const [products, setProducts] = useState([]); // 原始商品資料
   const [tempProducts, setTempProducts] = useState([]); // 篩選後的商品列表
   const [searchKeyword, setSearchKeyword] = useState(''); // 關鍵字
@@ -260,4 +260,4 @@ function SearchProduct() {
   );
 }
 
-export default SearchProduct;
+export default SearchProductComponent;

@@ -1,31 +1,31 @@
+// 打開註解，用於查看所有元素邊框
 // *, *::before, *::after{
-//   // outline: 1px solid red;
+//   outline: 1px solid red;
 // }
+
 // body{
-//   line-height: 1.5;  // 滿足大部分內文內容行高
 //   letter-spacing: 0.03em; // 滿足大部分內文 letter-spacing
-// }
-// a {
-//   color: inherit;
-//   display: inline-block;
 // }
 
 // // bootstrap 沒有針對的字距變數可以設定，所以將字距設定寫在 base 中
 // h1,h2,h3,h4,h5,h6{
-//   // 設計稿上顯示為 3%
 //   letter-spacing: 0.03em;
 // }
 
 // p{
-//   // 設計稿上顯示為 3%
 //   letter-spacing: 0.03em;  
 // }
 
-
+// Material icon 設定
 .material-symbols-outlined {
   font-variation-settings:
   'FILL' 0,
   'wght' 400,
   'GRAD' 0,
   'opsz' 24
+}
+
+.material-filled {
+  font-variation-settings:
+  'FILL' 1,
 }
