@@ -13,7 +13,7 @@ import ModalTestComponent from './components/ModalTestComponent.jsx';
 import AxiosTestComponent from './components/AxiosTestComponent.jsx';
 import BootstrapStyleTestComponent from './components/BootstrapStyleTestComponent.jsx';
 
-import HomePage from './pages/HomePage.jsx';
+import HomePage from './front-end/pages/HomePage.jsx';
 
 function App() {
   return (

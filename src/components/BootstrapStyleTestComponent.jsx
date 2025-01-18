@@ -184,7 +184,7 @@ const BootstrapStyleTestComponent = () => {
             <span className="material-symbols-outlined material-filled fs-1">
               favorite
             </span>
-            <p>-該樣式設定路徑放在_base.scss</p>
+            <p>-該樣式設定路徑放在_font.scss</p>
           </div>
         </div>
         <div>
