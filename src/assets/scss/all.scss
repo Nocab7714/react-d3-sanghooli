@@ -1,6 +1,6 @@
 // Configuration
 @import "bootstrap/scss/functions";
-@import "./base/font"; // google font，字體設定須放置於 functions 檔案之前
+@import "./base/font"; // google font；字體設定須放置於 bootstrap functions 檔案之前
 @import "./utils/variables";
 @import "./utils/variables-dark";
 @import "bootstrap/scss/maps";
@@ -40,10 +40,7 @@
 @import "bootstrap/scss/offcanvas";
 @import "bootstrap/scss/placeholders";
 
-// icon
-// @import "bootstrap-icons/font/bootstrap-icons.css"; //範例
-
-// custom components
+// custom components ( Bootstrap 5 元件樣式設定 )
 // @import "../scss/components/card"; //範例
 
 // Helpers
@@ -56,11 +53,12 @@
 @import "./base/base";
 
 // layout
-@import './layout/header';
-@import './layout/footer';
+@import './layout/HeaderBacked';
+@import './layout/HeaderFront';
+@import './layout/FooterFront';
 
-// pages
+// pages ( 頁面樣式設定 )
+@import './pages/HomePage.scss';
 
-
-// others
+// others ( 插件樣式、元件樣式設定 )
 // 其他新增的樣式，例如插件的樣式，可以在這裡新增
