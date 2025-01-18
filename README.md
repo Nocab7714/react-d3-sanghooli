@@ -39,7 +39,7 @@ npm run dev
 
 ## 資料夾說明
 
-- assets - 靜態資源放置處
+<!-- - assets - 靜態資源放置處
   - img - 圖片資源放置處
   - scss - scss 資源放置處
     - base - 基礎設定資源放置處
@@ -51,7 +51,7 @@ npm run dev
 - components 元件資源放置處
 - layout - 佈局資源放置處
 - pages - 頁面資源放置處
-- plugins - 插件資源放置處
+- plugins - 插件資源放置處 -->
 
 ## 專案技術
 
