@@ -8,10 +8,10 @@ import axios from 'axios'; // 引入 axios
 const { VITE_BASE_URL: baseUrl, VITE_API_PATH: apiPath } = import.meta.env; // 將 env 解構出來並重新命名使用
 
 // 3.內部資源（排序：元件 -> 工具/樣式等）
-import SearchProductComponent from './components/SearchProductComponent.jsx';
-import ModalTestComponent from './components/ModalTestComponent.jsx';
-import AxiosTestComponent from './components/AxiosTestComponent.jsx';
-import BootstrapStyleTestComponent from './components/BootstrapStyleTestComponent.jsx';
+import SearchProductComponent from './front-end/components/SearchProductComponent.jsx';
+import ModalTestComponent from './front-end/components/ModalTestComponent.jsx';
+import AxiosTestComponent from './front-end/components/AxiosTestComponent.jsx';
+import BootstrapStyleTestComponent from './front-end/components/BootstrapStyleTestComponent.jsx';
 
 import HomePage from './front-end/pages/HomePage.jsx';
 
