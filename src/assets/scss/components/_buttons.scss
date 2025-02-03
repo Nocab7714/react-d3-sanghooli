@@ -1,0 +1,33 @@
+
+.btn-primary {
+  color: $neutral80;
+
+  &:hover {
+    background: $primary-dark;
+    color: white;
+    border-color: $primary-dark;
+  }
+
+  &:disabled{
+    background: $neutral20;
+    color: $neutral40;
+    border-color:  $neutral20;
+  }
+
+  &:active{
+    color: $neutral80 !important;
+  }
+}
+.btn-outline-neutral60{
+  &:hover {
+    // background: $primary-dark;
+    border-color:  $primary-dark;
+    color: white;
+    border-color:  $neutral20;
+  }
+  &:disabled{
+    background: $neutral20;
+    color: $neutral40;
+    border-color:  $neutral20;
+  }
+}

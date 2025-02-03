@@ -1,0 +1,128 @@
+// 設定 .form-select. 和 .form-control
+// hover 與 disabled 樣式
+// placeholder 的文字顏色
+.form-select,
+.form-control {
+  &::placeholder {
+    color: $neutral40;
+  }
+
+  &:hover {
+    border: 1px solid $primary-dark;
+    // cursor: pointer;
+  }
+  &:disabled {
+    cursor: auto;
+    border: 1px solid $neutral40;
+  }
+}
+
+// 清除 input type = search 的預設取消按鈕
+input[type='search']::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+}
+
+// SearchInputComponent 搜尋輸入框元件樣式
+.search-input-container {
+  border: 1px solid $neutral40;
+  border-radius: 12px;
+  overflow: hidden;
+  // transition: all 0.3s ease;
+
+  &:hover {
+    border: 1px solid $primary-dark;
+  }
+
+  &:focus-within {
+    border: 1px solid $primary-dark;
+    box-shadow: 0px 0px 0px 4px #ffab4a33;
+
+    // 修改 .input-search-icon 的顏色
+    .input-search-icon {
+      color: $neutral80 !important;
+    }
+  }
+
+  .input-clear-icon:hover {
+    span {
+      color: $primary-dark !important;
+    }
+  }
+
+  .btn {
+    border-radius: 0;
+  }
+}
+
+// 移除 input type = number 的預設輸入箭頭
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+input[type='number'] {
+  -moz-appearance: textfield; /* 移除 Firefox 的數字輸入箭頭 */
+}
+
+input[type='number']::-webkit-outer-spin-button,
+input[type='number']::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0; /* 移除 Chrome 和 Safari 的數字輸入箭頭 */
+}
+
+.input-group-calculate {
+  width: 116px;
+  height: 44px;
+
+  .btn {
+    border: 0;
+    &:hover {
+      background-color: $primary-light;
+    }
+    &:active {
+      background-color: $primary-dark;
+    }
+    &:disabled {
+      color: $neutral40;
+    }
+  }
+
+  .btn-add {
+    z-index: 3;
+    top: 55%;
+    left: 78%;
+  }
+
+  .btn-sub {
+    z-index: 3;
+    top: 55%;
+    left: 23%;
+  }
+
+  input {
+    font-size: 1rem;
+    padding-left: 48px;
+    padding-right: 40px;
+  }
+}
+
+.input-group-calculate-lg {
+  width: 148px;
+  height: 56px;
+
+  input {
+    font-size: 1.25rem;
+    padding-left: 60px;
+    padding-right: 54px;
+  }
+
+  .btn-add {
+    top: 50%;
+    left: 79%;
+  }
+
+  .btn-sub {
+    top: 50%;
+    left: 22%;
+  }
+}

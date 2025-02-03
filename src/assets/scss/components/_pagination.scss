@@ -1,0 +1,13 @@
+// 分頁元件設定
+.page-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  margin: 0 4px;
+
+  font-size: 14px;
+}
