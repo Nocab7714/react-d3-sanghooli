@@ -9,7 +9,7 @@ const InputExampleComponent = () => {
           type="button"
           disabled
         >
-          <span class="material-symbols-outlined align-middle fs-5">
+          <span className="material-symbols-outlined align-middle fs-5">
             remove
           </span>
         </button>
@@ -22,7 +22,7 @@ const InputExampleComponent = () => {
           className="btn btn-add position-absolute translate-middle rounded-1 p-1  "
           type="button"
         >
-          <span class="material-symbols-outlined align-middle fs-5">add</span>
+          <span className="material-symbols-outlined align-middle fs-5">add</span>
         </button>
       </div>
       {/* input-group-calculate */}
@@ -31,7 +31,7 @@ const InputExampleComponent = () => {
           className="btn btn-sub position-absolute translate-middle rounded-1 p-1 "
           type="button"
         >
-          <span class="material-symbols-outlined align-middle fs-5">
+          <span className="material-symbols-outlined align-middle fs-5">
             remove
           </span>
         </button>
@@ -44,7 +44,7 @@ const InputExampleComponent = () => {
           className="btn btn-add position-absolute translate-middle rounded-1 p-1  "
           type="button"
         >
-          <span class="material-symbols-outlined align-middle fs-5">add</span>
+          <span className="material-symbols-outlined align-middle fs-5">add</span>
         </button>
       </div>
       {/* input-group-calculate-lg-disabled */}
@@ -54,7 +54,7 @@ const InputExampleComponent = () => {
           type="button"
           disabled
         >
-          <span class="material-symbols-outlined align-middle fs-4">
+          <span className="material-symbols-outlined align-middle fs-4">
             remove
           </span>
         </button>
@@ -67,7 +67,7 @@ const InputExampleComponent = () => {
           className="btn btn-add position-absolute translate-middle rounded-1 p-2  "
           type="button"
         >
-          <span class="material-symbols-outlined align-middle fs-4">add</span>
+          <span className="material-symbols-outlined align-middle fs-4">add</span>
         </button>
       </div>
       {/* input-group-calculate */}
@@ -76,7 +76,7 @@ const InputExampleComponent = () => {
           className="btn btn-sub position-absolute translate-middle rounded-1 p-2 "
           type="button"
         >
-          <span class="material-symbols-outlined align-middle fs-4">
+          <span className="material-symbols-outlined align-middle fs-4">
             remove
           </span>
         </button>
@@ -89,7 +89,7 @@ const InputExampleComponent = () => {
           className="btn btn-add position-absolute translate-middle rounded-1 p-2  "
           type="button"
         >
-          <span class="material-symbols-outlined align-middle fs-4">add</span>
+          <span className="material-symbols-outlined align-middle fs-4">add</span>
         </button>
       </div>
 

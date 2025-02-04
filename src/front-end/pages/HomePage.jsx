@@ -3,6 +3,7 @@ import BreadcrumbParentExampleComponent from '../components/BreadcrumbParentExam
 import PaginationParentExampleComponent from '../components/PaginationParentExampleComponent.jsx';
 import SelectExampleComponent from '../components/SelectExampleComponent.jsx';
 import InputExampleComponent from '../components/InputExampleComponent.jsx';
+import ButtonsExampleComponent from '../components/ButtonsExampleComponent.jsx';
 
 const HomePage = () => {
   return (
@@ -22,6 +23,9 @@ const HomePage = () => {
       </div>
       <div className="mb-5">
         <InputExampleComponent />
+      </div>
+      <div className="mb-5">
+      <ButtonsExampleComponent />
       </div>
     </>
   );

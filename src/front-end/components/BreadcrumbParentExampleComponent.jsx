@@ -15,9 +15,9 @@ const breadcrumbItem = [
   },
 ];
 
-const BreadcrumbParentExampleComponent =  ()=>{
+const BreadcrumbParentExampleComponent = () =>{
   return(<>
-        <BreadcrumbComponent breadcrumbItem={breadcrumbItem}></BreadcrumbComponent>
+        <BreadcrumbComponent breadcrumbItem={breadcrumbItem}/>
       </>)
 }
 

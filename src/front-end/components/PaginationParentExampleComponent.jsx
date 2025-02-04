@@ -21,10 +21,10 @@ const PaginationParentExampleComponent = () => {
 
     // 假設 API 回應的分頁資訊
     setPaginationData({
-      total_pages: 10,
+      total_pages: 30,
       current_page: page,
       has_pre: page > 1,
-      has_next: page < 10,
+      has_next: page < 30,
     });
   };
 
