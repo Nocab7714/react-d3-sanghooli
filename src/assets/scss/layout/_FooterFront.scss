@@ -1,0 +1,11 @@
+.social-links{
+  li a{
+    background-color: $primary-light;
+    color: $primary-dark;
+
+    &:hover{
+      background-color: $primary-dark;
+      color: $white;
+    }
+  }
+}
