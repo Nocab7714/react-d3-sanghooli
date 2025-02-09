@@ -8,27 +8,18 @@ import axios from 'axios'; // 引入 axios
 const { VITE_BASE_URL: baseUrl, VITE_API_PATH: apiPath } = import.meta.env; // 將 env 解構出來並重新命名使用
 
 // 3.內部資源（排序：元件 -> 工具/樣式等）
-import SearchProductComponent from './front-end/components/SearchProductComponent.jsx';
-import ModalTestComponent from './front-end/components/ModalTestComponent.jsx';
-import AxiosTestComponent from './front-end/components/AxiosTestComponent.jsx';
-import BootstrapStyleTestComponent from './front-end/components/BootstrapStyleTestComponent.jsx';
-
-import HomePage from './front-end/pages/HomePage.jsx';
+import BootstrapStyleExampleComponent from './front-end/components/BootstrapStyleExampleComponent.jsx';
+import HeaderFront from './front-end/layout/HeaderFront.jsx';
+import FooterFront from './front-end/layout/FooterFront.jsx';
 
 function App() {
   return (
     <>
-      <div className="container mt-5 ">
-        <h2>元件引入測試</h2>
-        <p>記得不要急著拆元件，做完全部功能後再拆元件!!</p>
-        {/* <ModalTestComponent /> */}
-        {/* <SearchProductComponent /> */}
-        {/* <AxiosTestComponent /> */}
-        <BootstrapStyleTestComponent />
-        <hr />
-        <h2> 頁面引入測試</h2>
-        {/* <HomePage /> */}
+      <HeaderFront />
+      <div className="container">
+        <BootstrapStyleExampleComponent />
       </div>
+      <FooterFront />
     </>
   );
 }
