@@ -13,7 +13,10 @@ import ModalTestComponent from './front-end/components/ModalTestComponent.jsx';
 import AxiosTestComponent from './front-end/components/AxiosTestComponent.jsx';
 import BootstrapStyleTestComponent from './front-end/components/BootstrapStyleTestComponent.jsx';
 
+
 import HomePage from './front-end/pages/HomePage.jsx';
+import HowToBuyPage from './front-end/pages/HowToBuyPage.jsx';
+import PrivacyPolicyPage from './front-end/pages/PrivacyPolicyPage.jsx';
 
 function App() {
   return (
@@ -28,6 +31,10 @@ function App() {
         <hr />
         <h2> 頁面引入測試</h2>
         {/* <HomePage /> */}
+        {/* <HowToBuyPage /> */}
+        <PrivacyPolicyPage />
+        
+
       </div>
     </>
   );
