@@ -11,33 +11,34 @@ const { VITE_BASE_URL: baseUrl, VITE_API_PATH: apiPath } = import.meta.env; // �
 import SearchProductComponent from './front-end/components/SearchProductComponent.jsx';
 import ModalTestComponent from './front-end/components/ModalTestComponent.jsx';
 import AxiosTestComponent from './front-end/components/AxiosTestComponent.jsx';
-import BootstrapStyleTestComponent from './front-end/components/BootstrapStyleTestComponent.jsx';
-
 
 import HomePage from './front-end/pages/HomePage.jsx';
 import HowToBuyPage from './front-end/pages/HowToBuyPage.jsx';
 import PrivacyPolicyPage from './front-end/pages/PrivacyPolicyPage.jsx';
 
-function App() {
-  return (
-    <>
-      <div className="container mt-5 ">
-        <h2>元件引入測試</h2>
-        <p>記得不要急著拆元件，做完全部功能後再拆元件!!</p>
-        {/* <ModalTestComponent /> */}
-        {/* <SearchProductComponent /> */}
-        {/* <AxiosTestComponent /> */}
-        <BootstrapStyleTestComponent />
-        <hr />
-        <h2> 頁面引入測試</h2>
-        {/* <HomePage /> */}
-        {/* <HowToBuyPage /> */}
-        <PrivacyPolicyPage />
-        
+import BootstrapStyleExampleComponent from './front-end/components/BootstrapStyleExampleComponent.jsx';
+import HeaderFront from './front-end/layout/HeaderFront.jsx';
+import FooterFront from './front-end/layout/FooterFront.jsx';
 
-      </div>
-    </>
-  );
-}
+      
+function App() {
+        return (
+          <>
+          <HeaderFront />
+            <div className="container">
+
+              <BootstrapStyleExampleComponent />
+
+              <hr />
+              <h2> 頁面引入測試</h2>
+              {/* <HomePage /> */}
+              <HowToBuyPage />
+              <PrivacyPolicyPage />
+            </div>
+          <FooterFront />
+          </>
+          );
+      }
+
 
 export default App;
