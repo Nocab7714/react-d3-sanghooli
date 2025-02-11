@@ -1,11 +1,22 @@
+.footer-page-links{
+  li a:hover{
+    color: $primary-dark !important;
+  }
+}
+
 .social-links{
   li a{
     background-color: $primary-light;
     color: $primary-dark;
+    padding: 12px 14px !important;
 
     &:hover{
       background-color: $primary-dark;
       color: $white;
+    }
+
+    &:active{
+      background-color: darken($primary-dark ,10%);
     }
   }
 }
