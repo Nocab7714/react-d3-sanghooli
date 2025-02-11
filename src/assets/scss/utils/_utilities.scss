@@ -506,6 +506,7 @@ $utilities: map-merge(
     ),
     "font-size": (
       rfs: true,
+      responsive: true, // custom*
       property: font-size,
       class: fs,
       values: $font-sizes
@@ -517,6 +518,7 @@ $utilities: map-merge(
     ),
     "font-weight": (
       property: font-weight,
+      responsive: true, // custom*
       class: fw,
       values: (
         lighter: $font-weight-lighter,
