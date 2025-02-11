@@ -10,6 +10,7 @@ const { VITE_BASE_URL: baseUrl, VITE_API_PATH: apiPath } = import.meta.env; // �
 // 3.內部資源（排序：元件 -> 工具/樣式等）
 import HeaderFront from './front-end/layout/HeaderFront.jsx';
 import FooterFront from './front-end/layout/FooterFront.jsx';
+import CartPage from './front-end/pages/CartPage.jsx';
 import GoToTopComponent from './front-end/components/GoToTopComponent.jsx';
 
 
@@ -17,6 +18,7 @@ function App() {
   return (
     <>
       <HeaderFront />
+      <CartPage />
       <FooterFront />
       <GoToTopComponent />
     </>
