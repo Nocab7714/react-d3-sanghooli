@@ -11,11 +11,13 @@ const { VITE_BASE_URL: baseUrl, VITE_API_PATH: apiPath } = import.meta.env; // å
 import BootstrapStyleExampleComponent from './front-end/components/BootstrapStyleExampleComponent.jsx';
 import HeaderFront from './front-end/layout/HeaderFront.jsx';
 import FooterFront from './front-end/layout/FooterFront.jsx';
+import CartPage from './front-end/pages/CartPage.jsx';
 
 function App() {
   return (
     <>
       <HeaderFront />
+      <CartPage />
       <div className="container">
         <BootstrapStyleExampleComponent />
       </div>
