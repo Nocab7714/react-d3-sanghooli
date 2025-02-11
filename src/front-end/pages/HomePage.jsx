@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 const selectData = ['資料01', '資料02', '資料03', '資料04', '資料05'];
 
-import GiftCategorySectionComponent from '../components/GiftCategorySectionComponent';
+import GiftCategorySection from '../components/GiftCategorySection';
 
 const HomePage = () => {
   // 控制 select 切換 M / Lg Size
@@ -225,7 +225,7 @@ const HomePage = () => {
         <div className="container">
           <div className="row">
             <div className="col-lg-9">
-              <GiftCategorySectionComponent />
+              <GiftCategorySection/>
             </div>
             <div className="col-lg-3">
               <img

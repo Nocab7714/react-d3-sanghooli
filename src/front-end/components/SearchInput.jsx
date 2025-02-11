@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-const SearchInputComponent = () => {
+const SearchInput = () => {
   const [searchValue, setSearchValue] = useState('');
 
   const handleInputChange = (e) => {
@@ -113,4 +113,4 @@ const SearchInputComponent = () => {
   );
 };
 
-export default SearchInputComponent;
+export default SearchInput;

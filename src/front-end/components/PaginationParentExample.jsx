@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import PaginationComponent from './PaginationComponent';
+import Pagination from './Pagination';
 
-const PaginationParentExampleComponent = () => {
+const PaginationParentExample = () => {
   // 資料驅動範例
   // 1. 請從外層傳入 PaginationData 資料
   // 2. 資料請使用 API Get 到的回傳的資料做驅動
@@ -34,7 +34,7 @@ const PaginationParentExampleComponent = () => {
 
   return (
     <>
-      <PaginationComponent
+      <Pagination
         paginationData={paginationData}
         onPageChange={fetchPageData}
       />
@@ -43,4 +43,4 @@ const PaginationParentExampleComponent = () => {
   );
 };
 
-export default PaginationParentExampleComponent;
+export default PaginationParentExample;

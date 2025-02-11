@@ -17,7 +17,7 @@
 //   }
 // ]
 
-const BreadcrumbComponent = ({breadcrumbItem}) => {
+const Breadcrumb = ({breadcrumbItem}) => {
   return(<>
         <nav
         aria-label="breadcrumb"
@@ -38,4 +38,4 @@ const BreadcrumbComponent = ({breadcrumbItem}) => {
       </nav></>)
 }
 
-export default BreadcrumbComponent;
+export default Breadcrumb;

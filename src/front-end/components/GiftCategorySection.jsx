@@ -1,4 +1,4 @@
-const GiftCategorySectionComponent = () => {
+const GiftCategorySection = () => {
   return (
     <>
       {/* GiftTitle */}
@@ -69,4 +69,4 @@ const GiftCategorySectionComponent = () => {
   );
 };
 
-export default GiftCategorySectionComponent;
+export default GiftCategorySection;
