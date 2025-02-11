@@ -7,20 +7,20 @@ import axios from "axios"; // 引入 axios
 // 2.環境變數提取
 const { VITE_BASE_URL: baseUrl, VITE_API_PATH: apiPath } = import.meta.env; // 將 env 解構出來並重新命名使用
 
-import BootstrapStyleExampleComponent from "./front-end/components/BootstrapStyleExampleComponent.jsx";
-import HeaderFront from "./front-end/layout/HeaderFront.jsx";
-import FooterFront from "./front-end/layout/FooterFront.jsx";
+// 3.內部資源（排序：元件 -> 工具/樣式等）
+import HeaderFront from './front-end/layout/HeaderFront.jsx';
+import FooterFront from './front-end/layout/FooterFront.jsx';
+import CartPage from './front-end/pages/CartPage.jsx';
+import GoToTopComponent from './front-end/components/GoToTopComponent.jsx';
 
-import BootstrapStyleExampleComponent from "./front-end/components/BootstrapStyleExampleComponent.jsx";
-import HeaderFront from "./front-end/layout/HeaderFront.jsx";
-import FooterFront from "./front-end/layout/FooterFront.jsx";
 
 function App() {
   return (
     <>
       <HeaderFront />
-
+      <CartPage />
       <FooterFront />
+      <GoToTopComponent />
     </>
   );
 }

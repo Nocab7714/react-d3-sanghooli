@@ -1,0 +1,43 @@
+.btn-favorite {
+  top: 16px;
+  right: 16px;
+  background: rgba(40, 40, 40, 0.6);
+  backdrop-filter: blur(10px);
+
+  &:hover {
+    background: rgba(40, 40, 40, 0.4) !important;
+  }
+
+  &:active {
+    background: rgba(40, 40, 40, 0.8) !important;
+  }
+}
+
+// .product-card 用於觸發 card-bg 的 jhover 背景效果
+.product-card {
+  &:hover {
+    .card-bg {
+      opacity: 1;
+    }
+  }
+}
+
+.card-bg {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: radial-gradient(
+    47.43% 26.42% at 50% 73.58%,
+    #ffeedb 0%,
+    rgba(255, 238, 219, 0) 100%
+  );
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+}
+
+// .hot-sale{
+//   top: 0;
+//   right: 0;
+// }

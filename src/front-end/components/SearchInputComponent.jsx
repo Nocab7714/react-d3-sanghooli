@@ -65,9 +65,10 @@ const SearchInputComponent = () => {
       </div>
 
       {/* Lg - 搜尋輸入框*/}
+      {/* Lg 版的搜尋輸入框加入 style={{height: '58.19px'}} ，是為了防止切換輸入狀態時 cancel 高度造成的抖動問題*/}
       <div className="input-group input-group-lg search-input-container mt-5">
         {!searchValue && (
-          <span className="input-group-text  bg-white border-0 pe-0 ps-6">
+          <span className="input-group-text bg-white border-0 pe-0 ps-6">
             <span className="material-symbols-outlined input-search-icon text-neutral40 fs-6 ">
               search
             </span>
@@ -79,6 +80,7 @@ const SearchInputComponent = () => {
           className={`form-control border-0 shadow-none pe-0 ${
             searchValue ? 'ps-6' : 'ps-3'
           }`}
+          style={{ height: '58.19px' }}
           placeholder="請輸入關鍵字"
           aria-label="Search"
           value={searchValue}

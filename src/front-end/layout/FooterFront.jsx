@@ -3,23 +3,23 @@ import { Icon } from '@iconify-icon/react';
 const footerPageLinks = [
   {
     name: '關於我們',
-    href: '#',
+    link: '#',
   },
   {
     name: '商品一覽',
-    href: '#',
+    link: '#',
   },
   {
     name: '隱私權服務條款',
-    href: '#',
+    link: '#',
   },
   {
     name: '購物流程與常見Q&A',
-    href: '#',
+    link: '#',
   },
   {
     name: '後台登入',
-    href: '#',
+    link: '#',
   },
 ];
 
@@ -46,11 +46,11 @@ const FooterFront = () => {
                   height="40"
                 />
               </div>
-              <ul className="list-unstyled d-flex flex-column flex-md-row align-items-center my-4 my-md-6">
+              <ul className="footer-page-links list-unstyled d-flex flex-column flex-md-row align-items-center my-4 my-md-6">
                 {footerPageLinks.map((link) => (
                   <li key={link.name}>
                     <a
-                      href={link.href}
+                      href={link.link}
                       className="d-inline-block fs-6 link-neutral60 px-4 py-3 mx-0 mx-md-1 "
                     >
                       {link.name}
@@ -60,7 +60,7 @@ const FooterFront = () => {
               </ul>
               <ul className="social-links list-unstyled d-flex mb-0">
                 <li>
-                  <a href="#" className="d-block rounded-3 p-3 mx-2">
+                  <a href="#" className="d-block rounded-3 mx-2" >
                     <Icon
                       icon="ri:instagram-fill"
                       width="20px"
@@ -70,7 +70,7 @@ const FooterFront = () => {
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="d-block rounded-3 p-3 mx-2">
+                  <a href="#" className="d-block rounded-3  mx-2">
                     <Icon
                       icon="bi:line"
                       width="20px"
@@ -80,7 +80,7 @@ const FooterFront = () => {
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="d-block rounded-3 p-3 mx-2">
+                  <a href="#" className="d-block rounded-3 mx-2">
                     <Icon
                       icon="uil:facebook"
                       width="20px"
@@ -92,7 +92,7 @@ const FooterFront = () => {
                 <li>
                   <a
                     href="mailto:sanghoolid3@gmail.com"
-                    className="d-block rounded-3 p-3 mx-2"
+                    className="d-block rounded-3  mx-2"
                   >
                     <Icon
                       icon="ic:baseline-email"

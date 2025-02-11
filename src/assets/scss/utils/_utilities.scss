@@ -44,6 +44,7 @@ $utilities: map-merge(
         0: 0,
         25: .25,
         50: .5,
+        70: .7, // *custom
         75: .75,
         100: 1,
       )
@@ -505,7 +506,9 @@ $utilities: map-merge(
       values: (monospace: var(--#{$prefix}font-monospace))
     ),
     "font-size": (
+      responsive: true, // *custom
       rfs: true,
+      responsive: true, // custom*
       property: font-size,
       class: fs,
       values: $font-sizes
@@ -517,6 +520,7 @@ $utilities: map-merge(
     ),
     "font-weight": (
       property: font-weight,
+      responsive: true, // custom*
       class: fw,
       values: (
         lighter: $font-weight-lighter,
