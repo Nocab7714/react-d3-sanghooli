@@ -8,18 +8,16 @@ import axios from 'axios'; // 引入 axios
 const { VITE_BASE_URL: baseUrl, VITE_API_PATH: apiPath } = import.meta.env; // 將 env 解構出來並重新命名使用
 
 // 3.內部資源（排序：元件 -> 工具/樣式等）
-import BootstrapStyleExampleComponent from './front-end/components/BootstrapStyleExampleComponent.jsx';
 import HeaderFront from './front-end/layout/HeaderFront.jsx';
 import FooterFront from './front-end/layout/FooterFront.jsx';
 import GoToTopComponent from './front-end/components/GoToTopComponent.jsx';
+import HomePage from './front-end/pages/HomePage.jsx';
 
 function App() {
   return (
     <>
       <HeaderFront />
-      <div className="container">
-        <BootstrapStyleExampleComponent />
-      </div>
+      <HomePage />
       <FooterFront />
       <GoToTopComponent />
     </>
