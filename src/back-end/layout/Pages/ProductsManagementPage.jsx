@@ -52,8 +52,7 @@ const ProductsManagementPage = () =>{
       <>
       <div className="container">
         <div className="row">
-          <div className="col">
-            
+          <div className="col pt-19">
             <div className=" titlDeco d-flex justify-content-between pt-19 pb-19 mb-8 rounded-3 ">
               <h1 className='ms-10'>商品管理</h1>
               <button type="button" className="btn btn-primary me-10">新增商品</button>
@@ -110,9 +109,10 @@ const ProductsManagementPage = () =>{
                     ))}
                 </tbody>
                 </table>
-              
-               {/* 分頁元件 */}
-              <nav className="d-flex justify-content-center mt-20 mb-20">
+            </div>
+
+             {/* 分頁元件 */}
+             <nav className="d-flex justify-content-center mt-20 mb-20">
                 <ul className="pagination">
                     {/* 第一頁按鈕 */}
                     <li className="page-item">
@@ -167,7 +167,6 @@ const ProductsManagementPage = () =>{
                     </li>
                 </ul>
             </nav>
-            </div>
 
 
            </div>
