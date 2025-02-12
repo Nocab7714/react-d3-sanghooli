@@ -16,6 +16,10 @@ import GoToTopComponent from './front-end/components/GoToTopComponent.jsx';
 import HowToBuyPage from './front-end/pages/HowToBuyPage.jsx';
 import PrivacyPolicyPage from './front-end/pages/PrivacyPolicyPage.jsx';
 
+// 後台頁面 back-end
+import OrdersManagementPage from "./back-end/layout/Pages/OrdersManagementPage.jsx";
+import ProductsManagementPage from "./back-end/layout/Pages/ProductsManagementPage.jsx";
+
 
 function App() {
   return (
@@ -23,9 +27,11 @@ function App() {
       <HeaderFront />
       {/* <CartPage /> */}
       {/* <HowToBuyPage /> */}
-      <PrivacyPolicyPage />
-      <FooterFront />
-      <GoToTopComponent />
+      {/* <PrivacyPolicyPage /> */}
+      {/* <OrdersManagementPage /> */}
+      <ProductsManagementPage />
+      {/* <FooterFront /> */}
+      {/* <GoToTopComponent /> */}
     </>
   );
 }
