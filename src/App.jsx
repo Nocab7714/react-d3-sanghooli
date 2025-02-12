@@ -28,10 +28,10 @@ function App() {
       {/* <CartPage /> */}
       {/* <HowToBuyPage /> */}
       {/* <PrivacyPolicyPage /> */}
-      {/* <OrdersManagementPage /> */}
-      <ProductsManagementPage />
-      {/* <FooterFront /> */}
-      {/* <GoToTopComponent /> */}
+      <OrdersManagementPage />
+      {/* <ProductsManagementPage /> */}
+      <FooterFront />
+      <GoToTopComponent />
     </>
   );
 }
