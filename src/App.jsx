@@ -11,15 +11,18 @@ const { VITE_BASE_URL: baseUrl, VITE_API_PATH: apiPath } = import.meta.env; // å
 import HeaderFront from './front-end/layout/HeaderFront.jsx';
 import FooterFront from './front-end/layout/FooterFront.jsx';
 import GoToTop from './front-end/components/GoToTop.jsx';
+
 import HomePage from './front-end/pages/HomePage.jsx';
 import ProductsListPage from './front-end/pages/ProductsListPage.jsx';
+import SingleProductPage from './front-end/pages/SingleProductPage.jsx';
 
 function App() {
   return (
     <>
       <HeaderFront />
       {/* <HomePage /> */}
-      <ProductsListPage />    
+      {/* <ProductsListPage />     */}
+      <SingleProductPage />
       <FooterFront />
       <GoToTop />
     </>
