@@ -276,7 +276,7 @@ const ProductsListPage = () => {
                 {/* products-is-hot */}
                 <div className="mb-10 mb-lg-19">
                   {/* Product-title */}
-                  <div className="d-flex align-items-center justify-content-between mb-10 ">
+                  <div className="d-flex align-items-center justify-content-between mb-8 mb-md-10 ">
                     <div className="d-flex align-items-center">
                       <span className="material-symbols-outlined fs-4 fs-md-2 text-secondary me-1 me-md-2">
                         crown
@@ -601,13 +601,13 @@ const ProductsListPage = () => {
                 {/* products-search-result-list */}
                 <div className="mb-10 mb-lg-19">
                   {/* Product-title */}
-                  <div className="d-flex align-items-center justify-content-between mb-10 ">
+                  <div className="d-flex align-items-center justify-content-between mb-8 mb-md-10 ">
                     <div className="d-flex align-items-center text-nowrap">
                       <span className="material-symbols-outlined fs-4 fs-md-2 text-secondary me-1 me-md-2">
                         search
                       </span>
                       <h2 className="fs-5 fs-md-4 m-0 d-flex flex-column">
-                        目前搜尋結果{' '}
+                        目前搜尋結果
                         <span className="fs-7 text-neutral60 fw-normal mt-1 d-md-none d-block">
                           100 個結果
                         </span>

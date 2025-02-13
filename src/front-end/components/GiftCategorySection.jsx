@@ -2,7 +2,7 @@ const GiftCategorySection = () => {
   return (
     <>
       {/* GiftTitle */}
-      <div className="d-flex align-items-center justify-content-between mb-10 ">
+      <div className="d-flex align-items-center justify-content-between mb-8 mb-md-10 ">
         <div className="d-flex align-items-center">
           <span className="material-symbols-outlined fs-4 fs-md-2 text-secondary me-1 me-md-2">
             local_fire_department
