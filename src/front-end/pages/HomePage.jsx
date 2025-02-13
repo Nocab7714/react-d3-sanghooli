@@ -292,7 +292,7 @@ const HomePage = () => {
       {/* random-product */}
       <section className="random-product mb-10 mb-lg-19">
         <div className="container">
-          <div className="random-product-bg rounded-4 pt-6 pt-md-17  pb-173 pb-md-17 px-4 px-md-19 text-center text-md-start">
+          <div className="random-product-bg rounded-4 pt-6 pt-md-17  pb-0 pb-md-17 px-4 px-md-19 text-center text-md-start">
             <h2 className="text-white fs-4 fs-md-2 mb-6 mb-md-10">
               <span className="d-block mb-4 mb-md-6">禮物選擇困難症？</span>
               <span className="d-block">交給我們隨機挑選一份驚喜！</span>

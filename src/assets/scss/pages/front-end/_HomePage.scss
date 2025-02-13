@@ -47,36 +47,40 @@
 }
 
 // new-product-item hover 效果
-.new-product-item{
+.new-product-item {
   position: relative;
 
-  &:hover{
-
-    .new-product-item-bg{
+  &:hover {
+    .new-product-item-bg {
       opacity: 1;
     }
   }
 }
 
-.new-product-item-bg{
+.new-product-item-bg {
   position: absolute;
   left: 0;
   right: 0;
   top: 0;
   bottom: 0;
-  background: radial-gradient(51.79% 51.79% at 50% 100%, #FFEEDB 0%, rgba(255, 238, 219, 0) 100%);
+  background: radial-gradient(
+    51.79% 51.79% at 50% 100%,
+    #ffeedb 0%,
+    rgba(255, 238, 219, 0) 100%
+  );
   opacity: 0;
   transition: opacity 0.2s ease-in-out;
 }
 
 // 隨機選禮區塊背景設定
 .random-product-bg {
-  @include media-breakpoint-up(md) { 
+  @include media-breakpoint-up(md) {
     background-image: url('src/assets/img/banner/banner05.png');
+    height: auto;
   }
   background-image: url('src/assets/img/banner/banner05-sm.png');
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
+  height: 351px;
 }
-
