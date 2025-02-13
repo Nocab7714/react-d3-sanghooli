@@ -12,12 +12,14 @@ import HeaderFront from './front-end/layout/HeaderFront.jsx';
 import FooterFront from './front-end/layout/FooterFront.jsx';
 import GoToTop from './front-end/components/GoToTop.jsx';
 import HomePage from './front-end/pages/HomePage.jsx';
+import ProductsListPage from './front-end/pages/ProductsListPage.jsx';
 
 function App() {
   return (
     <>
       <HeaderFront />
-      <HomePage />
+      {/* <HomePage /> */}
+      <ProductsListPage />    
       <FooterFront />
       <GoToTop />
     </>

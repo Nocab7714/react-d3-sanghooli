@@ -240,7 +240,7 @@ const HomePage = () => {
                 className="img-fluid mb-10 mb-lg-12"
               />
 
-              {/* new product */}
+              {/* new-product */}
               <div>
                 <div className="d-flex align-items-center justify-content-between mb-4 mb-lg-6">
                   <div className="d-flex align-items-center">
