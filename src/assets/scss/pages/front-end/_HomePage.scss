@@ -1,0 +1,82 @@
+// 加入願望清單按鈕
+.btn-favorite {
+  z-index: 500;
+  top: 16px;
+  right: 16px;
+  background: rgba(40, 40, 40, 0.6);
+  backdrop-filter: blur(10px);
+
+  &:hover {
+    background: rgba(40, 40, 40, 0.4) !important;
+  }
+
+  &:active {
+    background: rgba(40, 40, 40, 0.8) !important;
+    border: 1px solid rgb(81, 81, 81) !important;
+  }
+}
+
+// .product-card 用於觸發 card-bg 的 hover 背景效果
+.product-card {
+  &:hover {
+    .card-bg {
+      opacity: 1;
+    }
+  }
+}
+
+// 卡片元件設定
+.card-bg {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: radial-gradient(
+    47.43% 26.42% at 50% 73.58%,
+    #ffeedb 0%,
+    rgba(255, 238, 219, 0) 100%
+  );
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.hot-sale {
+  top: 5px;
+  left: 12px;
+}
+
+// new-product-item hover 效果
+.new-product-item{
+  position: relative;
+
+  &:hover{
+
+    .new-product-item-bg{
+      opacity: 1;
+    }
+  }
+}
+
+.new-product-item-bg{
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: radial-gradient(51.79% 51.79% at 50% 100%, #FFEEDB 0%, rgba(255, 238, 219, 0) 100%);
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+}
+
+// 隨機選禮區塊背景設定
+.random-product-bg {
+  @include media-breakpoint-up(md) { 
+    background-image: url('src/assets/img/banner/banner05.png');
+  }
+  background-image: url('src/assets/img/banner/banner05-sm.png');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+}
+
