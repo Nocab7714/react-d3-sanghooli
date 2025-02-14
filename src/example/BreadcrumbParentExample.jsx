@@ -1,4 +1,4 @@
-import Breadcrumb from '../components/Breadcrumb.jsx';
+import Breadcrumb from '../front-end/components/Breadcrumb.jsx';
 
 const breadcrumbItem = [
   {

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import Pagination from './Pagination';
+import Pagination from '../front-end/components/Pagination';
 
 const PaginationParentExample = () => {
   // 資料驅動範例
