@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 const selectData = ['資料01', '資料02', '資料03', '資料04', '資料05'];
+import ReactHelmetAsync from '../../plugins/ReactHelmetAsync';
+import { Link } from 'react-router-dom';
 
 import GiftCategorySection from '../components/GiftCategorySection';
 
@@ -39,6 +41,7 @@ const HomePage = () => {
 
   return (
     <>
+      <ReactHelmetAsync title="首頁" />
       {/* 預留空間 - 之後要改成 swiper 輪播 */}
       {/* banner */}
       <section className="banner">
@@ -130,7 +133,7 @@ const HomePage = () => {
               </div>
             </div>
             <div>
-              <div className="d-block d-lg-none">
+              <div className="d-block d-md-none">
                 <div className=" input-group search-input-container">
                   {!searchValue && (
                     <span className="input-group-text  bg-white border-0 pe-0">
@@ -173,7 +176,7 @@ const HomePage = () => {
                   )}
                 </div>
               </div>
-              <div className="d-none d-lg-block">
+              <div className="d-none d-md-block">
                 <div className=" input-group input-group-lg search-input-container mt-5">
                   {!searchValue && (
                     <span className="input-group-text bg-white border-0 pe-0 ps-6">
@@ -259,7 +262,7 @@ const HomePage = () => {
                       .map((num) => {
                         return (
                           <li className="new-product-item ">
-                            <a href="#">
+                            <Link to="/single-product/productID">
                               <div className="new-product-item-bg"></div>
                               <div className="d-flex align-items-center  border-bottom border-neutral40 py-4 z-3">
                                 <img
@@ -278,7 +281,7 @@ const HomePage = () => {
                                   </p>
                                 </div>
                               </div>
-                            </a>
+                            </Link>
                           </li>
                         );
                       }),
@@ -298,9 +301,12 @@ const HomePage = () => {
               <span className="d-block">交給我們隨機挑選一份驚喜！</span>
             </h2>
             {/* 透過方法連結到隨機商品路由 */}
-            <button type="button" className="btn btn-primary btn-lg">
+            <Link
+              to="/single-product/RandomProductID"
+              className="btn btn-primary btn-lg"
+            >
               驚喜就在這裡
-            </button>
+            </Link>
           </div>
         </div>
       </section>

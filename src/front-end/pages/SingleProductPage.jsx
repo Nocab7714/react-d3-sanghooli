@@ -1,17 +1,19 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import Breadcrumb from '../components/Breadcrumb.jsx';
+import ReactHelmetAsync from '../../plugins/ReactHelmetAsync';
 
 const breadcrumbItem = [
   {
     page: '首頁',
-    link: '#',
+    link: '/',
   },
   {
     page: '產品列表',
-    link: '#',
+    link: '/products-list',
   },
   {
-    page: '醇香紅酒禮盒',
+    page: `醇香紅酒禮盒`,
     link: '#',
   },
 ];
@@ -19,6 +21,7 @@ const breadcrumbItem = [
 const SingleProductPage = () => {
   return (
     <>
+      <ReactHelmetAsync title="醇香紅酒禮盒" />
       <div>
         {/* breadcrumb */}
         <div className="container pt-10 pt-md-19 mb-6 mb-md-10">
@@ -355,15 +358,15 @@ const SingleProductPage = () => {
               </li>
             </ul>
             <div className="d-flex justify-content-center">
-              <a
-                href="#"
+              <Link
+                to="/products-list"
                 className="link-neutral60 fs-6 fs-md-5 fw-semibold d-flex align-items-center "
               >
                 查看更多
                 <span className="material-symbols-outlined align-middle fw-semibold fs-5 fs--md-4 ms-1">
                   arrow_forward
                 </span>
-              </a>
+              </Link>
             </div>
           </div>
         </section>

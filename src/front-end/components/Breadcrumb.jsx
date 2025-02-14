@@ -17,6 +17,8 @@
 //   }
 // ]
 
+import { Link } from 'react-router-dom';
+
 const Breadcrumb = ({breadcrumbItem}) => {
   return(<>
         <nav
@@ -28,7 +30,7 @@ const Breadcrumb = ({breadcrumbItem}) => {
               return (
                 <li key={item.page} className={`breadcrumb-item ${index === breadcrumbItem.length - 1 ? 'active' : ''}`}>
                   {
-                    index === breadcrumbItem.length - 1 ? ( <span>{item.page}</span>) : (<a href={item.link} className='link-neutral40'>{item.page}</a>)
+                    index === breadcrumbItem.length - 1 ? ( <span>{item.page}</span>) : (<Link to={item.link} className='link-neutral40'>{item.page}</Link>)
                   }
                 </li>
               )
