@@ -29,14 +29,14 @@ const HeaderFront = () => {
             <Link className="navbar-brand py-0" to="/">
               <img
                 className="d-block d-md-none"
-                src="/src/assets/img/illustration/logo-SANGHOOLI.svg"
+                src="/react-d3-sanghooli/img/illustration/logo-SANGHOOLI.svg"
                 alt="SANGHOOLI Logo"
                 width="148"
                 height="32"
               />
               <img
                 className="d-none d-md-block"
-                src="/src/assets/img/illustration/logo-SANGHOOLI.svg"
+                src="/react-d3-sanghooli/img/illustration/logo-SANGHOOLI.svg"
                 alt="SANGHOOLI Logo"
                 width="240"
                 height="52"

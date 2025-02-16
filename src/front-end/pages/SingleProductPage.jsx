@@ -252,7 +252,7 @@ const SingleProductPage = () => {
                     </p>
                     <div className="d-flex align-items-center">
                       <img
-                        src="src\assets\img\other\user01.png"
+                        src="/react-d3-sanghooli/img/other/user01.png"
                         alt="user01"
                         height="48"
                         width="48"
@@ -297,7 +297,7 @@ const SingleProductPage = () => {
                     </p>
                     <div className="d-flex align-items-center">
                       <img
-                        src="src\assets\img\other\user02.png"
+                        src="/react-d3-sanghooli/img/other/user02.png"
                         alt="user02"
                         height="48"
                         width="48"
@@ -342,7 +342,7 @@ const SingleProductPage = () => {
                     </p>
                     <div className="d-flex align-items-center">
                       <img
-                        src="src\assets\img\other\user03.png"
+                        src="/react-d3-sanghooli/img/other/user03.png"
                         alt="user03"
                         height="48"
                         width="48"

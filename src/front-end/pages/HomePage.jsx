@@ -48,7 +48,7 @@ const HomePage = () => {
         <div className="container">
           <div className="d-flex justify-content-center">
             <img
-              src="src\assets\img\banner\banner01.png"
+              src="/react-d3-sanghooli/img/banner/banner01.png"
               alt=""
               height="480"
               className="img-fluid"
@@ -238,11 +238,10 @@ const HomePage = () => {
 
             <div className="col-lg-3">
               <img
-                src="src\assets\img\other\ad01.png"
+                src="/react-d3-sanghooli/img/other/ad01.png "
                 alt="免費禮物包裝與代寫卡片服務廣告"
                 className="img-fluid mb-10 mb-lg-12"
               />
-
               {/* new-product */}
               <div>
                 <div className="d-flex align-items-center justify-content-between mb-4 mb-lg-6">
@@ -261,7 +260,7 @@ const HomePage = () => {
                       .keys()
                       .map((num) => {
                         return (
-                          <li className="new-product-item ">
+                          <li className="new-product-item " key={`new-product-${num}`}>
                             <Link to="/single-product/productID">
                               <div className="new-product-item-bg"></div>
                               <div className="d-flex align-items-center  border-bottom border-neutral40 py-4 z-3">

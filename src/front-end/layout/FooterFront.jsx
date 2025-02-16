@@ -1,5 +1,5 @@
 import { Icon } from '@iconify-icon/react';
-import { Link,  } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const footerPageLinks = [
   {
@@ -34,14 +34,14 @@ const FooterFront = () => {
               <div>
                 <img
                   className="d-block d-md-none"
-                  src="/src/assets/img/illustration/logo-SANGHOOLI.svg"
+                  src="/react-d3-sanghooli/img/illustration/logo-SANGHOOLI.svg"
                   alt="SANGHOOLI Logo"
                   width="148"
                   height="32"
                 />
                 <img
                   className="d-none d-md-block"
-                  src="/src/assets/img/illustration/logo-SANGHOOLI.svg"
+                  src="/react-d3-sanghooli/img/illustration/logo-SANGHOOLI.svg"
                   alt="SANGHOOLI Logo"
                   width="185"
                   height="40"
@@ -61,7 +61,7 @@ const FooterFront = () => {
               </ul>
               <ul className="social-links list-unstyled d-flex mb-0">
                 <li>
-                  <Link to="/" className="d-block rounded-3 mx-2" >
+                  <Link to="/" className="d-block rounded-3 mx-2">
                     <Icon
                       icon="ri:instagram-fill"
                       width="20px"
@@ -91,7 +91,7 @@ const FooterFront = () => {
                   </Link>
                 </li>
                 <li>
-                  <a 
+                  <a
                     href="mailto:sanghoolid3@gmail.com"
                     className="d-block rounded-3  mx-2"
                   >

@@ -47,7 +47,7 @@ const GiftCategorySection = () => {
                         <div className="position-relative z-3">
                           <div className="hot-sale position-absolute  translate-middle z-4">
                             <img
-                              src="src\assets\img\illustration\crown.svg"
+                              src="/react-d3-sanghooli/img/illustration/crown.svg"
                               alt="crown svg"
                               height="48"
                               width="48"
