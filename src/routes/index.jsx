@@ -1,5 +1,6 @@
 // 頁面元件引入
-import FrontLayout from '../App.jsx';
+// 前台
+import LayoutFront from '../front-end/layout/LayoutFront.jsx';
 import NotFoundPage from '../front-end/pages/NotFoundPage.jsx';
 import HomePage from '../front-end/pages/HomePage.jsx';
 import AboutUsPage from '../front-end/pages/AboutUsPage.jsx';
@@ -8,13 +9,17 @@ import SingleProductPage from '../front-end/pages/SingleProductPage.jsx';
 import PrivacyPolicyPage from '../front-end/pages/PrivacyPolicyPage.jsx';
 import HowToBuyPage from '../front-end/pages/HowToBuyPage.jsx';
 
+// 後台
+import LayoutBacked from '../back-end/layout/LayoutBacked.jsx';
+
 import { createHashRouter } from 'react-router-dom';
 
 // 路由表
 const routes = [
-  {
+  { 
+    // 前台路由設定
     path: '/',
-    element: <FrontLayout />,
+    element: <LayoutFront />,
     children:[
       {
         index: true,
@@ -29,14 +34,8 @@ const routes = [
         element: <ProductsListPage />,
       },
       {
-        path: 'single-product',
+        path: 'single-product/:id',
         element: <SingleProductPage />,
-        children: [
-          {
-            path: ':id',
-            element: <SingleProductPage />,
-          }
-        ]
       },
       {
         path: 'privacy-policy',
@@ -50,7 +49,17 @@ const routes = [
         path : '*',
         element: <NotFoundPage />
       },
-
+    ]
+  },
+  { 
+    // 前台路由設定
+    path: '/admin',
+    element: <LayoutBacked />,
+    children:[
+      {
+        path : '*',
+        element: <NotFoundPage />
+      },
     ]
   },
 ];
