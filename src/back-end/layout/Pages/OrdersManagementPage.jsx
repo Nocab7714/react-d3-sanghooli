@@ -79,14 +79,14 @@ const OrdersManagementPage = () =>{
                   <table className="table"> 
                     <thead>
                             <tr className='rounded-3'>
-                            <th className="text-center" scope="col">訂單編號</th>
+                            <th scope="col">訂單編號</th>
 
-                            <th className="text-center" scope="col">付款狀態</th>
-                            <th className="text-center" scope="col"   >訂購人姓名</th>
-                            <th className="text-center" scope="col" >聯絡電話</th>
-                            <th className="text-center" scope="col"  >聯絡信箱</th>
-                            <th className="text-center" scope="col"  >收件地址</th>
-                            <th className="text-center" scope="col"  >訂單成立時間</th>
+                            <th scope="col">付款狀態</th>
+                            <th scope="col"   >訂購人姓名</th>
+                            <th scope="col" >聯絡電話</th>
+                            <th scope="col"  >聯絡信箱</th>
+                            <th scope="col"  >收件地址</th>
+                            <th scope="col"  >訂單成立時間</th>
                             <th className="text-center" scope="col" >編輯資料</th>
                             </tr>
                     </thead>
@@ -107,7 +107,8 @@ const OrdersManagementPage = () =>{
                               <td>{orders.create_at}</td>
                     
                               {/* 編輯資料按鈕欄位 */}
-                              <td><div className="btn-group">
+                              <td className="text-center">
+                                <div className="btn-group">
                                   <button type="button" className="btn btn-outline-primary btn-sm">編輯</button>
                                   <button type="button" className="btn btn-outline-danger btn-sm">刪除</button>
                                   </div>

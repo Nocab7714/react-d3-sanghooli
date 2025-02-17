@@ -73,11 +73,11 @@ const ProductsManagementPage = () =>{
                       <tr className='rounded-3'>
                       <th className="text-center"  scope="col">產品類型</th>
                       <th scope="col">產品名稱</th>
-                      <th scope="col" className="text-center"  >原價</th>
-                      <th scope="col" className="text-center" >售價</th>
-                      <th scope="col" className="text-center" >庫存數量</th>
-                      <th scope="col" className="text-center" >是否啟用</th>
-                      <th scope="col" className="text-center" >熱銷狀態</th>
+                      <th scope="col" >原價</th>
+                      <th scope="col" >售價</th>
+                      <th scope="col" >庫存數量</th>
+                      <th scope="col" >是否啟用</th>
+                      <th scope="col" >熱銷狀態</th>
                       <th scope="col" className="text-center" >編輯資料</th>
                       </tr>
                   </thead>
@@ -99,17 +99,18 @@ const ProductsManagementPage = () =>{
                         }
                         </td>
                         <td>{product.is_hot? (
-                        <span className="text-success">熱銷中</span>
+                        <span className="text-success">熱銷商品</span>
                             ) : (
                             <>
-                                <span>一般</span>
+                                <span className="text-secondary">一般商品</span>
                             </>
                             )
                         }
                         </td>
               
                         {/* 編輯資料按鈕欄位 */}
-                        <td><div className="btn-group">
+                        <td className="text-center">
+                          <div className="btn-group">
                             <button type="button" className="btn btn-outline-primary btn-sm">編輯</button>
                             <button type="button" className="btn btn-outline-danger btn-sm">刪除</button>
                             </div>
