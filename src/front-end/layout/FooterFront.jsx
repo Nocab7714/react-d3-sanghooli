@@ -1,6 +1,8 @@
 import { Icon } from '@iconify-icon/react';
 import { Link } from 'react-router-dom';
 
+import logo from '@/assets/img/illustration/logo-SANGHOOLI.svg';
+
 const footerPageLinks = [
   {
     name: '關於我們',
@@ -34,14 +36,14 @@ const FooterFront = () => {
               <div>
                 <img
                   className="d-block d-md-none"
-                  src="/react-d3-sanghooli/img/illustration/logo-SANGHOOLI.svg"
+                  src={logo}
                   alt="SANGHOOLI Logo"
                   width="148"
                   height="32"
                 />
                 <img
                   className="d-none d-md-block"
-                  src="/react-d3-sanghooli/img/illustration/logo-SANGHOOLI.svg"
+                  src={logo}
                   alt="SANGHOOLI Logo"
                   width="185"
                   height="40"

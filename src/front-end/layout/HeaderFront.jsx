@@ -2,6 +2,8 @@ import { useState, useRef } from 'react';
 import MarqueeText from './MarqueeText';
 import { Link, NavLink } from 'react-router-dom';
 
+import logo from '@/assets/img/illustration/logo-SANGHOOLI.svg';
+
 const HeaderFront = () => {
   // 控制修正 header 使用 fix top 的高度使用
   const headerRef = useRef(null);
@@ -29,14 +31,14 @@ const HeaderFront = () => {
             <Link className="navbar-brand py-0" to="/">
               <img
                 className="d-block d-md-none"
-                src="/react-d3-sanghooli/img/illustration/logo-SANGHOOLI.svg"
+                src={logo}
                 alt="SANGHOOLI Logo"
                 width="148"
                 height="32"
               />
               <img
                 className="d-none d-md-block"
-                src="/react-d3-sanghooli/img/illustration/logo-SANGHOOLI.svg"
+                src={logo}
                 alt="SANGHOOLI Logo"
                 width="240"
                 height="52"
@@ -74,8 +76,8 @@ const HeaderFront = () => {
                   </span> */}
                 </NavLink>
               </li>
-              <NavLink className="nav-item position-relative me-4">
-                <a className="nav-link link-neutral80" to="/">
+              <li className="nav-item position-relative me-4">
+                <NavLink className="nav-link link-neutral80" to="/">
                   <span className="material-symbols-outlined align-middle fs-3 ">
                     local_mall
                   </span>
@@ -86,8 +88,8 @@ const HeaderFront = () => {
                   >
                     1
                   </span> */}
-                </a>
-              </NavLink>
+                </NavLink>
+              </li>
             </ul>
           </div>
         </nav>

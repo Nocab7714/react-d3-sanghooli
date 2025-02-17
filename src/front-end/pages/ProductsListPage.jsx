@@ -5,6 +5,8 @@ import Pagination from '../components/Pagination.jsx';
 import Breadcrumb from '../components/Breadcrumb.jsx';
 import ReactHelmetAsync from '../../plugins/ReactHelmetAsync';
 
+import crownIcon from '@/assets/img/illustration/crown.svg';
+
 const breadcrumbItem = [
   {
     page: '首頁',
@@ -316,7 +318,7 @@ const ProductsListPage = () => {
                                     <div className="position-relative z-3">
                                       <div className="hot-sale position-absolute  translate-middle z-4">
                                         <img
-                                          src="/react-d3-sanghooli/img/illustration/crown.svg"
+                                          src={crownIcon}
                                           alt="crown svg"
                                           height="48"
                                           width="48"
@@ -421,7 +423,7 @@ const ProductsListPage = () => {
                                     <div className="position-relative z-3">
                                       <div className="hot-sale position-absolute  translate-middle z-4">
                                         <img
-                                          src="/react-d3-sanghooli/img/illustration/crown.svg"
+                                          src={crownIcon}
                                           alt="crown svg"
                                           height="48"
                                           width="48"

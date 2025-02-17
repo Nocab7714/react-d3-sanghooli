@@ -4,6 +4,8 @@ import ReactHelmetAsync from '../../plugins/ReactHelmetAsync';
 import { Link } from 'react-router-dom';
 
 import GiftCategorySection from '../components/GiftCategorySection';
+import bannerImg from '@/assets/img/banner/banner01.png';
+import adImg from '@/assets/img/other/ad01.png';
 
 const HomePage = () => {
   // 控制 select 切換 M / Lg Size
@@ -48,7 +50,7 @@ const HomePage = () => {
         <div className="container">
           <div className="d-flex justify-content-center">
             <img
-              src="/react-d3-sanghooli/img/banner/banner01.png"
+              src={bannerImg}
               alt=""
               height="480"
               className="img-fluid"
@@ -238,7 +240,7 @@ const HomePage = () => {
 
             <div className="col-lg-3">
               <img
-                src="/react-d3-sanghooli/img/other/ad01.png "
+                src={adImg}
                 alt="免費禮物包裝與代寫卡片服務廣告"
                 className="img-fluid mb-10 mb-lg-12"
               />

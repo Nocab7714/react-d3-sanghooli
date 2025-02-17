@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import crownIcon from '@/assets/img/illustration/crown.svg';
 
 const GiftCategorySection = () => {
   return (
@@ -47,7 +48,7 @@ const GiftCategorySection = () => {
                         <div className="position-relative z-3">
                           <div className="hot-sale position-absolute  translate-middle z-4">
                             <img
-                              src="/react-d3-sanghooli/img/illustration/crown.svg"
+                              src={crownIcon}
                               alt="crown svg"
                               height="48"
                               width="48"

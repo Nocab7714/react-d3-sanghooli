@@ -3,6 +3,10 @@ import { Link } from 'react-router-dom';
 import Breadcrumb from '../components/Breadcrumb.jsx';
 import ReactHelmetAsync from '../../plugins/ReactHelmetAsync';
 
+import userImg01 from '@/assets/img/other/user01.png';
+import userImg02 from '@/assets/img/other/user02.png';
+import userImg03 from '@/assets/img/other/user03.png';
+
 const breadcrumbItem = [
   {
     page: '首頁',
@@ -252,7 +256,7 @@ const SingleProductPage = () => {
                     </p>
                     <div className="d-flex align-items-center">
                       <img
-                        src="/react-d3-sanghooli/img/other/user01.png"
+                        src={userImg01}
                         alt="user01"
                         height="48"
                         width="48"
@@ -297,7 +301,7 @@ const SingleProductPage = () => {
                     </p>
                     <div className="d-flex align-items-center">
                       <img
-                        src="/react-d3-sanghooli/img/other/user02.png"
+                        src={userImg02}
                         alt="user02"
                         height="48"
                         width="48"
@@ -342,7 +346,7 @@ const SingleProductPage = () => {
                     </p>
                     <div className="d-flex align-items-center">
                       <img
-                        src="/react-d3-sanghooli/img/other/user03.png"
+                        src={userImg03}
                         alt="user03"
                         height="48"
                         width="48"
