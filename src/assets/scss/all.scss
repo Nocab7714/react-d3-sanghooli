@@ -42,6 +42,12 @@
 
 // custom components ( Bootstrap 5 元件樣式設定 )
 // @import "../scss/components/card"; //範例
+@import "../scss/components/buttons";
+@import "../scss/components/input&select";
+@import "../scss/components/pagination";
+@import "../scss/components/breadcrumb";
+@import "../scss/components/go-to-top";
+@import "../scss/components/GiftCategorySectionComponent";
 
 // Helpers
 @import "bootstrap/scss/helpers";
@@ -59,6 +65,10 @@
 
 // pages ( 頁面樣式設定 )
 @import './pages/front-end/HomePage';
+@import './pages/front-end/CartPage';
+@import './pages/front-end/HowToBuyPage';
 
 // others ( 插件樣式、元件樣式設定 )
 // 其他新增的樣式，例如插件的樣式，可以在這裡新增
+
+
