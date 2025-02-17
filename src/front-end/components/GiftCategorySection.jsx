@@ -13,14 +13,10 @@ const GiftCategorySection = () => {
           <h2 className="fs-5 fs-md-4 m-0 ">最高人氣的禮物</h2>
         </div>
         <div className="flex-grow-1 mx-3 mx-md-4 border-top border-neutral40" />
-
-        <a
-          href="#"
-          className="fw-semibold d-flex link-neutral60 fs-6 fs-md-5 align-items-center"
-        >
+        <Link to="/products-list" className="fw-semibold d-flex link-neutral60 fs-6 fs-md-5 align-items-center">
           查看更多
           <span className="ms-1 material-symbols-outlined">arrow_forward</span>
-        </a>
+        </Link>
       </div>
       {/* GiftList */}
       <ul className="list-unstyled row gy-10">
