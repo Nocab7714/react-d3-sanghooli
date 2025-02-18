@@ -1,4 +1,20 @@
+// 外部資源
 import React, { useState } from "react";
+import BreadcrumbComponent from '../components/BreadcrumbComponent.jsx';
+
+//視 麵包屑breadcrumb 階層保留對應資料
+const breadcrumbItem = [
+    {
+      page: '首頁',
+      link: '#',
+    },
+    {
+      page: '隱私權服務條款',
+      link: '#',
+    },
+  ];
+
+
 const PrivacyPolicyPage = () => {
     const [activeLink, setActiveLink] = useState("privacy-policy"); // 預設選中 "隱私權政策"
   
@@ -12,9 +28,10 @@ const PrivacyPolicyPage = () => {
         <div className="row">
           <div className="col d-flex mt-19 mb-10">
             {/* <!-- 麵包屑Breadcrumbs --> */}
-            <p className="fs-6 me-4 text-neutral40">首頁</p>
+            <BreadcrumbComponent  breadcrumbItem={breadcrumbItem} />
+            {/* <p className="fs-6 me-4 text-neutral40">首頁</p>
             <span className="material-symbols-outlined text-neutral40">keyboard_double_arrow_right</span>
-            <p className="fs-6 text-neutral80 ms-4">隱私權服務條款</p>
+            <p className="fs-6 text-neutral80 ms-4">隱私權服務條款</p> */}
             </div>
             </div>
       </div>
@@ -33,7 +50,7 @@ const PrivacyPolicyPage = () => {
             </div>
           </div>
 
-          <div className="col-md-8 ps-5 mb-19 col-12">
+          <div className="col-md-8 ps-5 mb-19 mt-4 col-12">
             {/* <!-- 資訊說明區塊（右側） --> */}
             <h4 id="privacy-policy">隱私權政策</h4>
             <p className="fs-6 text-neutral60 mb-6 mt-6">我們深知您的隱私對您至關重要，因此致力於保護您的個人資料安全。以下為我們的隱私權政策概要：</p>
