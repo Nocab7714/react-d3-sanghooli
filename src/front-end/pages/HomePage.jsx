@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
-const selectData = ['資料01', '資料02', '資料03', '資料04', '資料05'];
-import ReactHelmetAsync from '../../plugins/ReactHelmetAsync';
 import { Link } from 'react-router-dom';
 
+const selectData = ['資料01', '資料02', '資料03', '資料04', '資料05'];
+import ReactHelmetAsync from '../../plugins/ReactHelmetAsync';
 import GiftCategorySection from '../components/GiftCategorySection';
+import HomeBannerSwiper from '../components/HomeBannerSwiper';
+
 import bannerImg from '@/assets/img/banner/banner01.png';
 import adImg from '@/assets/img/other/ad01.png';
 
@@ -47,7 +49,8 @@ const HomePage = () => {
       {/* 預留空間 - 之後要改成 swiper 輪播 */}
       {/* banner */}
       <section className="banner">
-        <div className="container">
+      <HomeBannerSwiper />
+        {/* <div className="container">
           <div className="d-flex justify-content-center">
             <img
               src={bannerImg}
@@ -57,7 +60,7 @@ const HomePage = () => {
               style={{ maxHeight: '480px' }}
             />
           </div>
-        </div>
+        </div> */}
       </section>
       {/* home-search-form */}
       <section className="home-search-form bg-neutral20 py-6 py-md-10">
