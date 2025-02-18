@@ -1,4 +1,4 @@
-const ButtonsExampleComponent = () => {
+const ButtonsExample = () => {
   return (
     <>
       <button className="btn btn-primary">按鈕</button>
@@ -22,4 +22,4 @@ const ButtonsExampleComponent = () => {
   );
 };
 
-export default ButtonsExampleComponent;
+export default ButtonsExample;

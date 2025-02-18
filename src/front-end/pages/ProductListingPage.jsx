@@ -1,10 +1,9 @@
-const ProductListingPage = () =>{
-
+const ProductListingPage = () => {
   return (
     <>
-    <p>ProductListingPage</p>
+      <p>ProductListingPage</p>
     </>
-  )
-}
+  );
+};
 
 export default ProductListingPage;

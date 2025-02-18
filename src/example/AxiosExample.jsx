@@ -5,7 +5,7 @@ import axios from 'axios'; // 引入 axios
 const { VITE_BASE_URL: baseUrl, VITE_API_PATH: apiPath } = import.meta.env; // 將 env 解構出來並重新命名使用
 
 // axios 與 env 測試
-const AxiosTestComponent = () => {
+const AxiosTest = () => {
   console.log(`成功取得環境變數資源：${baseUrl},${apiPath}`);
   useEffect(() => {
     (async () => {
@@ -17,4 +17,4 @@ const AxiosTestComponent = () => {
   return <></>;
 };
 
-export default AxiosTestComponent;
+export default AxiosTest;

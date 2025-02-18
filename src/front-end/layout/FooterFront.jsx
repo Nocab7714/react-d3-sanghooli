@@ -1,25 +1,28 @@
 import { Icon } from '@iconify-icon/react';
+import { Link } from 'react-router-dom';
+
+import logo from '@/assets/img/illustration/logo-SANGHOOLI.svg';
 
 const footerPageLinks = [
   {
     name: '關於我們',
-    link: '#',
+    link: 'about-us',
   },
   {
     name: '商品一覽',
-    link: '#',
+    link: 'products-list',
   },
   {
     name: '隱私權服務條款',
-    link: '#',
+    link: 'privacy-policy',
   },
   {
     name: '購物流程與常見Q&A',
-    link: '#',
+    link: 'how-to-buy',
   },
   {
     name: '後台登入',
-    link: '#',
+    link: '/',
   },
 ];
 
@@ -33,61 +36,61 @@ const FooterFront = () => {
               <div>
                 <img
                   className="d-block d-md-none"
-                  src="/src/assets/img/illustration/logo-SANGHOOLI.svg"
+                  src={logo}
                   alt="SANGHOOLI Logo"
                   width="148"
                   height="32"
                 />
                 <img
                   className="d-none d-md-block"
-                  src="/src/assets/img/illustration/logo-SANGHOOLI.svg"
+                  src={logo}
                   alt="SANGHOOLI Logo"
                   width="185"
                   height="40"
                 />
               </div>
               <ul className="footer-page-links list-unstyled d-flex flex-column flex-md-row align-items-center my-4 my-md-6">
-                {footerPageLinks.map((link) => (
-                  <li key={link.name}>
-                    <a
-                      href={link.link}
+                {footerPageLinks.map((links) => (
+                  <li key={links.name}>
+                    <Link
+                      to={links.link}
                       className="d-inline-block fs-6 link-neutral60 px-4 py-3 mx-0 mx-md-1 "
                     >
-                      {link.name}
-                    </a>
+                      {links.name}
+                    </Link>
                   </li>
                 ))}
               </ul>
               <ul className="social-links list-unstyled d-flex mb-0">
                 <li>
-                  <a href="#" className="d-block rounded-3 mx-2" >
+                  <Link to="/" className="d-block rounded-3 mx-2">
                     <Icon
                       icon="ri:instagram-fill"
                       width="20px"
                       height="20px"
                       style={{ verticalAlign: 'sub' }}
                     />
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="#" className="d-block rounded-3  mx-2">
+                  <Link to="/" className="d-block rounded-3  mx-2">
                     <Icon
                       icon="bi:line"
                       width="20px"
                       height="20px"
                       style={{ verticalAlign: 'sub' }}
                     />
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="#" className="d-block rounded-3 mx-2">
+                  <Link to="/" className="d-block rounded-3 mx-2">
                     <Icon
                       icon="uil:facebook"
                       width="20px"
                       height="20px"
                       style={{ verticalAlign: 'sub' }}
                     />
-                  </a>
+                  </Link>
                 </li>
                 <li>
                   <a
