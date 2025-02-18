@@ -1,5 +1,8 @@
 import { useState, useRef } from 'react';
 import MarqueeText from './MarqueeText';
+import { Link, NavLink } from 'react-router-dom';
+
+import logo from '@/assets/img/illustration/logo-SANGHOOLI.svg';
 
 const HeaderFront = () => {
   // 控制修正 header 使用 fix top 的高度使用
@@ -25,42 +28,42 @@ const HeaderFront = () => {
           }}
         >
           <div className="container">
-            <a className="navbar-brand py-0" href="#">
+            <Link className="navbar-brand py-0" to="/">
               <img
                 className="d-block d-md-none"
-                src="/src/assets/img/illustration/logo-SANGHOOLI.svg"
+                src={logo}
                 alt="SANGHOOLI Logo"
                 width="148"
                 height="32"
               />
               <img
                 className="d-none d-md-block"
-                src="/src/assets/img/illustration/logo-SANGHOOLI.svg"
+                src={logo}
                 alt="SANGHOOLI Logo"
                 width="240"
                 height="52"
               />
-            </a>
+            </Link>
             <ul className="navbar-nav flex-row">
               {/* 未登入狀態 navbar 顯示 - 登入按鈕*/}
-              <li className="nav-item me-2 me-md-4">
-                <a href="#" className="btn btn-outline-neutral60">
+              {/* <li className="nav-item me-2 me-md-4">
+                <NavLink to="/" className="btn btn-outline-neutral60">
                   登入
-                </a>
-              </li>
+                </NavLink>
+              </li> */}
               {/* 登入狀態 navbar 顯示 - 會員名稱*/}
-              {/* <li className="nav-item  position-relative me-4 me-md-1">
-                <a className="nav-link link-neutral80" href="#">
+              <li className="nav-item  position-relative me-4 me-md-1">
+                <NavLink className="nav-link link-neutral80" to="/">
                   <span className="material-symbols-outlined material-filled align-middle fs-3 ">
                     face
                   </span>
                   <span className=" align-middle ms-2 d-none d-md-inline-block">
                     周大俠 先生
                   </span>
-                </a>
-              </li> */}
+                </NavLink>
+              </li>
               <li className="nav-item  position-relative me-4 me-md-1">
-                <a className="nav-link link-neutral80" href="#">
+                <NavLink className="nav-link link-neutral80" to="/">
                   <span className="material-symbols-outlined align-middle fs-3 ">
                     favorite
                   </span>
@@ -71,10 +74,10 @@ const HeaderFront = () => {
                   >
                     99+
                   </span> */}
-                </a>
+                </NavLink>
               </li>
               <li className="nav-item position-relative me-4">
-                <a className="nav-link link-neutral80" href="#">
+                <NavLink className="nav-link link-neutral80" to="/">
                   <span className="material-symbols-outlined align-middle fs-3 ">
                     local_mall
                   </span>
@@ -85,7 +88,7 @@ const HeaderFront = () => {
                   >
                     1
                   </span> */}
-                </a>
+                </NavLink>
               </li>
             </ul>
           </div>

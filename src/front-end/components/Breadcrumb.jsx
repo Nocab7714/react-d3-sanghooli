@@ -17,7 +17,9 @@
 //   }
 // ]
 
-const BreadcrumbComponent = ({breadcrumbItem}) => {
+import { Link } from 'react-router-dom';
+
+const Breadcrumb = ({breadcrumbItem}) => {
   return(<>
         <nav
         aria-label="breadcrumb"
@@ -28,7 +30,7 @@ const BreadcrumbComponent = ({breadcrumbItem}) => {
               return (
                 <li key={item.page} className={`breadcrumb-item ${index === breadcrumbItem.length - 1 ? 'active' : ''}`}>
                   {
-                    index === breadcrumbItem.length - 1 ? ( <span>{item.page}</span>) : (<a href={item.link} className='link-neutral40'>{item.page}</a>)
+                    index === breadcrumbItem.length - 1 ? ( <span>{item.page}</span>) : (<Link to={item.link} className='link-neutral40'>{item.page}</Link>)
                   }
                 </li>
               )
@@ -38,4 +40,4 @@ const BreadcrumbComponent = ({breadcrumbItem}) => {
       </nav></>)
 }
 
-export default BreadcrumbComponent;
+export default Breadcrumb;

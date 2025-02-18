@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react';
 import { Modal } from 'bootstrap'; // bootstrap 5 的方法請要使用在各別引入
 
 // bootstrap modal 測試
-const ModalTestComponent = () => {
+const ModalTest = () => {
 
   const modalRef = useRef(null); // modal dom
   const myModal = useRef(null); // modal 實體
@@ -65,4 +65,4 @@ const ModalTestComponent = () => {
   );
 };
 
-export default ModalTestComponent;
+export default ModalTest;

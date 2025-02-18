@@ -6,7 +6,7 @@ const selectData = [
   '3,000 元以上',
 ];
 
-const SelectExampleComponent = () => {
+const SelectExample = () => {
   return (
     <>
       {/* select default-size */}
@@ -73,4 +73,4 @@ const SelectExampleComponent = () => {
   );
 };
 
-export default SelectExampleComponent;
+export default SelectExample;

@@ -2,7 +2,7 @@
 // 1. 請從外層傳入 PaginationData 資料
 // 2. 資料請使用 API Get 到的回傳的資料做驅動
 // 3. 後台系統也可以使用
-const PaginationComponent = ({ paginationData, onPageChange }) => {
+const Pagination= ({ paginationData, onPageChange }) => {
   const { total_pages, current_page, has_pre, has_next } = paginationData;
 
   const goToPage = (page) => {
@@ -85,4 +85,4 @@ const PaginationComponent = ({ paginationData, onPageChange }) => {
   );
 };
 
-export default PaginationComponent;
+export default Pagination;

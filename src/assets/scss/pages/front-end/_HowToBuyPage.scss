@@ -19,7 +19,7 @@
 
   .timeline-item {
     position: relative;
-    color: $neutral40 ; /* 預設灰色:$neutral40 */
+    color: $neutral40 ; /* 預設灰色:$neutral40(#D0CDC7) */
     text-decoration: none;
     margin-bottom: 20px;
   }
@@ -32,7 +32,7 @@
     transform: translateY(-50%);
     width: 12px;
     height: 12px;
-    background: #D0CDC7; /* 預設灰色圓點:$neutral40 */
+    background: $neutral40 ;/* 預設灰色圓點:$neutral40(#D0CDC7) */
     border-radius: 50%;
   }
   
@@ -42,5 +42,5 @@
   }
   
   .timeline-item.active::before {
-    background:#FFBB6D ; /* 橙色圓點:$primary */
+    background:$primary; /* 橙色圓點:$primary(#FFBB6D) */
   }

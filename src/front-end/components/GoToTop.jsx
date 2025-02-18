@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-const GoToTopComponent = () => {
+const GoToTop = () => {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
@@ -35,4 +35,4 @@ const GoToTopComponent = () => {
   );
 };
 
-export default GoToTopComponent;
+export default GoToTop;

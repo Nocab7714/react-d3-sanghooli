@@ -1,5 +1,5 @@
 // 僅為 input 樣式範例，不包含 label
-const InputExampleComponent = () => {
+const InputExample = () => {
   return (
     <>
       {/* input-group-calculate-disabled */}
@@ -116,4 +116,4 @@ const InputExampleComponent = () => {
   );
 };
 
-export default InputExampleComponent;
+export default InputExample;
