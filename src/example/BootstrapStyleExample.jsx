@@ -1,6 +1,6 @@
 import { Icon } from '@iconify-icon/react';
 
-const BootstrapStyleTestComponent = () => {
+const BootstrapStyleExample = () => {
   return (
     <>
       <h3 className="mt-20">切版樣式說明</h3>
@@ -243,4 +243,4 @@ const BootstrapStyleTestComponent = () => {
   );
 };
 
-export default BootstrapStyleTestComponent;
+export default BootstrapStyleExample;

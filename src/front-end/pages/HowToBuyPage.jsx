@@ -1,6 +1,6 @@
 // 外部資源
-import React, { useState } from "react";
-import BreadcrumbComponent from '../components/BreadcrumbComponent.jsx';
+import { useState } from "react";
+import Breadcrumb from '../components/Breadcrumb.jsx';
 
 
 //視 麵包屑breadcrumb 階層保留對應資料
@@ -31,7 +31,7 @@ const HowToBuyPage = () => {
           <div className="col d-flex mt-19 mb-10">
             
             {/* <!-- 麵包屑Breadcrumbs --> */}
-            <BreadcrumbComponent  breadcrumbItem={breadcrumbItem} />
+            <Breadcrumb  breadcrumbItem={breadcrumbItem} />
 
             </div>
             </div>

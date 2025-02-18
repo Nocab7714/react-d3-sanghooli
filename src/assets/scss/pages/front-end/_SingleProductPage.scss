@@ -1,0 +1,35 @@
+.product-quantity-selector-mobile {
+  z-index: 2100;
+  box-shadow: 0px 0px 12px 0px rgba(0, 0, 0, 0.08);
+}
+
+// 暫時用於撐出 swiper 預留的高度
+.swiper-content {
+  @include media-breakpoint-up(md) {
+    height: 404px;
+  }
+  height: 386px;
+}
+
+.consumer-reviews {
+  background: linear-gradient(
+    to top,
+    rgba(255, 238, 219, 0.8),
+    rgba(255, 238, 219, 0)
+  );
+  backdrop-filter: blur(200px);
+}
+
+
+// 文字截斷設定
+.multiline-ellipsis {
+  @include media-breakpoint-up(md) {
+    -webkit-line-clamp: 5;
+  }
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  word-break: break-word;     
+  white-space: normal;
+}
