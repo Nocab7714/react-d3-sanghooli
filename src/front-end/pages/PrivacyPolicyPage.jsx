@@ -1,16 +1,17 @@
 // 外部資源
 import { useState } from "react";
 import Breadcrumb from '../components/Breadcrumb.jsx';
+import ReactHelmetAsync from '../../plugins/ReactHelmetAsync';
 
 //視 麵包屑breadcrumb 階層保留對應資料
 const breadcrumbItem = [
     {
       page: '首頁',
-      link: '#',
+      link: '/',
     },
     {
       page: '隱私權服務條款',
-      link: '#',
+      link: '/privacy-policy',
     },
   ];
 
@@ -24,14 +25,12 @@ const PrivacyPolicyPage = () => {
 
     return(
         <>
+        <ReactHelmetAsync title="隱私權服務條款" />
         <div className="container">
         <div className="row">
           <div className="col d-flex mt-19 mb-10">
             {/* <!-- 麵包屑Breadcrumbs --> */}
             <Breadcrumb  breadcrumbItem={breadcrumbItem} />
-            {/* <p className="fs-6 me-4 text-neutral40">首頁</p>
-            <span className="material-symbols-outlined text-neutral40">keyboard_double_arrow_right</span>
-            <p className="fs-6 text-neutral80 ms-4">隱私權服務條款</p> */}
             </div>
             </div>
       </div>

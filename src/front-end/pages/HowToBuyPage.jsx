@@ -1,17 +1,18 @@
 // 外部資源
 import { useState } from "react";
 import Breadcrumb from '../components/Breadcrumb.jsx';
+import ReactHelmetAsync from '../../plugins/ReactHelmetAsync';
 
 
 //視 麵包屑breadcrumb 階層保留對應資料
 const breadcrumbItem = [
   {
     page: '首頁',
-    link: '#',
+    link: '/',
   },
   {
     page: '購物流程與常見Q&A',
-    link: '#',
+    link: '/how-to-buy',
   },
 ];
 
@@ -26,6 +27,7 @@ const HowToBuyPage = () => {
 
     return(
         <>
+        <ReactHelmetAsync title="購物流程與常見Q&A" />
         <div className="container">
         <div className="row">
           <div className="col d-flex mt-19 mb-10">
@@ -45,6 +47,7 @@ const HowToBuyPage = () => {
                 <a href="#shipping" 
                 className={`timeline-item fs-5 mt-4 mb-4 ms-6 me-6 ${ activeLink === "shipping" ? "active" :'' }`}
                 onClick={() => handleClick('shipping')} > 配送方式 </a>
+                
                 <a href="#return-policy" 
                 className={`timeline-item fs-5 mt-4 mb-4 ms-6 me-6 ${activeLink === "return-policy" ? "active" : ""}`}
                 onClick={() => handleClick("return-policy")} > 退換貨規則 </a>
@@ -71,7 +74,7 @@ const HowToBuyPage = () => {
                 <li className="text-neutral60">所有商品都將採用安全包裝，確保完整無損地送到您手中。</li>
             </ol>
 
-            <h4 id="return-policy" className="mt-19">退換貨規則</h4>
+            <h4 id="#return-policy" className="mt-19">退換貨規則</h4>
             <p className="fs-6 text-neutral60 mb-6 mt-6">我們致力於提供滿意的購物體驗，若需退換貨請參考以下規則：</p>
             <ol className="ordered-list fs-6">
                 <li className="mb-2 text-neutral60">
