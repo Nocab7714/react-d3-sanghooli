@@ -1,6 +1,6 @@
 // 外部資源
-import React, { useState } from "react";
-import BreadcrumbComponent from '../components/BreadcrumbComponent.jsx';
+import { useState } from "react";
+import Breadcrumb from '../components/Breadcrumb.jsx';
 
 //視 麵包屑breadcrumb 階層保留對應資料
 const breadcrumbItem = [
@@ -28,7 +28,7 @@ const PrivacyPolicyPage = () => {
         <div className="row">
           <div className="col d-flex mt-19 mb-10">
             {/* <!-- 麵包屑Breadcrumbs --> */}
-            <BreadcrumbComponent  breadcrumbItem={breadcrumbItem} />
+            <Breadcrumb  breadcrumbItem={breadcrumbItem} />
             {/* <p className="fs-6 me-4 text-neutral40">首頁</p>
             <span className="material-symbols-outlined text-neutral40">keyboard_double_arrow_right</span>
             <p className="fs-6 text-neutral80 ms-4">隱私權服務條款</p> */}
