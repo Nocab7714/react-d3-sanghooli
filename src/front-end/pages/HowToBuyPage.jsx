@@ -1,6 +1,23 @@
+// 外部資源
 import React, { useState } from "react";
+import BreadcrumbComponent from '../components/BreadcrumbComponent.jsx';
+
+
+//視 麵包屑breadcrumb 階層保留對應資料
+const breadcrumbItem = [
+  {
+    page: '首頁',
+    link: '#',
+  },
+  {
+    page: '購物流程與常見Q&A',
+    link: '#',
+  },
+];
+
 
 const HowToBuyPage = () => {
+  
     const [activeLink, setActiveLink] = useState("shipping"); // 預設選中 "配送方式"
   
     const handleClick = (id) => {
@@ -12,10 +29,10 @@ const HowToBuyPage = () => {
         <div className="container">
         <div className="row">
           <div className="col d-flex mt-19 mb-10">
+            
             {/* <!-- 麵包屑Breadcrumbs --> */}
-            <p className="fs-6 me-4 text-neutral40">首頁</p>
-            <span className="material-symbols-outlined text-neutral40">keyboard_double_arrow_right</span>
-            <p className="fs-6 text-neutral80 ms-4">購物流程與常見Q&A</p>
+            <BreadcrumbComponent  breadcrumbItem={breadcrumbItem} />
+
             </div>
             </div>
       </div>
@@ -34,7 +51,7 @@ const HowToBuyPage = () => {
             </div>
           </div>
 
-          <div className="col-md-8 ps-5 mb-19 col-12">
+          <div className="col-md-8 ps-5 mb-19 mt-4 col-12">
             {/* <!-- 資訊說明區塊（右側） --> */}
             <h4 id="shipping">配送方式</h4>
             <p className="fs-6 text-neutral60 mb-6 mt-6">我們提供靈活的配送選項，確保禮物準時送達：</p>

@@ -10,15 +10,26 @@ const { VITE_BASE_URL: baseUrl, VITE_API_PATH: apiPath } = import.meta.env; // �
 // 3.內部資源（排序：元件 -> 工具/樣式等）
 import HeaderFront from './front-end/layout/HeaderFront.jsx';
 import FooterFront from './front-end/layout/FooterFront.jsx';
-import CartPage from './front-end/pages/CartPage.jsx';
 import GoToTopComponent from './front-end/components/GoToTopComponent.jsx';
+
+//import CartPage from './front-end/pages/CartPage.jsx';
+import HowToBuyPage from './front-end/pages/HowToBuyPage.jsx';
+import PrivacyPolicyPage from './front-end/pages/PrivacyPolicyPage.jsx';
+
+// 後台頁面 back-end
+import OrdersManagementPage from "./back-end/layout/Pages/OrdersManagementPage.jsx";
+import ProductsManagementPage from "./back-end/layout/Pages/ProductsManagementPage.jsx";
 
 
 function App() {
   return (
     <>
       <HeaderFront />
-      <CartPage />
+      {/* <CartPage /> */}
+      {/* <HowToBuyPage /> */}
+      {/* <PrivacyPolicyPage /> */}
+      <OrdersManagementPage />
+      {/* <ProductsManagementPage /> */}
       <FooterFront />
       <GoToTopComponent />
     </>
