@@ -47,7 +47,6 @@
 @import "../scss/components/pagination";
 @import "../scss/components/breadcrumb";
 @import "../scss/components/go-to-top";
-@import "../scss/components/GiftCategorySectionComponent";
 
 // Helpers
 @import "bootstrap/scss/helpers";
@@ -67,6 +66,9 @@
 @import './pages/front-end/HomePage';
 @import './pages/front-end/CartPage';
 @import './pages/front-end/HowToBuyPage';
+@import './pages/front-end/ProductsListPage';
+@import './pages/front-end/SingleProductPage';
+@import './pages/front-end/AboutUsPage';
 
 @import './pages/back-end/ProductsManagement';
 
