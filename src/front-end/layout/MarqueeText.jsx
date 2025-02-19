@@ -53,7 +53,7 @@ const MarqueeText = ({ headerRef, headerHeight, setHeaderHeight }) => {
           }}
         >
           <p
-            className="text-center"
+            className="text-center fs-7 fs-md-6"
             style={{
               opacity: fade ? 1 : 0, // 使用 opacity 做淡入淡出
               transition: 'opacity 0.5s ease-in-out', // 0.5 秒內淡入淡出
