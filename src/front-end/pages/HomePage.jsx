@@ -6,7 +6,6 @@ import ReactHelmetAsync from '../../plugins/ReactHelmetAsync';
 import GiftCategorySection from '../components/GiftCategorySection';
 import HomeBannerSwiper from '../components/HomeBannerSwiper';
 
-import bannerImg from '@/assets/img/banner/banner01.png';
 import adImg from '@/assets/img/other/ad01.png';
 
 const HomePage = () => {
@@ -49,18 +48,7 @@ const HomePage = () => {
       {/* 預留空間 - 之後要改成 swiper 輪播 */}
       {/* banner */}
       <section className="banner">
-      <HomeBannerSwiper />
-        {/* <div className="container">
-          <div className="d-flex justify-content-center">
-            <img
-              src={bannerImg}
-              alt=""
-              height="480"
-              className="img-fluid"
-              style={{ maxHeight: '480px' }}
-            />
-          </div>
-        </div> */}
+        <HomeBannerSwiper />
       </section>
       {/* home-search-form */}
       <section className="home-search-form bg-neutral20 py-6 py-md-10">
@@ -265,7 +253,10 @@ const HomePage = () => {
                       .keys()
                       .map((num) => {
                         return (
-                          <li className="new-product-item " key={`new-product-${num}`}>
+                          <li
+                            className="new-product-item "
+                            key={`new-product-${num}`}
+                          >
                             <Link to="/single-product/productID">
                               <div className="new-product-item-bg"></div>
                               <div className="d-flex align-items-center  border-bottom border-neutral40 py-4 z-3">
