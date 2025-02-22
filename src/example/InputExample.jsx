@@ -15,8 +15,9 @@ const InputExample = () => {
         </button>
         <input
           type="number"
-          className="form-control position-absolute "
+          className="form-control position-absolute text-center"
           defaultValue="1"
+          readOnly
         />
         <button
           className="btn btn-add position-absolute translate-middle rounded-1 p-1  "
@@ -37,8 +38,9 @@ const InputExample = () => {
         </button>
         <input
           type="number"
-          className="form-control position-absolute "
+          className="form-control position-absolute text-center"
           defaultValue="99"
+          readOnly
         />
         <button
           className="btn btn-add position-absolute translate-middle rounded-1 p-1  "
@@ -82,8 +84,9 @@ const InputExample = () => {
         </button>
         <input
           type="number"
-          className="form-control position-absolute "
+          className="form-control position-absolute text-center"
           defaultValue="99"
+          readOnly
         />
         <button
           className="btn btn-add position-absolute translate-middle rounded-1 p-2  "

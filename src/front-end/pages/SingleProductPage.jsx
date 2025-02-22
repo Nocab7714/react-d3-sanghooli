@@ -132,8 +132,9 @@ const SingleProductPage = () => {
                       </button>
                       <input
                         type="number"
-                        className="form-control position-absolute "
+                        className="form-control position-absolute text-center"
                         defaultValue="0"
+                        readOnly
                       />
                       <button
                         className="btn btn-add position-absolute translate-middle rounded-1 p-2  "
@@ -390,8 +391,9 @@ const SingleProductPage = () => {
                 </button>
                 <input
                   type="number"
-                  className="form-control position-absolute "
+                  className="form-control position-absolute text-center"
                   defaultValue="99"
+                  readOnly
                 />
                 <button
                   className="btn btn-add position-absolute translate-middle rounded-1 p-1  "
