@@ -28,7 +28,24 @@ export default function CartStep({step = 1}){
   return (
     <>
       <div className="bg-white rounded-4 overflow-hidden mb-xl-19">
-      <ul className="fs-7 d-flex py-5 mb-0 px-0 flex-wrap">
+      {/* 手機 */}
+      <ul className="fs-7 d-flex d-lg-none py-5 mb-0 px-0 flex-wrap">
+        {
+          progressMap.filter((progressMap) => progressMap.step === step).map((item) => (
+            <ol key={item.step} className="cart-step d-flex align-items-center gap-4 px-6">
+              <span className={`material-symbols-outlined rounded-circle p-4 fs-2 ${item.step <= step ? 'text-primary-dark bg-primary-light' : 'text-neutral40 bg-neutral20'}`}>
+                {item.icon}
+              </span>
+              <div className={`${item.step <= step ? '' : 'text-neutral40'}`}>
+                <h6 className="fs-7">{item.title}</h6>
+                <span>{item.description}</span>
+              </div>
+            </ol>
+          ))
+        }
+      </ul>
+      {/* 桌機 */}
+      <ul className="fs-7 d-none d-lg-flex py-5 mb-0 px-0 flex-wrap">
         {
           progressMap.map((progressMap) => (
             <ol key={progressMap.step} className="cart-step d-flex align-items-center gap-4 px-6">
