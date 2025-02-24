@@ -1,52 +1,94 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import Breadcrumb from '../components/Breadcrumb.jsx';
-import ReactHelmetAsync from '../../plugins/ReactHelmetAsync';
+import { Link, useParams } from 'react-router-dom';
+import axios from 'axios';
+
+const { VITE_BASE_URL: baseUrl, VITE_API_PATH: apiPath } = import.meta.env;
 
 import userImg01 from '@/assets/img/other/user01.png';
 import userImg02 from '@/assets/img/other/user02.png';
 import userImg03 from '@/assets/img/other/user03.png';
 
-const breadcrumbItem = [
-  {
-    page: '首頁',
-    link: '/',
-  },
-  {
-    page: '產品列表',
-    link: '/products-list',
-  },
-  {
-    page: `醇香紅酒禮盒`,
-    link: '#',
-  },
-];
+import Breadcrumb from '../components/Breadcrumb.jsx';
+import ReactHelmetAsync from '../../plugins/ReactHelmetAsync';
+import InputCalculate from '../components/InputCalculate.jsx';
 
 const SingleProductPage = () => {
+  const [product, setProduct] = useState({});
+  const [productTitle, setProductTitle] = useState('');
+  const [productStockQty, setProductStockQty] =useState(0)
+  const { id: product_id } = useParams();
+  const [breadcrumbItem, setBreadcrumbItem] = useState([
+    {
+      page: '首頁',
+      link: '/',
+    },
+    {
+      page: '產品列表',
+      link: '/products-list',
+    },
+  ]);
+
+  // 取得商品資料
+  useEffect(() => {
+    const getProduct = async () => {
+      try {
+        const res = await axios.get(
+          `${baseUrl}/api/${apiPath}/product/${product_id}`
+        );
+        setProduct(res.data.product);
+        setProductTitle(res.data.product.title);
+        setProductStockQty(res.data.product.qty)
+        setBreadcrumbItem((pre) => [...pre, { page: res.data.product.title }]);
+      } catch (error) {
+        alert('取得產品失敗');
+      } finally {
+      }
+    };
+    getProduct();
+  }, []);
+
+  // 加入購物車
+  const [productQty, setProductQty] = useState(1);
+  const addCartItem = async (product_id) => {
+    try {
+      await axios.post(`${baseUrl}/api/${apiPath}/cart`, {
+        data: {
+          product_id,
+          qty: Number(productQty),
+        },
+      });
+      alert(`成功將商品加入購物車,數量${productQty}`);
+    } catch (error) {
+      alert('加入購物車失敗');
+      console.log(error);
+    } finally {
+      // console.log(typeof productQty ,productQty)
+    }
+  };
+
   return (
     <>
-      <ReactHelmetAsync title="醇香紅酒禮盒" />
+      <ReactHelmetAsync title={productTitle} />
       <div>
         {/* breadcrumb */}
         <div className="container pt-10 pt-md-19 mb-6 mb-md-10">
           <Breadcrumb breadcrumbItem={breadcrumbItem} />
         </div>
-
         <div className="container pb-10 pb-md-19">
           <section className="product-info">
             <div className="row">
               {/* product-img */}
               <div className="col-xl-6">
                 <img
-                  src="https://storage.googleapis.com/vue-course-api.appspot.com/d3sanghooli/1736190936754.png?GoogleAccessId=firebase-adminsdk-zzty7%40vue-course-api.iam.gserviceaccount.com&Expires=1742169600&Signature=To%2BG3QFz%2Foc2Al3qLnIeq4zoYXZFUxmUOxp57T6XTZYJZAb%2FwmcvpivJ0BVD1wCqg%2F9oPIBK4Q%2FQ%2F8sSYADDWXwfggt6MOwYBgOJJn%2FSE3rmJf6fwCBrsoQjzS9O%2BaNXFw4Q6tESMGYF3SSjhGBli%2FqiNy9%2FS%2FSwxJsBG4XyNgFu3%2FmfoIHiDGE7Ig28JWewVO9f3cHdRYOHuMNKKDGqEHQVAwxir%2BtwJdoDsE8dxrIpiiG79gFIj6YFsxKvwWK3D9Cbz7FABkAlBByhf4EjrEdh0Niog4g4ssuA62sngbFTmItN9DDmpP7ILdBOxqFDKa%2FvwNo4k%2B87ONQV%2FmXTRQ%3D%3D"
-                  alt=""
+                  src={product.imageUrl}
+                  alt={product.id}
                   className="img-fluid rounded-4 mb-10 mb-xl-0"
                   height="636"
                   width="636"
                 />
               </div>
               <div className="col-xl-5 ms-xl-14 ">
-                <h2 className="fs-3 fs-md-1 mb-6 mb-md-8">醇香紅酒禮盒</h2>
+                <h2 className="fs-3 fs-md-1 mb-6 mb-md-8">{product.title}</h2>
                 {/* product-ratings */}
                 <div className="d-flex align-items-center  mb-6 mb-md-8">
                   <span className="material-symbols-outlined material-filled text-primary fs-5 fs-md-4 me-2 ">
@@ -69,7 +111,7 @@ const SingleProductPage = () => {
                 </div>
                 {/* product-description */}
                 <p className="text-neutral60 mb-6 mb-md-8">
-                  一款完美結合香氣與口感的高品質紅酒禮盒，專為追求生活品味的您打造。紅酒採用嚴選的葡萄品種，經由傳統工藝釀造，呈現豐富的果香與絲滑的口感。禮盒設計精美，內附專屬酒杯，適合於節慶聚會、親朋好友的送禮選擇。無論是與摯友分享，還是享受一個人的品酒時光，這款紅酒禮盒都將為您帶來獨特的體驗
+                  {product.description}
                 </p>
                 {/* product-info */}
                 <div className="card rounded-4 border-neutral40  mb-6 mb-md-8">
@@ -82,70 +124,56 @@ const SingleProductPage = () => {
                         材質/內容物
                       </p>
                       <p className="card-text fs-7 fw-semibold text-end w-md-75 w-50">
-                        紅酒750ml × 2瓶
+                        {product?.content?.material_contents}
                       </p>
                     </div>
                     <div className="d-flex justify-content-between align-items-center mb-4">
                       <p className="card-text fs-7 text-neutral60">保存期限</p>
                       <p className="card-text fs-7 fw-semibold text-end w-md-75 w-50">
-                        無保存期限
+                        {product?.content?.expiry_date}
                       </p>
                     </div>
                     <div className="d-flex justify-content-between align-items-center mb-4">
                       <p className="card-text fs-7 text-neutral60">產地</p>
                       <p className="card-text fs-7 fw-semibold text-end w-md-75 w-50">
-                        法國波爾多地區
-                      </p>
-                    </div>
-                    <div className="d-flex justify-content-between align-items-center mb-4">
-                      <p className="card-text fs-7 text-neutral60">注意事項</p>
-                      <p className="card-text fs-7 fw-semibold text-end w-md-75 w-50">
-                        適合存放於陰涼乾燥處，避免陽光直射
+                        {product?.content?.origin}
                       </p>
                     </div>
                     <div className="d-flex justify-content-between align-items-center">
+                      <p className="card-text fs-7 text-neutral60">注意事項</p>
+                      <p className="card-text fs-7 fw-semibold text-end w-md-75 w-50">
+                        {product?.content?.notes}
+                      </p>
+                    </div>
+                    {/* 熱門度 - 區塊表劉 */}
+                    {/* <div className="d-flex justify-content-between align-items-center">
                       <p className="card-text fs-7 text-neutral60">熱門度</p>
                       <p className="card-text fs-7 fw-semibold text-end w-md-75 w-50">
                         已售出 50 次
                       </p>
-                    </div>
+                    </div> */}
                   </div>
                 </div>
                 {/* product-price */}
                 <p className="d-flex align-items-center fs-5 fs-md-3 fw-semibold fw-md-bold text-primary-dark  mb-0 mb-md-8">
-                  NT$&nbsp; <span className="me-4 me-md-6">5,800</span>
-                  <span className="fs-6 fs-md-5 fw-normal text-decoration-line-through text-neutral60">
-                    NT$&nbsp;4,800
-                  </span>
+                  NT$&nbsp;
+                  <span className="me-4 me-md-6">{product.price}</span>
+                  {product.origin_price !== product.price && (
+                    <span className="fs-6 fs-md-5 fw-normal text-decoration-line-through text-neutral60">
+                      NT$&nbsp;{product.origin_price}
+                    </span>
+                  )}
                 </p>
                 <div className="d-none d-md-block">
                   {/* product-quantity-selector */}
                   <div className="d-flex align-items-center mb-0 mb-md-8">
-                    <div className="input-group-calculate input-group-calculate-lg position-relative  me-6">
-                      <button
-                        className="btn btn-sub position-absolute translate-middle rounded-1 p-2 "
-                        type="button"
-                      >
-                        <span className="material-symbols-outlined align-middle fs-4">
-                          remove
-                        </span>
-                      </button>
-                      <input
-                        type="number"
-                        className="form-control position-absolute text-center"
-                        defaultValue="0"
-                        readOnly
-                      />
-                      <button
-                        className="btn btn-add position-absolute translate-middle rounded-1 p-2  "
-                        type="button"
-                      >
-                        <span className="material-symbols-outlined align-middle fs-4">
-                          add
-                        </span>
-                      </button>
+                    <div className="me-6">
+                      <InputCalculate inputSize='lg' productQty={productQty} setProductQty={setProductQty} productStockQty={productStockQty} />
                     </div>
-                    <span className="fs-6 text-neutral60">庫存尚有15件</span>
+                    <span className="fs-6 text-neutral60">
+                      庫存尚有{product.qty}件
+
+                    </span>
                   </div>
                   {/* add-to-cart & add-to-favorite */}
                   <div className="row">
@@ -173,7 +201,12 @@ const SingleProductPage = () => {
                     </div>
 
                     <div className="col-6">
-                      <button type="button" className="btn btn-primary w-100">
+                      <button
+                        onClick={() => addCartItem(product.id)}
+                        type="button"
+                        className="btn btn-primary w-100"
+                        disabled={product.qty === 0}
+                      >
                         <span className="material-symbols-outlined align-middle me-1">
                           local_mall
                         </span>
@@ -380,31 +413,10 @@ const SingleProductPage = () => {
           <div className="pt-4 pb-6 px-3">
             {/* product-quantity-selector */}
             <div className="d-flex align-items-center justify-content-between mb-4">
-              <div className="input-group-calculate  position-relative ">
-                <button
-                  className="btn btn-sub position-absolute translate-middle rounded-1 p-1 "
-                  type="button"
-                >
-                  <span className="material-symbols-outlined align-middle fs-5">
-                    remove
-                  </span>
-                </button>
-                <input
-                  type="number"
-                  className="form-control position-absolute text-center"
-                  defaultValue="99"
-                  readOnly
-                />
-                <button
-                  className="btn btn-add position-absolute translate-middle rounded-1 p-1  "
-                  type="button"
-                >
-                  <span className="material-symbols-outlined align-middle fs-5">
-                    add
-                  </span>
-                </button>
-              </div>
-              <span className="fs-6 text-neutral60">庫存尚有15件</span>
+            <InputCalculate productQty={productQty} setProductQty={setProductQty} productStockQty={productStockQty} />
+              <span className="fs-6 text-neutral60">
+                庫存尚有{product.qty}件
+              </span>
             </div>
             {/* add-to-cart & add-to-favorite */}
             <div className="row g-4">
@@ -433,8 +445,10 @@ const SingleProductPage = () => {
 
               <div className="col-6">
                 <button
+                  onClick={() => addCartItem(product.id)}
                   type="button"
                   className="btn btn-primary fs-6 w-100 px-2"
+                  disabled={product.qty === 0}
                 >
                   <span className="material-symbols-outlined fs-5 align-middle me-1">
                     local_mall
