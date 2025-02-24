@@ -17,6 +17,7 @@ const InputExample = () => {
           type="number"
           className="form-control position-absolute text-center"
           defaultValue="1"
+          aria-label="product quantity"
           readOnly
         />
         <button
@@ -40,6 +41,7 @@ const InputExample = () => {
           type="number"
           className="form-control position-absolute text-center"
           defaultValue="99"
+          aria-label="product quantity"
           readOnly
         />
         <button
@@ -72,7 +74,7 @@ const InputExample = () => {
           <span className="material-symbols-outlined align-middle fs-4">add</span>
         </button>
       </div>
-      {/* input-group-calculate */}
+      {/* input-group-calculate-lg */}
       <div className="input-group-calculate input-group-calculate-lg mb-5 position-relative ">
         <button
           className="btn btn-sub position-absolute translate-middle rounded-1 p-2 "
@@ -86,6 +88,7 @@ const InputExample = () => {
           type="number"
           className="form-control position-absolute text-center"
           defaultValue="99"
+          aria-label="product quantity"
           readOnly
         />
         <button
