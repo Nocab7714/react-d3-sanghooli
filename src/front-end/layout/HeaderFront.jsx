@@ -77,7 +77,7 @@ const HeaderFront = () => {
                 </NavLink>
               </li>
               <li className="nav-item position-relative me-4">
-                <NavLink className="nav-link link-neutral80" to="/">
+                <NavLink className="nav-link link-neutral80" to="/cart">
                   <span className="material-symbols-outlined align-middle fs-3 ">
                     local_mall
                   </span>
