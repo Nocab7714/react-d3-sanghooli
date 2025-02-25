@@ -1,11 +1,16 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
+
+const { VITE_BASE_URL: baseUrl, VITE_API_PATH: apiPath } = import.meta.env;
 
 import Pagination from '../components/Pagination.jsx';
 import Breadcrumb from '../components/Breadcrumb.jsx';
 import ReactHelmetAsync from '../../plugins/ReactHelmetAsync';
+import ProductCategoryList from '../components/ProductCategoryList';
+import ProductCard from '../components/ProductCard';
 
-import crownIcon from '@/assets/img/illustration/crown.svg';
+// import crownIcon from '@/assets/img/illustration/crown.svg';
 
 const breadcrumbItem = [
   {
@@ -21,32 +26,6 @@ const breadcrumbItem = [
 const selectData = ['資料01', '資料02', '資料03', '資料04', '資料05'];
 
 const ProductsListPage = () => {
-  const [paginationData, setPaginationData] = useState({
-    total_pages: 0, // 總頁數
-    current_page: 0, // 當前頁數
-    has_pre: false, // 是否有上一頁
-    has_next: false, // 是否有下一頁
-    // "category": "" // 類別屬性用於前台商品列表篩選使用
-  });
-
-  // 模擬 API 請求
-  const fetchPageData = (page) => {
-    // 這裡應該是 API 請求，例如 fetch(`/api?page=${page}`)
-    console.log(`Fetching data for page ${page}`);
-
-    // 假設 API 回應的分頁資訊
-    setPaginationData({
-      total_pages: 30,
-      current_page: page,
-      has_pre: page > 1,
-      has_next: page < 30,
-    });
-  };
-
-  useEffect(() => {
-    fetchPageData(paginationData.current_page);
-  }, []);
-
   // input search
   // 之後要完全元件化
   const [searchValue, setSearchValue] = useState('');
@@ -79,6 +58,78 @@ const ProductsListPage = () => {
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
+
+
+
+  
+  const searchTitleRef = useRef(null);
+
+  //  取得所有商品
+  const [products, setProducts] = useState([]);
+  useEffect(() => {
+    (async () => {
+      try {
+        const res = await axios.get(`${baseUrl}/api/${apiPath}/products/all`);
+        setProducts(res.data.products);
+      } catch (error) {
+        console.log(error);
+      }
+    })();
+  }, []);
+
+    // 取得最高人氣的禮物區塊 6 筆商品資料
+    const [mostPopularProducts, setMostPopularProducts] = useState([]);
+    useEffect(() => {
+      setMostPopularProducts(
+        products
+          ?.filter((product) => {
+            return product.is_hot == true;
+          })
+          .slice(0, 6)
+      );
+    }, [products]);
+  
+
+  // 控制排序方式
+  const [sortOption, setSortOption] = useState(0);
+  const [sortedProducts, setSortedProducts] = useState([]); // 存放排序後的商品
+
+  // 當 `products` 或 `sortOption` 改變時，重新排序
+  useEffect(() => {
+    const sorted = [...products].sort((a, b) => {
+      if (sortOption === 2) return b.price - a.price; // 最高到最低
+      if (sortOption === 3) return a.price - b.price; // 最低到最高
+      return 0;
+    });
+    setSortedProducts(sorted);
+  }, [products, sortOption]);
+
+  // 控制分頁
+  const itemsPerPage = 12;
+  const [currentPage, setCurrentPage] = useState(1);
+  const total_pages = Math.ceil(sortedProducts.length / itemsPerPage);
+  const paginatedProducts = sortedProducts.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
+  // 排序變更時，重置到第一頁
+  const handleSortChange = (e) => {
+    setSortOption(Number(e.target.value));
+    setCurrentPage(1);
+  };
+
+  // 換頁時滾動到標題
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage);
+    if (searchTitleRef.current) {
+      searchTitleRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }
+  };
+
   return (
     <>
       <ReactHelmetAsync title="禮物清單" />
@@ -280,83 +331,12 @@ const ProductsListPage = () => {
               <div className="col-xl-8 mt-10 mt-xl-0">
                 {/* products-is-hot */}
                 <div className="mb-10 mb-lg-19">
-                  {/* Product-title */}
-                  <div className="d-flex align-items-center justify-content-between mb-8 mb-md-10 ">
-                    <div className="d-flex align-items-center">
-                      <span className="material-symbols-outlined fs-4 fs-md-2 text-secondary me-1 me-md-2">
-                        crown
-                      </span>
-                      <h2 className="fs-5 fs-md-4 m-0 ">
-                        由 SANGHOOLI 精心挑選！ 禮品買家推薦排名
-                      </h2>
-                    </div>
-                    <div className="flex-grow-1 ms-3 ms-md-4 border-top border-neutral40" />
-                  </div>
-                  {/* Product-list */}
-                  <ul className="list-unstyled row gy-10">
-                    {[
-                      ...Array(6)
-                        .keys()
-                        .map((num) => {
-                          return (
-                            <li className="col-6 col-md-4" key={`gift-${num}`}>
-                              <div className="position-relative">
-                                <button
-                                  type="button"
-                                  className="position-absolute btn btn-favorite p-2 "
-                                >
-                                  <span className="material-symbols-outlined align-middle text-white">
-                                    favorite
-                                  </span>
-                                </button>
-                                <Link
-                                  to="/single-product/productID"
-                                  className="product-card"
-                                >
-                                  <div className="card border-0 position-relative">
-                                    <div className="card-bg"></div>
-                                    <div className="position-relative z-3">
-                                      <div className="hot-sale position-absolute  translate-middle z-4">
-                                        <img
-                                          src={crownIcon}
-                                          alt="crown svg"
-                                          height="48"
-                                          width="48"
-                                        />
-                                      </div>
-                                      <img
-                                        src="https://storage.googleapis.com/vue-course-api.appspot.com/d3sanghooli/1736190936754.png?GoogleAccessId=firebase-adminsdk-zzty7%40vue-course-api.iam.gserviceaccount.com&Expires=1742169600&Signature=To%2BG3QFz%2Foc2Al3qLnIeq4zoYXZFUxmUOxp57T6XTZYJZAb%2FwmcvpivJ0BVD1wCqg%2F9oPIBK4Q%2FQ%2F8sSYADDWXwfggt6MOwYBgOJJn%2FSE3rmJf6fwCBrsoQjzS9O%2BaNXFw4Q6tESMGYF3SSjhGBli%2FqiNy9%2FS%2FSwxJsBG4XyNgFu3%2FmfoIHiDGE7Ig28JWewVO9f3cHdRYOHuMNKKDGqEHQVAwxir%2BtwJdoDsE8dxrIpiiG79gFIj6YFsxKvwWK3D9Cbz7FABkAlBByhf4EjrEdh0Niog4g4ssuA62sngbFTmItN9DDmpP7ILdBOxqFDKa%2FvwNo4k%2B87ONQV%2FmXTRQ%3D%3D"
-                                        className="img-fluid rounded-4 mb-4 z-3"
-                                        alt=""
-                                        height="306"
-                                        width="306"
-                                      />
-                                    </div>
-                                    <div className="card-body z-3  p-0">
-                                      <span className="fs-7 fw-normal text-neutral60 mb-2">
-                                        食品與飲品
-                                      </span>
-                                      <p className="card-title fw-semibold fs-6 mb-3">
-                                        客製化鋼筆
-                                      </p>
-                                      <p className=" fs-7 text-primary-dark">
-                                        NT$
-                                        <span className="fs-6 fw-semibold me-4">
-                                          2,200
-                                        </span>
-                                        <span className="text-decoration-line-through text-neutral60">
-                                          NT$ 3,800
-                                        </span>
-                                      </p>
-                                    </div>
-                                  </div>
-                                </Link>
-                              </div>
-                            </li>
-                          );
-                        }),
-                    ]}
-                  </ul>
+                  <ProductCategoryList
+                    products={mostPopularProducts}
+                    listTitle="最高人氣的禮物"
+                    iconMaterial="local_fire_department"
+                    showIsHot={true}
+                  />
                 </div>
 
                 {/* products-search-result-list */}
@@ -367,7 +347,11 @@ const ProductsListPage = () => {
                       <span className="material-symbols-outlined fs-4 fs-md-2 text-secondary me-1 me-md-2">
                         search
                       </span>
-                      <h2 className="fs-5 fs-md-4 m-0 d-flex flex-column">
+                      <h2
+                        className="fs-5 fs-md-4 m-0 d-flex flex-column"
+                        ref={searchTitleRef}
+                        style={{ scrollMarginTop: '210px' }}
+                      >
                         目前搜尋結果
                         <span className="fs-7 text-neutral60 fw-normal mt-1 d-md-none d-block">
                           100 個結果
@@ -380,94 +364,38 @@ const ProductsListPage = () => {
 
                     <div className="flex-grow-1 mx-3 mx-md-4 border-top border-neutral40" />
                     <div>
-                      <select className="form-select ">
-                        <option value="" selected disabled>
-                          價格最低到最高
+                      <select className="form-select" value={sortOption} onChange={handleSortChange}>
+                        <option value={0} selected disabled>
+                          請選擇價格排序
                         </option>
-                        {selectData.map((item, index) => {
-                          return (
-                            <option key={index} value={index}>
-                              {item}
-                            </option>
-                          );
-                        })}
+                        <option value={2}>價格最高到最低</option>
+                        <option value={3}>價格最低到最高</option>
                       </select>
                     </div>
                   </div>
                   {/* Product-list */}
                   <ul className="list-unstyled row gy-10">
-                    {[
-                      ...Array(12)
-                        .keys()
-                        .map((num) => {
-                          return (
-                            <li
-                              className="col-6 col-md-4"
-                              key={`product-${num}`}
-                            >
-                              <div className="position-relative">
-                                <button
-                                  type="button"
-                                  className="position-absolute btn btn-favorite p-2 "
-                                >
-                                  <span className="material-symbols-outlined align-middle text-white">
-                                    favorite
-                                  </span>
-                                </button>
-                                <Link
-                                  to="/single-product/productID"
-                                  className="product-card"
-                                >
-                                  <div className="card border-0 position-relative">
-                                    <div className="card-bg"></div>
-                                    <div className="position-relative z-3">
-                                      <div className="hot-sale position-absolute  translate-middle z-4">
-                                        <img
-                                          src={crownIcon}
-                                          alt="crown svg"
-                                          height="48"
-                                          width="48"
-                                        />
-                                      </div>
-                                      <img
-                                        src="https://storage.googleapis.com/vue-course-api.appspot.com/d3sanghooli/1736190936754.png?GoogleAccessId=firebase-adminsdk-zzty7%40vue-course-api.iam.gserviceaccount.com&Expires=1742169600&Signature=To%2BG3QFz%2Foc2Al3qLnIeq4zoYXZFUxmUOxp57T6XTZYJZAb%2FwmcvpivJ0BVD1wCqg%2F9oPIBK4Q%2FQ%2F8sSYADDWXwfggt6MOwYBgOJJn%2FSE3rmJf6fwCBrsoQjzS9O%2BaNXFw4Q6tESMGYF3SSjhGBli%2FqiNy9%2FS%2FSwxJsBG4XyNgFu3%2FmfoIHiDGE7Ig28JWewVO9f3cHdRYOHuMNKKDGqEHQVAwxir%2BtwJdoDsE8dxrIpiiG79gFIj6YFsxKvwWK3D9Cbz7FABkAlBByhf4EjrEdh0Niog4g4ssuA62sngbFTmItN9DDmpP7ILdBOxqFDKa%2FvwNo4k%2B87ONQV%2FmXTRQ%3D%3D"
-                                        className="img-fluid rounded-4 mb-4 z-3"
-                                        alt=""
-                                        height="306"
-                                        width="306"
-                                      />
-                                    </div>
-                                    <div className="card-body z-3  p-0">
-                                      <span className="fs-7 fw-normal text-neutral60 mb-2">
-                                        食品與飲品
-                                      </span>
-                                      <p className="card-title fw-semibold fs-6 mb-3">
-                                        客製化鋼筆
-                                      </p>
-                                      <p className=" fs-7 text-primary-dark">
-                                        NT$
-                                        <span className="fs-6 fw-semibold me-4">
-                                          2,200
-                                        </span>
-                                        <span className="text-decoration-line-through text-neutral60">
-                                          NT$ 3,800
-                                        </span>
-                                      </p>
-                                    </div>
-                                  </div>
-                                </Link>
-                              </div>
-                            </li>
-                          );
-                        }),
-                    ]}
+                    {paginatedProducts?.map((product) => {
+                      return (
+                        <li className="col-6 col-md-4" key={product.id}>
+                          <ProductCard product={product} showIsHot={true} />
+                        </li>
+                      );
+                    })}
                   </ul>
                 </div>
                 {/* pagination */}
-                <Pagination
-                  paginationData={paginationData}
-                  onPageChange={fetchPageData}
-                />
+                {total_pages > 1 && (
+                  <Pagination
+                    paginationData={{
+                      total_pages,
+                      current_page: currentPage,
+                      has_pre: currentPage > 1,
+                      has_next: currentPage < total_pages,
+                    }}
+                    onPageChange={handlePageChange}
+                  />
+                )}
               </div>
             </div>
           </section>

@@ -586,6 +586,7 @@ $utilities: map-merge(
         ),
       ),
     'font-size': (
+      responsive: true, // custom*
       rfs: true,
       property: font-size,
       class: fs,
