@@ -1,5 +1,5 @@
 // 外部資源
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import Breadcrumb from '../components/Breadcrumb.jsx';
 import ReactHelmetAsync from '../../plugins/ReactHelmetAsync';
 
@@ -18,12 +18,40 @@ const breadcrumbItem = [
 
 
 const HowToBuyPage = () => {
-  
     const [activeLink, setActiveLink] = useState("shipping"); // 預設選中 "配送方式"
   
+    //將錨點改為 Ref 方式設定
+    const shippingRef = useRef(null);
+    const returnPolicyRef = useRef(null);
+    
+    //錨點：修改 handleClick 函式
     const handleClick = (id) => {
       setActiveLink(id);
+      
+      //錨點連動與樣式設定
+      if (id === "shipping") {
+        shippingRef.current?.scrollIntoView({ 
+          behavior: "smooth", 
+          block: "nearest" });
+      } else if (id === "return-policy") {
+        returnPolicyRef.current?.scrollIntoView({ 
+          behavior: "smooth", 
+          block: "center" });
+      }
     };
+
+    // 監聽滾動事件：內部控制 activeLink，確保點擊 GoToTop 時，左側的「隱私權政策」錨點會亮起
+    useEffect(() => {
+      const handleScroll = () => {
+      if (window.scrollY < 50) {
+          setActiveLink("shipping");
+      }
+      };
+
+      window.addEventListener("scroll", handleScroll);
+      return () => window.removeEventListener("scroll", handleScroll);
+    }, []);
+
 
     return(
         <>
@@ -44,19 +72,21 @@ const HowToBuyPage = () => {
           {/* <!-- 錨點anchor Timeline 區塊（左側），在手機版隱藏 --> */}
           <div className="col-md-4 rounded-3 d-flex d-none d-md-block">
             <div className="timeline ps-10">
-                <a href="#shipping" 
-                className={`timeline-item fs-5 mt-4 mb-4 ms-6 me-6 ${ activeLink === "shipping" ? "active" :'' }`}
-                onClick={() => handleClick('shipping')} > 配送方式 </a>
+            <a className={`timeline-item fs-5 mt-4 mb-4 ms-6 me-6 ${ activeLink === "shipping" ? "active" :'' }`}
+                onClick={() => handleClick('shipping')}> 
+                配送方式
+            </a>
                 
-                <a href="#return-policy" 
-                className={`timeline-item fs-5 mt-4 mb-4 ms-6 me-6 ${activeLink === "return-policy" ? "active" : ""}`}
-                onClick={() => handleClick("return-policy")} > 退換貨規則 </a>
-            </div>
+            <a className={`timeline-item fs-5 mt-4 mb-4 ms-6 me-6 ${activeLink === "return-policy" ? "active" : ""}`}
+                onClick={() => handleClick("return-policy")}> 
+                退換貨規則
+            </a>
           </div>
+        </div>
 
           <div className="col-md-8 ps-5 mb-19 mt-4 col-12">
             {/* <!-- 資訊說明區塊（右側） --> */}
-            <h4 id="shipping">配送方式</h4>
+            <h4 ref={shippingRef}>配送方式</h4>
             <p className="fs-6 text-neutral60 mb-6 mt-6">我們提供靈活的配送選項，確保禮物準時送達：</p>
             <ol className="ordered-list fs-6">
                 <li className="mb-2 text-neutral60">
@@ -74,7 +104,7 @@ const HowToBuyPage = () => {
                 <li className="text-neutral60">所有商品都將採用安全包裝，確保完整無損地送到您手中。</li>
             </ol>
 
-            <h4 id="#return-policy" className="mt-19">退換貨規則</h4>
+            <h4 ref={returnPolicyRef} className="mt-19">退換貨規則</h4>
             <p className="fs-6 text-neutral60 mb-6 mt-6">我們致力於提供滿意的購物體驗，若需退換貨請參考以下規則：</p>
             <ol className="ordered-list fs-6">
                 <li className="mb-2 text-neutral60">

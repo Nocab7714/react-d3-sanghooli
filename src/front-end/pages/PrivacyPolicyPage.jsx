@@ -1,5 +1,5 @@
 // 外部資源
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import Breadcrumb from '../components/Breadcrumb.jsx';
 import ReactHelmetAsync from '../../plugins/ReactHelmetAsync';
 
@@ -19,9 +19,37 @@ const breadcrumbItem = [
 const PrivacyPolicyPage = () => {
     const [activeLink, setActiveLink] = useState("privacy-policy"); // 預設選中 "隱私權政策"
   
+     //將錨點改為 Ref 方式設定
+     const privacyPolicyRef = useRef(null);
+     const servicePolicyRef = useRef(null);
+    
     const handleClick = (id) => {
       setActiveLink(id);
+
+      //錨點連動與樣式設定
+      if (id === "privacy-policy") {
+        privacyPolicyRef.current?.scrollIntoView({ 
+          behavior: "smooth", 
+          block: "nearest" });
+      } else if (id === "service-policy") {
+        servicePolicyRef.current?.scrollIntoView({ 
+          behavior: "smooth", 
+          block: "center" });
+      }
     };
+
+    // 監聽滾動事件：內部控制 activeLink，確保點擊 GoToTop 時，左側的「隱私權政策」錨點會亮起
+    useEffect(() => {
+        const handleScroll = () => {
+        if (window.scrollY < 50) {
+            setActiveLink("privacy-policy");
+        }
+        };
+
+        window.addEventListener("scroll", handleScroll);
+        return () => window.removeEventListener("scroll", handleScroll);
+    }, []);
+
 
     return(
         <>
@@ -40,18 +68,22 @@ const PrivacyPolicyPage = () => {
           {/* <!-- 錨點anchor Timeline 區塊（左側），在手機版隱藏 --> */}
           <div className="col-md-4 rounded-3 d-flex d-none d-md-block">
             <div className="timeline ps-10">
-                <a href="#privacy-policy" 
-                className={`timeline-item fs-5 mt-4 mb-4 ms-6 me-6 ${ activeLink === "privacy-policy" ? "active" :'' }`}
-                onClick={() => handleClick('privacy-policy')} > 隱私權政策 </a>
-                <a href="#service-policy" 
-                className={`timeline-item fs-5 mt-4 mb-4 ms-6 me-6 ${activeLink === "service-policy" ? "active" : ""}`}
-                onClick={() => handleClick("service-policy")} > 服務條款 </a>
+                
+                <a className={`timeline-item fs-5 mt-4 mb-4 ms-6 me-6 ${ activeLink === "privacy-policy" ? "active" :'' }`}
+                    onClick={() => handleClick('privacy-policy')}> 
+                    隱私權政策
+                </a>
+                
+                <a className={`timeline-item fs-5 mt-4 mb-4 ms-6 me-6 ${activeLink === "service-policy" ? "active" : ""}`}
+                    onClick={() => handleClick("service-policy")}> 
+                    服務條款
+                </a>
             </div>
           </div>
 
           <div className="col-md-8 ps-5 mb-19 mt-4 col-12">
             {/* <!-- 資訊說明區塊（右側） --> */}
-            <h4 id="privacy-policy">隱私權政策</h4>
+            <h4 ref={privacyPolicyRef}>隱私權政策</h4>
             <p className="fs-6 text-neutral60 mb-6 mt-6">我們深知您的隱私對您至關重要，因此致力於保護您的個人資料安全。以下為我們的隱私權政策概要：</p>
             <ol className="ordered-list fs-6">
                 <li className="mb-2 text-neutral60">
@@ -98,7 +130,7 @@ const PrivacyPolicyPage = () => {
             </ol>
 
 
-            <h4 id="service-policy" className="mt-20 mb-6">服務條款</h4>
+            <h4 ref={servicePolicyRef} className="mt-20 mb-6">服務條款</h4>
             <ol className="ordered-list fs-6">
                 <li className="mb-2 text-neutral60">
                     <strong className="text-black">接受條款</strong> 
