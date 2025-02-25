@@ -34,6 +34,8 @@ function CartPage() {
 
   const updateCart = async (cartId, productId, qty) => {
     try {
+      qty = Number(qty);
+      if (isNaN(qty) || qty < 1) qty = 1;
       const url = `${BASE_URL}/api/${API_PATH}/cart/${cartId}`;
       const data = {
         data: {
