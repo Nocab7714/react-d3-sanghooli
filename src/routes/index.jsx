@@ -8,11 +8,16 @@ import ProductsListPage from '../front-end/pages/ProductsListPage.jsx';
 import SingleProductPage from '../front-end/pages/SingleProductPage.jsx';
 import PrivacyPolicyPage from '../front-end/pages/PrivacyPolicyPage.jsx';
 import HowToBuyPage from '../front-end/pages/HowToBuyPage.jsx';
+import CartPage from '../front-end/pages/CartPage.jsx';
+import CheckoutPage from '../front-end/pages/CheckoutPage.jsx';
+import SuccessPage from '../front-end/pages/SuccessPage.jsx';
 
 // 後台
 import LayoutBacked from '../back-end/layout/LayoutBacked.jsx';
 
 import { createHashRouter } from 'react-router-dom';
+
+
 
 // 路由表
 const routes = [
@@ -44,6 +49,18 @@ const routes = [
       {
         path: 'how-to-buy',
         element: <HowToBuyPage />,
+      },
+      {
+        path : 'cart',
+        element: <CartPage />
+      },
+      {
+        path : 'checkout',
+        element: <CheckoutPage />
+      },
+      {
+        path : 'success/:orderId',
+        element: <SuccessPage />
       },
       {
         path : '*',

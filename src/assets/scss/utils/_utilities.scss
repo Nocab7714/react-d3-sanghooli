@@ -136,16 +136,15 @@ $utilities: map-merge(
     ),
     // scss-docs-end utils-position
     // scss-docs-start utils-borders
-    'border':
-      (
-        property: border,
-        values: (
-          null: var(--#{$prefix}border-width) var(--#{$prefix}border-style)
-            var(--#{$prefix}border-color),
-          0: 0,
-        ),
-      ),
-    'border-top': (
+    "border": (
+      property: border,
+      state: hover, // *custom
+      values: (
+        null: var(--#{$prefix}border-width) var(--#{$prefix}border-style) var(--#{$prefix}border-color),
+        0: 0,
+      )
+    ),
+    "border-top": (
       property: border-top,
       values: (
         null: var(--#{$prefix}border-width) var(--#{$prefix}border-style)
@@ -181,6 +180,7 @@ $utilities: map-merge(
     ),
     'border-color': (
       property: border-color,
+      state: hover, // *custom
       class: border,
       local-vars: (
         'border-opacity': 1,
@@ -211,24 +211,17 @@ $utilities: map-merge(
     // scss-docs-end utils-borders
     // Sizing utilities
     // scss-docs-start utils-sizing
-    'width':
-      (
-        property: width,
-        class: w,
-        values: (
-          25: 25%,
-          50: 50%,
-          75: 75%,
-          100: 100%,
-          auto: auto,
-        ),
-      ),
-    'width-custom': (
+    "width": (
+      responsive: true, // custom*
       property: width,
       class: w,
       values: (
-        15: 15%,
-      ),
+        25: 25%,
+        50: 50%,
+        75: 75%,
+        100: 100%,
+        auto: auto
+      )
     ),
     'max-width': (
       property: max-width,
@@ -760,32 +753,22 @@ $utilities: map-merge(
     ),
     // scss-docs-end utils-links
     // scss-docs-start utils-bg-color
-    'background-color':
-      (
-        property: background-color,
-        class: bg,
-        local-vars: (
-          'bg-opacity': 1,
-        ),
-        values:
-          map-merge(
-            $utilities-bg-colors,
-            (
-              'transparent': transparent,
-              'body-secondary':
-                rgba(
-                  var(--#{$prefix}secondary-bg-rgb),
-                  var(--#{$prefix}bg-opacity)
-                ),
-              'body-tertiary':
-                rgba(
-                  var(--#{$prefix}tertiary-bg-rgb),
-                  var(--#{$prefix}bg-opacity)
-                ),
-            )
-          ),
+    "background-color": (
+      property: background-color,
+      class: bg,
+      local-vars: (
+        "bg-opacity": 1
       ),
-    'bg-opacity': (
+      values: map-merge(
+        $utilities-bg-colors,
+        (
+          "transparent": transparent,
+          "body-secondary": rgba(var(--#{$prefix}secondary-bg-rgb), var(--#{$prefix}bg-opacity)),
+          "body-tertiary": rgba(var(--#{$prefix}tertiary-bg-rgb), var(--#{$prefix}bg-opacity)),
+        )
+      )
+    ),
+    "bg-opacity": (
       css-var: true,
       class: bg-opacity,
       values: (

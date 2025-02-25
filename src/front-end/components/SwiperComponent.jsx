@@ -9,6 +9,7 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import 'swiper/css/autoplay';
+import ProductCard from './ProductCard';
 
 function SwiperComponent(){
   
@@ -255,7 +256,7 @@ function SwiperComponent(){
               }
             }}
           >
-            {
+            {/* {
               carouselData.map((item) => (
                 <SwiperSlide key={item.id}>
                   <img src={item.imageUrl} alt={item.title} className='img-fluid' />
@@ -268,8 +269,17 @@ function SwiperComponent(){
                 </SwiperSlide>
               ))
           
-            }
+            } */}
+            {
+            carouselData.map((item) => (
+              <SwiperSlide key={item.id} >
+                <ProductCard key={item.id} product={item}/>
+              </SwiperSlide>
+            ))
+          }
           </Swiper>
+          
+          
         </div>
       </div>
     </>
