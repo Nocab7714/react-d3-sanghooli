@@ -30,8 +30,8 @@ const Pagination= ({ paginationData, onPageChange }) => {
   };
 
   return (
-    <nav aria-label="Page navigation">
-      <ul className="pagination">
+    <nav aria-label="Page navigation ">
+      <ul className="pagination flex-wrap">
         {/* 第一頁按鈕 */}
         <li className={`page-item ${!has_pre ? "disabled" : ""}`}>
           <button className="page-link" type="button" onClick={() => goToPage(1)}>
