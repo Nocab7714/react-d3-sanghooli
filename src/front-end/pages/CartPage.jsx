@@ -1,7 +1,7 @@
 // 外部資源
 import { useEffect, useState } from "react";
 import axios from "axios";
-import SwiperComponent from "../components/SwiperComponent";
+import SwiperProducts from "../components/SwiperProducts";
 
 // 內部資源
 import { Link } from "react-router-dom";
@@ -346,7 +346,7 @@ function CartPage() {
             <h5 className="fw-semibold">你可能會喜歡的商品</h5>
             <div className="border-top border-neutral40 flex-grow-1"></div>
           </div>
-          <SwiperComponent />
+          {/* <SwiperProducts /> */}
         </section>
       </main>
     </>
