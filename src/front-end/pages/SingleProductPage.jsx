@@ -76,7 +76,6 @@ const SingleProductPage = () => {
     (async () => {
       try {
         const res = await axios.get(`${baseUrl}/api/${apiPath}/products/all`);
-        setProducts(res.data.products);
         setProducts(getRandomProducts(res.data.products));
       } catch (error) {
         console.log(error);

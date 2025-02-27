@@ -1,7 +1,9 @@
 import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import { Icon } from '@iconify-icon/react';
 
 import ProductCard from './ProductCard';
+import SwiperProducts from './SwiperProducts';
 
 const ProductCategoryList = ({
   products,
@@ -10,7 +12,19 @@ const ProductCategoryList = ({
   iconify = false,
   path = false,
   showIsHot = false,
+  autoShowSwiper = false,
 }) => {
+  // autoShowSwiper 為 true，則會啟用斷點監測，在斷點小於 768px 顯示 SwiperProducts 輪播元件，大於 768px 顯示格線系統渲染的 ProductCard 元件
+  const [isShowSwiper, setIsShowSwiper] = useState(false);
+  useEffect(() => {
+    const handleResize = () => {
+      setIsShowSwiper(window.innerWidth <= 768);
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   return (
     <>
       {/* GiftTitle */}
@@ -62,15 +76,19 @@ const ProductCategoryList = ({
         )}
       </div>
       {/* GiftList */}
-      <ul className="list-unstyled row gy-10">
-        {products?.map((product, index) => {
-          return (
-            <li className="col-6 col-md-4" key={`gift-${index}`}>
-              <ProductCard product={product} showIsHot={showIsHot} />
-            </li>
-          );
-        })}
-      </ul>
+      {isShowSwiper === true && autoShowSwiper === true ? (
+        <SwiperProducts carouselData={products} />
+      ) : (
+        <ul className="list-unstyled row gy-10">
+          {products?.map((product, index) => {
+            return (
+              <li className="col-6 col-md-4" key={`gift-${index}`}>
+                <ProductCard product={product} showIsHot={showIsHot} />
+              </li>
+            );
+          })}
+        </ul>
+      )}
     </>
   );
 };

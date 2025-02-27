@@ -287,6 +287,7 @@ const HomePage = () => {
                   listTitle="最高人氣的禮物"
                   iconMaterial="local_fire_department"
                   path="/products-list"
+                  autoShowSwiper={true}
                 />
               </div>
               <div className="mb-10 mb-lg-19">
@@ -295,6 +296,7 @@ const HomePage = () => {
                   listTitle="情人節的浪漫驚喜"
                   iconify="streamline:smiley-in-love"
                   path="/products-list"
+                  autoShowSwiper={true}
                 />
               </div>
               <div className="mb-10 mb-lg-19">
@@ -303,6 +305,7 @@ const HomePage = () => {
                   listTitle="聖誕禮物交換趣"
                   iconify="mingcute:christmas-hat-line"
                   path="/products-list"
+                  autoShowSwiper={true}
                 />
               </div>
             </div>
