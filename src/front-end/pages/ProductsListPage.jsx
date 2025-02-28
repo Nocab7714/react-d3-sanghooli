@@ -348,7 +348,7 @@ const handleSearchValueChange = (val) => {
 
               <div className="col-xl-8 mt-10 mt-xl-0">
                 {/* 最高人氣的禮物 */}
-                <div>
+                <div className="mb-10 mb-lg-19">
                   <ProductCategoryList
                     products={mostPopularProducts}
                     listTitle="最高人氣的禮物"
