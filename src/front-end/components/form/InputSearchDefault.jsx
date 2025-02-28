@@ -65,9 +65,7 @@ const InputSearchDefault = ({ size = 'standard', value, onChange }) => {
 
       <input
         type="search"
-        className={`form-control border-0 shadow-none pe-0 ${
-          isLg ? 'ps-6' : 'ps-4'
-        }`}
+        className={`form-control border-0 shadow-none pe-0 ps-3`}
         style={isLg ? { height: '58.19px' } : {}}
         placeholder="請輸入關鍵字"
         aria-label="Search"
