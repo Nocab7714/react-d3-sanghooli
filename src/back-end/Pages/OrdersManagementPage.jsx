@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Modal } from 'bootstrap';
-import C3Chart from '../../components/C3Chart';
+import C3Chart from '../components/C3Chart';
 
 // 內部資源
 
