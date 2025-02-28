@@ -196,7 +196,7 @@ const ProductsListPage = () => {
     scrollToSearchTitle();
   };
 
-  // 3️⃣ `select` 變更時，行動版不滑動，桌機才會滑動
+  // `select` 變更時，行動版不滑動，桌機才會滑動
   const handleFestivalChange = (e) => {
     setFestival(e.target.value);
     setCurrentPage(1);
@@ -221,7 +221,7 @@ const ProductsListPage = () => {
     if (!isMobile) scrollToSearchTitle();
   };
 
-  // 4️⃣ `input` 關鍵字搜尋時，桌機 & 行動版都會滑動
+  // `input` 關鍵字搜尋時，桌機 & 行動版都會滑動
   const handleSearchValueChange = (val) => {
     setSearchValue(val);
     if (val === '') {
