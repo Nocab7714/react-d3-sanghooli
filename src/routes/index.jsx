@@ -14,8 +14,13 @@ import SuccessPage from '../front-end/pages/SuccessPage.jsx';
 
 // 後台
 import LayoutBacked from '../back-end/layout/LayoutBacked.jsx';
+import AdminLoginPage from '../back-end/Pages/AdminLoginPage.jsx';
+import OrdersManagementPage from '../back-end/Pages/OrdersManagementPage.jsx'
+import ProductsManagementPage from '../back-end/Pages/ProductsManagementPage.jsx'
+
 
 import { createHashRouter } from 'react-router-dom';
+
 
 
 
@@ -73,6 +78,18 @@ const routes = [
     path: '/admin',
     element: <LayoutBacked />,
     children:[
+      { 
+        path: 'login', 
+        element: <AdminLoginPage /> // 新增後台登入頁面
+      },
+      { 
+        path: 'order', 
+        element: <OrdersManagementPage /> // 新增訂單管理頁面
+      },
+      { 
+        path: 'product', 
+        element: <ProductsManagementPage /> // 新增產品登入頁面
+      },      
       {
         path : '*',
         element: <NotFoundPage />
