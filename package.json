@@ -11,6 +11,7 @@
     "deploy": "gh-pages -d dist"
   },
   "dependencies": {
+    "@reduxjs/toolkit": "^2.6.0",
     "axios": "^1.7.9",
     "bootstrap": "^5.3.3",
     "c3": "^0.7.20",
@@ -22,6 +23,7 @@
     "react-helmet-async": "^2.0.5",
     "react-hook-form": "^7.54.2",
     "react-loading": "^2.0.3",
+    "react-redux": "^9.2.0",
     "react-router-dom": "^7.1.5",
     "swiper": "^11.2.4"
   },

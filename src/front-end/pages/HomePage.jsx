@@ -1,8 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-
-const { VITE_BASE_URL: baseUrl, VITE_API_PATH: apiPath } = import.meta.env;
+import { useSelector } from 'react-redux';
 
 const selectData = ['資料01', '資料02', '資料03', '資料04', '資料05'];
 import ReactHelmetAsync from '../../plugins/ReactHelmetAsync';
@@ -12,7 +10,12 @@ import NewProductsList from '../components/NewProductsList';
 
 import adImg from '@/assets/img/other/ad01.png';
 
+
 const HomePage = () => {
+
+  // 透過 useSelector 取得 Redux state 存放的所有產品資料
+  const products = useSelector((state) => state.products.products );
+
   // 控制 select 切換 M / Lg Size
   const [isLarge, setIsLarge] = useState(true); // 預設為大尺寸
   useEffect(() => {
@@ -45,19 +48,6 @@ const HomePage = () => {
     e.preventDefault();
     setSearchValue('');
   };
-
-  // 取得所有商品
-  const [products, setProducts] = useState([]);
-  useEffect(() => {
-    (async () => {
-      try {
-        const res = await axios.get(`${baseUrl}/api/${apiPath}/products/all`);
-        setProducts(res.data.products);
-      } catch (error) {
-        console.log(error);
-      }
-    })();
-  }, []);
 
   // 各分類商品資料，每筆取前 6 個
   const [mostPopularProducts, setMostPopularProducts] = useState([]);

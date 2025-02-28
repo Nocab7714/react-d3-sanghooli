@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { useSelector } from 'react-redux';
+import axios from 'axios';
 
 import Pagination from '../components/Pagination.jsx';
 import Breadcrumb from '../components/Breadcrumb.jsx';
@@ -8,6 +8,7 @@ import ProductCard from '../components/ProductCard';
 import ProductCategoryList from '../components/ProductCategoryList';
 import InputSearchDefault from '../components/form/InputSearchDefault';
 
+const { VITE_BASE_URL: baseUrl, VITE_API_PATH: apiPath } = import.meta.env;
 
 const breadcrumbItem = [
   { page: '首頁', link: '/' },
@@ -95,8 +96,18 @@ const ProductsListPage = () => {
 
   const searchTitleRef = useRef(null);
 
-  // 透過 useSelector 取得 Redux state 存放的所有產品資料
-  const products = useSelector((state) => state.products.products);
+  // 取得所有商品
+  const [products, setProducts] = useState([]);
+  useEffect(() => {
+    (async () => {
+      try {
+        const res = await axios.get(`${baseUrl}/api/${apiPath}/products/all`);
+        setProducts(res.data.products);
+      } catch (error) {
+        console.error(error);
+      }
+    })();
+  }, []);
 
   // 取得最高人氣的禮物區塊 (6 筆)
   const [mostPopularProducts, setMostPopularProducts] = useState([]);
@@ -196,42 +207,42 @@ const ProductsListPage = () => {
     scrollToSearchTitle();
   };
 
-  // 3️⃣ `select` 變更時，行動版不滑動，桌機才會滑動
-  const handleFestivalChange = (e) => {
-    setFestival(e.target.value);
-    setCurrentPage(1);
-    if (!isMobile) scrollToSearchTitle(); // 只有桌機才會滑動
-  };
+// 3️⃣ `select` 變更時，行動版不滑動，桌機才會滑動
+const handleFestivalChange = (e) => {
+  setFestival(e.target.value);
+  setCurrentPage(1);
+  if (!isMobile) scrollToSearchTitle(); // 只有桌機才會滑動
+};
 
-  const handleRelationChange = (e) => {
-    setRelation(e.target.value);
-    setCurrentPage(1);
-    if (!isMobile) scrollToSearchTitle();
-  };
+const handleRelationChange = (e) => {
+  setRelation(e.target.value);
+  setCurrentPage(1);
+  if (!isMobile) scrollToSearchTitle();
+};
 
-  const handleCategoryChange = (e) => {
-    setCategory(e.target.value);
-    setCurrentPage(1);
-    if (!isMobile) scrollToSearchTitle();
-  };
+const handleCategoryChange = (e) => {
+  setCategory(e.target.value);
+  setCurrentPage(1);
+  if (!isMobile) scrollToSearchTitle();
+};
 
-  const handlePriceRangeChange = (e) => {
-    setPriceRange(e.target.value);
-    setCurrentPage(1);
-    if (!isMobile) scrollToSearchTitle();
-  };
+const handlePriceRangeChange = (e) => {
+  setPriceRange(e.target.value);
+  setCurrentPage(1);
+  if (!isMobile) scrollToSearchTitle();
+};
 
-  // 4️⃣ `input` 關鍵字搜尋時，桌機 & 行動版都會滑動
-  const handleSearchValueChange = (val) => {
-    setSearchValue(val);
-    if (val === '') {
-      setTriggerSearch(false);
-    } else {
-      setTriggerSearch(true);
-    }
-    setCurrentPage(1);
-    scrollToSearchTitle(); // 桌機 & 行動版都會滑動
-  };
+// 4️⃣ `input` 關鍵字搜尋時，桌機 & 行動版都會滑動
+const handleSearchValueChange = (val) => {
+  setSearchValue(val);
+  if (val === '') {
+    setTriggerSearch(false);
+  } else {
+    setTriggerSearch(true);
+  }
+  setCurrentPage(1);
+  scrollToSearchTitle(); // 桌機 & 行動版都會滑動
+};
 
   return (
     <>
