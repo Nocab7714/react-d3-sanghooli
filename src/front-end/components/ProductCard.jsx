@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import crownIcon from '@/assets/img/illustration/crown.svg';
+import { formatNumber } from '../../utils/formatNumber';
 
 // props 備註說明
 // product 為傳入單項商品資料
@@ -7,12 +8,6 @@ import crownIcon from '@/assets/img/illustration/crown.svg';
 // 若 showIsHot 為 true，會再經由 product.is_hot 屬性來判斷是否顯示該項商品的熱銷圖標
 
 const ProductCard = ({ product, showIsHot = false }) => {
-  // 千分比符號
-  const formatNumber = (number) => {
-    let parts = number.toString().split('.'); // 分割整數和小數部分
-    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ','); // 格式化整數部分
-    return parts.length > 1 ? parts.join('.') : parts[0]; // 拼接小數部分
-  };
   // 缺少加入願望清單的方法
   const addToFavorite = (id) => {
     console.log(`傳入加入願望清單的商品 id：「${id}」`);

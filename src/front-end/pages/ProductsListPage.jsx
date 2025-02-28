@@ -1,70 +1,102 @@
 import { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
 import axios from 'axios';
-
-const { VITE_BASE_URL: baseUrl, VITE_API_PATH: apiPath } = import.meta.env;
 
 import Pagination from '../components/Pagination.jsx';
 import Breadcrumb from '../components/Breadcrumb.jsx';
 import ReactHelmetAsync from '../../plugins/ReactHelmetAsync';
-import ProductCategoryList from '../components/ProductCategoryList';
 import ProductCard from '../components/ProductCard';
+import ProductCategoryList from '../components/ProductCategoryList';
+import InputSearchDefault from '../components/form/InputSearchDefault';
 
-// import crownIcon from '@/assets/img/illustration/crown.svg';
+const { VITE_BASE_URL: baseUrl, VITE_API_PATH: apiPath } = import.meta.env;
 
 const breadcrumbItem = [
-  {
-    page: '首頁',
-    link: '/',
-  },
-  {
-    page: '產品列表',
-    link: '/products-list',
-  },
+  { page: '首頁', link: '/' },
+  { page: '產品列表', link: '/products-list' },
 ];
 
-const selectData = ['資料01', '資料02', '資料03', '資料04', '資料05'];
+// 篩選條件選單的選項
+const festivalOptions = [
+  '畢業季',
+  '生日',
+  '婚禮',
+  '喬遷',
+  '情人節',
+  '母親節',
+  '父親節',
+  '兒童滿月',
+  '春節',
+  '兒童節',
+  '中秋節',
+  '聖誕節',
+];
+const relationOptions = [
+  '父母',
+  '父親',
+  '母親',
+  '祖父母',
+  '子女',
+  '男性朋友',
+  '女性朋友',
+  '男性情人',
+  '女性情人',
+  '丈夫',
+  '妻子',
+  '師長',
+  '同事',
+  '商業夥伴',
+];
+const categoryOptions = [
+  '食品與飲品',
+  '電子與實用',
+  '花卉與植物',
+  '美妝與保養',
+  '服飾與配件',
+  '文具與書籍',
+  '居家與生活',
+  '嬰幼兒與兒童',
+];
+const priceRangeOptions = [
+  '500 元以下',
+  '500 ~ 1,000 元',
+  '1,000 ~ 3,000 元',
+  '3,000 元以上',
+];
 
 const ProductsListPage = () => {
-  // input search
-  // 之後要完全元件化
+  // 商品搜尋關鍵字
   const [searchValue, setSearchValue] = useState('');
 
-  const handleInputChange = (e) => {
-    setSearchValue(e.target.value);
-  };
+  // 控制 select 與 inputSearch 的斷點
+  const [isLarge, setIsLarge] = useState(window.innerWidth >= 992);
 
-  const handleSearch = (e) => {
-    if (e.key === 'Enter') {
-      alert('搜尋:' + searchValue);
-    }
-  };
-
-  const handleClearInput = (e) => {
-    e.preventDefault();
-    setSearchValue('');
-  };
-
-  // 控制 select 切換 M / Lg Size
-  const [isLarge, setIsLarge] = useState(true); // 預設為大尺寸
   useEffect(() => {
-    // 設定 Bootstrap 5.3 的 md 斷點 (992px)
-    const handleResize = () => {
-      setIsLarge(window.innerWidth >= 992); // 小於 768px 移除 lg
-    };
-    // 初始化時執行一次
-    handleResize();
-    // 監聽視窗大小變化
+    const handleResize = () => setIsLarge(window.innerWidth >= 992);
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  // 判斷是否為行動裝置
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
+  // 小工具：捲動到搜尋結果標題
+  const scrollToSearchTitle = () => {
+    if (searchTitleRef.current) {
+      searchTitleRef.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      });
+    }
+  };
 
-  
   const searchTitleRef = useRef(null);
 
-  //  取得所有商品
+  // 取得所有商品
   const [products, setProducts] = useState([]);
   useEffect(() => {
     (async () => {
@@ -72,202 +104,193 @@ const ProductsListPage = () => {
         const res = await axios.get(`${baseUrl}/api/${apiPath}/products/all`);
         setProducts(res.data.products);
       } catch (error) {
-        console.log(error);
+        console.error(error);
       }
     })();
   }, []);
 
-    // 取得最高人氣的禮物區塊 6 筆商品資料
-    const [mostPopularProducts, setMostPopularProducts] = useState([]);
-    useEffect(() => {
-      setMostPopularProducts(
-        products
-          ?.filter((product) => {
-            return product.is_hot == true;
-          })
-          .slice(0, 6)
-      );
-    }, [products]);
-  
-
-  // 控制排序方式
-  const [sortOption, setSortOption] = useState(0);
-  const [sortedProducts, setSortedProducts] = useState([]); // 存放排序後的商品
-
-  // 當 `products` 或 `sortOption` 改變時，重新排序
+  // 取得最高人氣的禮物區塊 (6 筆)
+  const [mostPopularProducts, setMostPopularProducts] = useState([]);
   useEffect(() => {
-    const sorted = [...products].sort((a, b) => {
-      if (sortOption === 2) return b.price - a.price; // 最高到最低
-      if (sortOption === 3) return a.price - b.price; // 最低到最高
-      return 0;
-    });
-    setSortedProducts(sorted);
-  }, [products, sortOption]);
+    setMostPopularProducts(products?.filter((p) => p.is_hot).slice(0, 6));
+  }, [products]);
 
-  // 控制分頁
+  // 篩選條件
+  const [festival, setFestival] = useState('');
+  const [relation, setRelation] = useState('');
+  const [category, setCategory] = useState('');
+  const [priceRange, setPriceRange] = useState('');
+  const [sortOption, setSortOption] = useState(0);
+  const [filteredProducts, setFilteredProducts] = useState([]);
+  const [triggerSearch, setTriggerSearch] = useState(false); // 控制關鍵字搜尋
+
+  // 分頁
   const itemsPerPage = 12;
   const [currentPage, setCurrentPage] = useState(1);
-  const total_pages = Math.ceil(sortedProducts.length / itemsPerPage);
-  const paginatedProducts = sortedProducts.slice(
+  const total_pages = Math.ceil(filteredProducts.length / itemsPerPage);
+  const paginatedProducts = filteredProducts.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
 
-  // 排序變更時，重置到第一頁
-  const handleSortChange = (e) => {
-    setSortOption(Number(e.target.value));
-    setCurrentPage(1);
-  };
+  // 商品篩選
+  useEffect(() => {
+    let result = [...products];
 
-  // 換頁時滾動到標題
-  const handlePageChange = (newPage) => {
-    setCurrentPage(newPage);
-    if (searchTitleRef.current) {
-      searchTitleRef.current.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
+    // 關鍵字搜尋
+    if (searchValue && triggerSearch) {
+      result = result.filter((product) => product.title.includes(searchValue));
+    }
+
+    // 節慶 / 場合
+    if (festival) {
+      result = result.filter((product) => product.tages?.includes(festival));
+    }
+    // 送禮關係
+    if (relation) {
+      result = result.filter((product) => product.tages?.includes(relation));
+    }
+    // 禮物類別
+    if (category) {
+      result = result.filter((product) => product.category === category);
+    }
+    // 價格範圍
+    if (priceRange) {
+      result = result.filter((product) => {
+        const price = product.price;
+        switch (priceRange) {
+          case '500 元以下':
+            return price < 500;
+          case '500 ~ 1,000 元':
+            return price >= 500 && price <= 1000;
+          case '1,000 ~ 3,000 元':
+            return price > 1000 && price <= 3000;
+          case '3,000 元以上':
+            return price > 3000;
+          default:
+            return true;
+        }
       });
     }
+
+    // 價格排序
+    if (sortOption === 1) {
+      // 最高到最低
+      result.sort((a, b) => b.price - a.price);
+    } else if (sortOption === 2) {
+      // 最低到最高
+      result.sort((a, b) => a.price - b.price);
+    }
+
+    setFilteredProducts(result);
+  }, [
+    searchValue,
+    triggerSearch,
+    festival,
+    relation,
+    category,
+    priceRange,
+    sortOption,
+    products,
+  ]);
+
+  // 當關鍵字清空時，自動執行一次篩選
+  useEffect(() => {
+    if (searchValue === '') {
+      setTriggerSearch((prev) => !prev);
+    }
+  }, [searchValue]);
+
+  // 分頁行為：切換頁碼時，捲動到搜尋結果標題
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage);
+    scrollToSearchTitle();
   };
+
+// 3️⃣ `select` 變更時，行動版不滑動，桌機才會滑動
+const handleFestivalChange = (e) => {
+  setFestival(e.target.value);
+  setCurrentPage(1);
+  if (!isMobile) scrollToSearchTitle(); // 只有桌機才會滑動
+};
+
+const handleRelationChange = (e) => {
+  setRelation(e.target.value);
+  setCurrentPage(1);
+  if (!isMobile) scrollToSearchTitle();
+};
+
+const handleCategoryChange = (e) => {
+  setCategory(e.target.value);
+  setCurrentPage(1);
+  if (!isMobile) scrollToSearchTitle();
+};
+
+const handlePriceRangeChange = (e) => {
+  setPriceRange(e.target.value);
+  setCurrentPage(1);
+  if (!isMobile) scrollToSearchTitle();
+};
+
+// 4️⃣ `input` 關鍵字搜尋時，桌機 & 行動版都會滑動
+const handleSearchValueChange = (val) => {
+  setSearchValue(val);
+  if (val === '') {
+    setTriggerSearch(false);
+  } else {
+    setTriggerSearch(true);
+  }
+  setCurrentPage(1);
+  scrollToSearchTitle(); // 桌機 & 行動版都會滑動
+};
 
   return (
     <>
       <ReactHelmetAsync title="禮物清單" />
+
       <div className="py-10 py-md-19">
-        {/* banner */}
         <div className="container mb-6 mb-md-10">
-          <section className="products-list-banner rounded-4 d-flex align-items-md-center justify-content-center justify-content-md-start ">
+          <section className="products-list-banner rounded-4 d-flex align-items-md-center justify-content-center justify-content-md-start">
             <h2 className="text-white fs-4 fs-md-1 ms-md-19 mt-10 mt-md-0">
               禮物清單
             </h2>
           </section>
         </div>
 
-        {/* breadcrumb */}
         <section className="container mb-6 mb-md-10">
           <Breadcrumb breadcrumbItem={breadcrumbItem} />
         </section>
 
-        {/* productsList-list */}
-        <div className="container ">
+        <div className="container">
           <section className="productsList-list">
-            <div className="row ">
+            <div className="row">
               <div className="col-xl-4 pe-lg-10 px-0">
-                {/* search-form */}
-                <div className="productsList-search-form bg-neutral20 px-3 px-sm-6 px-xl-8 py-6 py-xl-8 sticky-top ">
-                  <form>
+                <div className="productsList-search-form bg-neutral20 px-3 px-sm-6 px-xl-8 py-6 py-xl-8 sticky-top">
+                  <form onSubmit={(e) => e.preventDefault()}>
                     <h3 className="fs-4 mb-6">篩選</h3>
                     <div className="row gy-4 gy-xl-6 gx-4 gx-xl-0">
                       <div className="col-12">
-                        <div className="d-block d-lg-none">
-                          <div className=" input-group search-input-container">
-                            {!searchValue && (
-                              <span className="input-group-text  bg-white border-0 pe-0">
-                                <span className="material-symbols-outlined input-search-icon text-neutral40 fs-6 ">
-                                  search
-                                </span>
-                              </span>
-                            )}
-
-                            <input
-                              type="search"
-                              className={`form-control border-0 shadow-none pe-0 ${
-                                searchValue ? 'ps-4' : 'ps-3'
-                              }`}
-                              placeholder="關鍵字"
-                              aria-label="Search"
-                              value={searchValue}
-                              onChange={handleInputChange}
-                              onKeyDown={(e) => {
-                                handleSearch(e);
-                              }}
-                            />
-
-                            {searchValue ? (
-                              <a
-                                className="input-group-text input-clear-icon border-0 bg-white"
-                                href="#"
-                                onClick={(e) => {
-                                  handleClearInput(e);
-                                }}
-                              >
-                                <span className="material-symbols-outlined fs-6 text-neutral80 ">
-                                  cancel
-                                </span>
-                              </a>
-                            ) : (
-                              <button
-                                className="btn btn-primary "
-                                type="button"
-                              >
-                                搜尋
-                              </button>
-                            )}
-                          </div>
-                        </div>
-                        <div className="d-none d-lg-block">
-                          <div className=" input-group input-group-lg search-input-container ">
-                            {!searchValue && (
-                              <span className="input-group-text bg-white border-0 pe-0 ps-6">
-                                <span className="material-symbols-outlined input-search-icon text-neutral40 fs-6 ">
-                                  search
-                                </span>
-                              </span>
-                            )}
-
-                            <input
-                              type="search"
-                              className={`form-control border-0 shadow-none pe-0 ${
-                                searchValue ? 'ps-6' : 'ps-3'
-                              }`}
-                              style={{ height: '58.19px' }}
-                              placeholder="關鍵字"
-                              aria-label="Search"
-                              value={searchValue}
-                              onChange={handleInputChange}
-                              onKeyDown={(e) => {
-                                handleSearch(e);
-                              }}
-                            />
-                            {searchValue ? (
-                              <a
-                                className="input-group-text input-clear-icon border-0 bg-white"
-                                href="#"
-                                onClick={(e) => {
-                                  handleClearInput(e);
-                                }}
-                              >
-                                <span className="material-symbols-outlined fs-6 text-neutral80 ">
-                                  cancel
-                                </span>
-                              </a>
-                            ) : (
-                              <button
-                                className="btn btn-primary px-8 fs-5"
-                                type="button"
-                              >
-                                搜尋
-                              </button>
-                            )}
-                          </div>
-                        </div>
+                        <InputSearchDefault
+                          size={isLarge ? 'lg' : 'standard'}
+                          value={searchValue}
+                          onChange={handleSearchValueChange}
+                        />
                       </div>
+
                       <div className="col-6 col-xl-12">
                         <select
                           className={`form-select ${
                             isLarge ? 'form-select-lg' : ''
                           }`}
+                          value={festival}
+                          onChange={handleFestivalChange}
                         >
-                          <option value="" selected disabled>
-                            類別/場合
-                          </option>
-                          {selectData.map((item, index) => {
-                            return (
-                              <option key={index} value={index}>
-                                {item}
-                              </option>
-                            );
-                          })}
+                          <option value="">節慶 / 場合</option>
+                          {festivalOptions.map((option) => (
+                            <option key={option} value={option}>
+                              {option}
+                            </option>
+                          ))}
                         </select>
                       </div>
                       <div className="col-6 col-xl-12">
@@ -275,17 +298,15 @@ const ProductsListPage = () => {
                           className={`form-select ${
                             isLarge ? 'form-select-lg' : ''
                           }`}
+                          value={relation}
+                          onChange={handleRelationChange}
                         >
-                          <option value="" selected disabled>
-                            送禮關係
-                          </option>
-                          {selectData.map((item, index) => {
-                            return (
-                              <option key={index} value={index}>
-                                {item}
-                              </option>
-                            );
-                          })}
+                          <option value="">送禮關係</option>
+                          {relationOptions.map((option) => (
+                            <option key={option} value={option}>
+                              {option}
+                            </option>
+                          ))}
                         </select>
                       </div>
                       <div className="col-6 col-xl-12">
@@ -293,17 +314,15 @@ const ProductsListPage = () => {
                           className={`form-select ${
                             isLarge ? 'form-select-lg' : ''
                           }`}
+                          value={category}
+                          onChange={handleCategoryChange}
                         >
-                          <option value="" selected disabled>
-                            禮物類別
-                          </option>
-                          {selectData.map((item, index) => {
-                            return (
-                              <option key={index} value={index}>
-                                {item}
-                              </option>
-                            );
-                          })}
+                          <option value="">禮物類別</option>
+                          {categoryOptions.map((option) => (
+                            <option key={option} value={option}>
+                              {option}
+                            </option>
+                          ))}
                         </select>
                       </div>
                       <div className="col-6 col-xl-12">
@@ -311,25 +330,24 @@ const ProductsListPage = () => {
                           className={`form-select ${
                             isLarge ? 'form-select-lg' : ''
                           }`}
+                          value={priceRange}
+                          onChange={handlePriceRangeChange}
                         >
-                          <option value="" selected disabled>
-                            價格範圍
-                          </option>
-                          {selectData.map((item, index) => {
-                            return (
-                              <option key={index} value={index}>
-                                {item}
-                              </option>
-                            );
-                          })}
+                          <option value="">價格範圍</option>
+                          {priceRangeOptions.map((option) => (
+                            <option key={option} value={option}>
+                              {option}
+                            </option>
+                          ))}
                         </select>
                       </div>
                     </div>
                   </form>
                 </div>
               </div>
+
               <div className="col-xl-8 mt-10 mt-xl-0">
-                {/* products-is-hot */}
+                {/* 最高人氣的禮物 */}
                 <div className="mb-10 mb-lg-19">
                   <ProductCategoryList
                     products={mostPopularProducts}
@@ -339,10 +357,8 @@ const ProductsListPage = () => {
                   />
                 </div>
 
-                {/* products-search-result-list */}
                 <div className="mb-10 mb-lg-19">
-                  {/* Product-title */}
-                  <div className="d-flex align-items-center justify-content-between mb-8 mb-md-10 ">
+                  <div className="d-flex align-items-center justify-content-between mb-8 mb-md-10">
                     <div className="d-flex align-items-center text-nowrap">
                       <span className="material-symbols-outlined fs-4 fs-md-2 text-secondary me-1 me-md-2">
                         search
@@ -354,37 +370,45 @@ const ProductsListPage = () => {
                       >
                         目前搜尋結果
                         <span className="fs-7 text-neutral60 fw-normal mt-1 d-md-none d-block">
-                          100 個結果
+                          {filteredProducts.length} 個結果
                         </span>
                       </h2>
                     </div>
                     <span className="fs-7 text-neutral60 ms-2 d-md-block d-none">
-                      100 個結果
+                      {filteredProducts.length} 個結果
                     </span>
 
                     <div className="flex-grow-1 mx-3 mx-md-4 border-top border-neutral40" />
                     <div>
-                      <select className="form-select" value={sortOption} onChange={handleSortChange}>
-                        <option value={0} selected disabled>
-                          請選擇價格排序
-                        </option>
-                        <option value={2}>價格最高到最低</option>
-                        <option value={3}>價格最低到最高</option>
+                      <select
+                        className="form-select"
+                        value={sortOption}
+                        onChange={(e) => setSortOption(Number(e.target.value))}
+                      >
+                        <option value={0}>請選擇價格排序</option>
+                        <option value={1}>價格最高到最低</option>
+                        <option value={2}>價格最低到最高</option>
                       </select>
                     </div>
                   </div>
-                  {/* Product-list */}
+
+                  {/* ★ 若無商品，顯示提示文字 */}
                   <ul className="list-unstyled row gy-10">
-                    {paginatedProducts?.map((product) => {
-                      return (
+                    {paginatedProducts.length > 0 ? (
+                      paginatedProducts.map((product) => (
                         <li className="col-6 col-md-4" key={product.id}>
                           <ProductCard product={product} showIsHot={true} />
                         </li>
-                      );
-                    })}
+                      ))
+                    ) : (
+                      <div className="col-12 text-center py-6">
+                        <p className="text-muted fs-5">沒有找到對應的商品</p>
+                      </div>
+                    )}
                   </ul>
                 </div>
-                {/* pagination */}
+
+                {/* 分頁 */}
                 {total_pages > 1 && (
                   <Pagination
                     paginationData={{
