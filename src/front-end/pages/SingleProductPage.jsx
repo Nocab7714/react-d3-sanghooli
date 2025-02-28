@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const { VITE_BASE_URL: baseUrl, VITE_API_PATH: apiPath } = import.meta.env;
@@ -29,6 +29,8 @@ const SingleProductPage = () => {
     },
   ]);
 
+  const navigate = useNavigate();
+
   // 取得單一商品資料
   useEffect(() => {
     const getProduct = async () => {
@@ -40,11 +42,15 @@ const SingleProductPage = () => {
         setProductTitle(res.data.product.title);
         setProductStockQty(res.data.product.qty);
         setBreadcrumbItem((prev) => [
-          ...prev.slice(0, 2), 
-          { page: res.data.product.title, link: `/single-product/${res.data.product.id}` }, 
+          ...prev.slice(0, 2),
+          {
+            page: res.data.product.title,
+            link: `/single-product/${res.data.product.id}`,
+          },
         ]);
       } catch (error) {
         alert('取得產品失敗');
+        navigate('/404');
       } finally {
       }
     };
@@ -96,7 +102,7 @@ const SingleProductPage = () => {
     // 取前 10 筆
     return shuffled.slice(0, 10);
   };
-  
+
   return (
     <>
       <ReactHelmetAsync title={productTitle} />
@@ -264,7 +270,7 @@ const SingleProductPage = () => {
           </div>
         </section>
         <div className="pb-10 pb-md-19">
-          <SwiperProducts carouselData={products} autoplay={true}/>
+          <SwiperProducts carouselData={products} autoplay={true} />
         </div>
 
         {/* consumer-reviews */}

@@ -69,7 +69,7 @@ const routes = [
     ]
   },
   { 
-    // 前台路由設定
+    // 後台路由設定
     path: '/admin',
     element: <LayoutBacked />,
     children:[
