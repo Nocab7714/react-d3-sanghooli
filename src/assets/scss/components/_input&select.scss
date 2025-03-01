@@ -22,7 +22,7 @@ input[type='search']::-webkit-search-cancel-button {
   -webkit-appearance: none;
 }
 
-// SearchInputComponent 搜尋輸入框元件樣式
+// InputSearch 搜尋輸入框元件樣式
 .search-input-container {
   border: 1px solid $neutral40;
   border-radius: 12px;
@@ -101,8 +101,6 @@ input[type='number']::-webkit-inner-spin-button {
 
   input {
     font-size: 1rem;
-    padding-left: 48px;
-    padding-right: 40px;
   }
 }
 
@@ -112,8 +110,6 @@ input[type='number']::-webkit-inner-spin-button {
 
   input {
     font-size: 1.25rem;
-    padding-left: 60px;
-    padding-right: 54px;
   }
 
   .btn-add {

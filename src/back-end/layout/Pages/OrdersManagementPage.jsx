@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Modal } from 'bootstrap';
-import C3ChartComponent from '../../components/C3ChartComponent';
+import C3Chart from '../../components/C3Chart';
 
 // 內部資源
 
@@ -69,7 +69,7 @@ const OrdersManagementPage = () =>{
               <div className= "pt-10 pb-12 ps-5 pe-8">
                   <h4 className="">最多銷售商品類別</h4>
                   <div className="mt-8" id="chart">
-                  <C3ChartComponent />
+                  <C3Chart />
                   </div>
               </div>
               </div>

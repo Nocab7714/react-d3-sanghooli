@@ -15,14 +15,18 @@ const InputExample = () => {
         </button>
         <input
           type="number"
-          className="form-control position-absolute "
+          className="form-control position-absolute text-center"
           defaultValue="1"
+          aria-label="product quantity"
+          readOnly
         />
         <button
           className="btn btn-add position-absolute translate-middle rounded-1 p-1  "
           type="button"
         >
-          <span className="material-symbols-outlined align-middle fs-5">add</span>
+          <span className="material-symbols-outlined align-middle fs-5">
+            add
+          </span>
         </button>
       </div>
       {/* input-group-calculate */}
@@ -37,14 +41,18 @@ const InputExample = () => {
         </button>
         <input
           type="number"
-          className="form-control position-absolute "
+          className="form-control position-absolute text-center"
           defaultValue="99"
+          aria-label="product quantity"
+          readOnly
         />
         <button
           className="btn btn-add position-absolute translate-middle rounded-1 p-1  "
           type="button"
         >
-          <span className="material-symbols-outlined align-middle fs-5">add</span>
+          <span className="material-symbols-outlined align-middle fs-5">
+            add
+          </span>
         </button>
       </div>
       {/* input-group-calculate-lg-disabled */}
@@ -67,10 +75,12 @@ const InputExample = () => {
           className="btn btn-add position-absolute translate-middle rounded-1 p-2  "
           type="button"
         >
-          <span className="material-symbols-outlined align-middle fs-4">add</span>
+          <span className="material-symbols-outlined align-middle fs-4">
+            add
+          </span>
         </button>
       </div>
-      {/* input-group-calculate */}
+      {/* input-group-calculate-lg */}
       <div className="input-group-calculate input-group-calculate-lg mb-5 position-relative ">
         <button
           className="btn btn-sub position-absolute translate-middle rounded-1 p-2 "
@@ -82,14 +92,18 @@ const InputExample = () => {
         </button>
         <input
           type="number"
-          className="form-control position-absolute "
+          className="form-control position-absolute text-center"
           defaultValue="99"
+          aria-label="product quantity"
+          readOnly
         />
         <button
           className="btn btn-add position-absolute translate-middle rounded-1 p-2  "
           type="button"
         >
-          <span className="material-symbols-outlined align-middle fs-4">add</span>
+          <span className="material-symbols-outlined align-middle fs-4">
+            add
+          </span>
         </button>
       </div>
 

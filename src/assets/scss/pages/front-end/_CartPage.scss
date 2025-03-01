@@ -12,3 +12,11 @@
     width: 33.33%;
   }
 }
+.cart-img{
+  max-width: 102px;
+  height: auto;
+  border-radius: 12px;
+  @include media-breakpoint-up(lg){
+    max-width: 80px;
+  }
+}

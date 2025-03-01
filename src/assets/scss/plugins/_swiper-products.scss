@@ -1,0 +1,28 @@
+
+// 左右滑動輪播 - 按鈕樣式
+.swiper-products{
+  .btn-swiper-products{
+    background: rgba(40, 40, 40, 0.7);
+    border: 1px solid rgba(208, 205, 199, 1);
+    backdrop-filter: blur(20px);
+    color: white;
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+  
+    &:hover{
+      background: rgba(40, 40, 40, 0.5);
+  
+    }
+    &:active{
+      background: rgba(40, 40, 40, 1) !important;
+      color: white !important; 
+    }
+  }
+
+  &:hover{
+    .btn-swiper-products{
+      opacity: 1;
+    }
+  }
+}
+

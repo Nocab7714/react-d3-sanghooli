@@ -779,7 +779,8 @@ $mark-bg:                     $yellow-100 !default;
 // Customizes the `.table` component with basic values, each used across all table variations.
 
 // scss-docs-start table-variables
-$table-cell-padding-y:        .5rem !default;
+// $table-cell-padding-y:        .5rem !default;
+$table-cell-padding-y:        1.5rem !default;
 $table-cell-padding-x:        .5rem !default;
 $table-cell-padding-y-sm:     .25rem !default;
 $table-cell-padding-x-sm:     .25rem !default;
@@ -787,7 +788,8 @@ $table-cell-padding-x-sm:     .25rem !default;
 $table-cell-vertical-align:   top !default;
 
 $table-color:                 var(--#{$prefix}emphasis-color) !default;
-$table-bg:                    var(--#{$prefix}body-bg) !default;
+// $table-bg:                    var(--#{$prefix}body-bg) !default;
+$table-bg:                    transparent !default; // *custom
 $table-accent-bg:             transparent !default;
 
 $table-th-font-weight:        null !default;
@@ -1441,7 +1443,8 @@ $card-cap-bg:                       rgba(var(--#{$prefix}body-color-rgb), .03) !
 $card-cap-color:                    null !default;
 $card-height:                       null !default;
 $card-color:                        null !default;
-$card-bg:                           var(--#{$prefix}body-bg) !default;
+// $card-bg:                           var(--#{$prefix}body-bg) !default;
+$card-bg:                           transparent !default; // *custom
 $card-img-overlay-padding:          $spacer !default;
 $card-group-margin:                 $grid-gutter-width * .5 !default;
 // scss-docs-end card-variables

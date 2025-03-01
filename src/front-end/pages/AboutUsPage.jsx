@@ -1,4 +1,8 @@
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
+
+const { VITE_BASE_URL: baseUrl, VITE_API_PATH: apiPath } = import.meta.env;
 
 import ReactHelmetAsync from '../../plugins/ReactHelmetAsync';
 import Breadcrumb from '../components/Breadcrumb.jsx';
@@ -13,6 +17,8 @@ import userImg01 from '@/assets/img/other/user01.png';
 import userImg02 from '@/assets/img/other/user02.png';
 import userImg03 from '@/assets/img/other/user03.png';
 
+import ProductCard from '../components/ProductCard.jsx';
+
 const breadcrumbItem = [
   {
     page: '首頁',
@@ -25,6 +31,33 @@ const breadcrumbItem = [
 ];
 
 const AboutUsPage = () => {
+  //  取得所有商品
+  const [products, setProducts] = useState([]);
+  useEffect(() => {
+    (async () => {
+      try {
+        const res = await axios.get(`${baseUrl}/api/${apiPath}/products/all`);
+        setProducts(getRandomProducts(res.data.products));
+      } catch (error) {
+        console.log(error);
+      }
+    })();
+  }, []);
+
+  // 取得隨機 4 筆商品的方法
+  const getRandomProducts = (products) => {
+    if (!products || products.length === 0) return [];
+    // 複製陣列，避免修改原始陣列
+    const shuffled = [...products];
+    // Fisher-Yates 洗牌演算法 ( 超過 100 筆的陣列適用 )
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    // 取前 4 筆
+    return shuffled.slice(0, 4);
+  };
+
   return (
     <>
       <ReactHelmetAsync title="關於我們" />
@@ -62,68 +95,13 @@ const AboutUsPage = () => {
               <h2 className="fs-4 fs-md-2">各式禮品供你挑選</h2>
             </div>
             <ul className="row gy-10 list-unstyled mb-10">
-              {[
-                ...Array(4)
-                  .keys()
-                  .map((num) => {
-                    return (
-                      <li className="col-6 col-md-3" key={`gift-${num}`}>
-                        <div className="position-relative">
-                          {/* <button
-                        type="button"
-                        className="position-absolute btn btn-favorite p-2 "
-                      >
-                        <span className="material-symbols-outlined align-middle text-white">
-                          favorite
-                        </span>
-                      </button> */}
-                          <Link
-                            to="/single-product/productID"
-                            className="product-card"
-                          >
-                            <div className="card border-0 position-relative">
-                              <div className="card-bg"></div>
-                              <div className="position-relative z-3">
-                                <div className="hot-sale position-absolute  translate-middle z-4">
-                                  {/* <img
-                                src={crownIcon}
-                                alt="crown svg"
-                                height="48"
-                                width="48"
-                              /> */}
-                                </div>
-                                <img
-                                  src="https://storage.googleapis.com/vue-course-api.appspot.com/d3sanghooli/1736190936754.png?GoogleAccessId=firebase-adminsdk-zzty7%40vue-course-api.iam.gserviceaccount.com&Expires=1742169600&Signature=To%2BG3QFz%2Foc2Al3qLnIeq4zoYXZFUxmUOxp57T6XTZYJZAb%2FwmcvpivJ0BVD1wCqg%2F9oPIBK4Q%2FQ%2F8sSYADDWXwfggt6MOwYBgOJJn%2FSE3rmJf6fwCBrsoQjzS9O%2BaNXFw4Q6tESMGYF3SSjhGBli%2FqiNy9%2FS%2FSwxJsBG4XyNgFu3%2FmfoIHiDGE7Ig28JWewVO9f3cHdRYOHuMNKKDGqEHQVAwxir%2BtwJdoDsE8dxrIpiiG79gFIj6YFsxKvwWK3D9Cbz7FABkAlBByhf4EjrEdh0Niog4g4ssuA62sngbFTmItN9DDmpP7ILdBOxqFDKa%2FvwNo4k%2B87ONQV%2FmXTRQ%3D%3D"
-                                  className="img-fluid rounded-4 mb-4 z-3"
-                                  alt=""
-                                  height="306"
-                                  width="306"
-                                />
-                              </div>
-                              <div className="card-body z-3  p-0">
-                                <span className="fs-7 fw-normal text-neutral60 mb-2">
-                                  食品與飲品
-                                </span>
-                                <p className="card-title fw-semibold fs-6 mb-3">
-                                  客製化鋼筆
-                                </p>
-                                <p className=" fs-7 text-primary-dark">
-                                  NT$
-                                  <span className="fs-6 fw-semibold me-4">
-                                    2,200
-                                  </span>
-                                  <span className="text-decoration-line-through text-neutral60">
-                                    NT$ 3,800
-                                  </span>
-                                </p>
-                              </div>
-                            </div>
-                          </Link>
-                        </div>
-                      </li>
-                    );
-                  }),
-              ]}
+              {products.map((product) => {
+                return (
+                  <li className="col-6 col-md-3" key={`gift-${product.id}`}>
+                    <ProductCard product={product} />
+                  </li>
+                );
+              })}
             </ul>
             <div className="text-center ">
               <Link to="/products-list" className="btn btn-outline-neutral80">

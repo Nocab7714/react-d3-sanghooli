@@ -1,8 +1,9 @@
 // 資料驅動範例
-// 1. 請從外層傳入 PaginationData 資料
+// 1. 請從外層傳入 paginationData 資料
 // 2. 資料請使用 API Get 到的回傳的資料做驅動
 // 3. 後台系統也可以使用
-const Pagination= ({ paginationData, onPageChange }) => {
+
+const Pagination = ({ paginationData, onPageChange }) => {
   const { total_pages, current_page, has_pre, has_next } = paginationData;
 
   const goToPage = (page) => {
@@ -18,31 +19,51 @@ const Pagination= ({ paginationData, onPageChange }) => {
     if (!isNaN(pageNumber) && pageNumber >= 1 && pageNumber <= total_pages) {
       goToPage(pageNumber);
     } else {
-      alert("請輸入有效的頁碼！");
+      alert('請輸入有效的頁碼！');
     }
   };
 
   const generatePagination = () => {
-    if (total_pages <= 5) return Array.from({ length: total_pages }, (_, i) => i + 1);
-    if (current_page <= 3) return [1, 2, 3, "...", total_pages];
-    if (current_page >= total_pages - 3) return ["...", total_pages - 3, total_pages - 2, total_pages - 1, total_pages];
-    return [current_page - 1, current_page, current_page + 1, "...", total_pages];
+    if (total_pages <= 5)
+      return Array.from({ length: total_pages }, (_, i) => i + 1);
+
+    if (current_page <= 3) return [1, 2, 3, '...', total_pages];
+
+    if (current_page >= total_pages - 2)
+      return ['...', total_pages - 2, total_pages - 1, total_pages];
+
+    return [
+      current_page - 1,
+      current_page,
+      current_page + 1,
+      '...',
+      total_pages,
+    ];
   };
 
   return (
     <nav aria-label="Page navigation">
-      <ul className="pagination">
+      <ul className="pagination flex-wrap">
         {/* 第一頁按鈕 */}
-        <li className={`page-item ${!has_pre ? "disabled" : ""}`}>
-          <button className="page-link" type="button" onClick={() => goToPage(1)}>
+        <li className={`page-item ${!has_pre ? 'disabled' : ''}`}>
+          <button
+            className="page-link"
+            type="button"
+            onClick={() => goToPage(1)}
+          >
             <span className="material-symbols-outlined fs-6 align-middle">
               keyboard_double_arrow_left
             </span>
           </button>
         </li>
+
         {/* 上一頁按鈕 */}
-        <li className={`page-item ${!has_pre ? "disabled" : ""}`}>
-          <button className="page-link" type="button" onClick={() => goToPage(current_page - 1)}>
+        <li className={`page-item ${!has_pre ? 'disabled' : ''}`}>
+          <button
+            className="page-link"
+            type="button"
+            onClick={() => goToPage(current_page - 1)}
+          >
             <span className="material-symbols-outlined fs-6 align-middle">
               chevron_left
             </span>
@@ -51,13 +72,24 @@ const Pagination= ({ paginationData, onPageChange }) => {
 
         {/* 生成頁碼 */}
         {generatePagination().map((page, index) => (
-          <li key={index} className={`page-item ${page === current_page ? "active" : ""}`}>
-            {page === "..." ? (
-              <button className="page-link" type="button" onClick={handleEllipsisClick}>
+          <li
+            key={index}
+            className={`page-item ${page === current_page ? 'active' : ''}`}
+          >
+            {page === '...' ? (
+              <button
+                className="page-link"
+                type="button"
+                onClick={handleEllipsisClick}
+              >
                 ...
               </button>
             ) : (
-              <button className="page-link" type="button" onClick={() => goToPage(page)}>
+              <button
+                className="page-link"
+                type="button"
+                onClick={() => goToPage(page)}
+              >
                 {page}
               </button>
             )}
@@ -65,16 +97,25 @@ const Pagination= ({ paginationData, onPageChange }) => {
         ))}
 
         {/* 下一頁按鈕 */}
-        <li className={`page-item ${!has_next ? "disabled" : ""}`}>
-          <button className="page-link" type="button" onClick={() => goToPage(current_page + 1)}>
+        <li className={`page-item ${!has_next ? 'disabled' : ''}`}>
+          <button
+            className="page-link"
+            type="button"
+            onClick={() => goToPage(current_page + 1)}
+          >
             <span className="material-symbols-outlined fs-6 align-middle">
               chevron_right
             </span>
           </button>
         </li>
+
         {/* 最後一頁按鈕 */}
-        <li className={`page-item ${!has_next ? "disabled" : ""}`}>
-          <button className="page-link" type="button" onClick={() => goToPage(total_pages)}>
+        <li className={`page-item ${!has_next ? 'disabled' : ''}`}>
+          <button
+            className="page-link"
+            type="button"
+            onClick={() => goToPage(total_pages)}
+          >
             <span className="material-symbols-outlined fs-6 align-middle">
               keyboard_double_arrow_right
             </span>
