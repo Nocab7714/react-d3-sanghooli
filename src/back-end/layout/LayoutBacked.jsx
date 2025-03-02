@@ -1,11 +1,25 @@
-import { Outlet } from 'react-router-dom';
+// 頁面元件引入
 import HeaderBacked from './HeaderBacked.jsx';
+import { Outlet } from 'react-router-dom';
+import GoToTop from '../components/GoToTop.jsx';
+import FooterBacked from './FooterBacked.jsx';
+
+//外部元件
+import AutoScrollToTop from '../../plugins/AutoScrollToTop.jsx';
+
 
 function LayoutBacked() {
   return (
     <>
+      <AutoScrollToTop />
       <HeaderBacked />
-      <Outlet />
+
+      <div>
+        <Outlet />
+      </div>
+      
+      <FooterBacked />
+      <GoToTop />
     </>
   );
 }
