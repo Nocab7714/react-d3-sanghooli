@@ -7,10 +7,20 @@ export const productsSlice = createSlice({
   name: 'products',
   initialState: {
     products: [], // 存放 API 取得的產品資料
-    filteredProductsData: [],
+    filteredProductsData: {
+      festival: '',
+      relation: '',
+      category: '',
+      priceRange: '',
+      searchValue: '',
+    }, // 存放篩選條件
   },
-  reducers: {},
-  // 測試使用
+  reducers: {
+    setFilteredProductsData: (state, action) => {
+      state.filteredProductsData = action.payload;
+      console.log('Redux state 更新後 (篩選條件):', state.filteredProductsData);
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(getProducts.fulfilled, (state, action) => {
@@ -38,4 +48,5 @@ export const getProducts = createAsyncThunk(
   }
 );
 
+export const { setFilteredProductsData } = productsSlice.actions;
 export default productsSlice.reducer;

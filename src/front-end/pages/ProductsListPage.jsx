@@ -8,7 +8,6 @@ import ProductCard from '../components/ProductCard';
 import ProductCategoryList from '../components/ProductCategoryList';
 import InputSearchDefault from '../components/form/InputSearchDefault';
 
-
 const breadcrumbItem = [
   { page: '首頁', link: '/' },
   { page: '產品列表', link: '/products-list' },
@@ -63,8 +62,104 @@ const priceRangeOptions = [
 ];
 
 const ProductsListPage = () => {
-  // 商品搜尋關鍵字
-  const [searchValue, setSearchValue] = useState('');
+
+  // ✅ 取得 Redux 內的篩選條件
+  const filteredProductsData = useSelector(
+    (state) => state.products.filteredProductsData
+  );
+
+  // ✅ 取得 Redux 內的所有商品
+  const products = useSelector((state) => state.products.products);
+
+  // ✅ 設定狀態，並初始化為 Redux 內的 `filteredProductsData`
+  const [searchValue, setSearchValue] = useState(
+    filteredProductsData.searchValue || ''
+  );
+  const [festival, setFestival] = useState(filteredProductsData.festival || '');
+  const [relation, setRelation] = useState(filteredProductsData.relation || '');
+  const [category, setCategory] = useState(filteredProductsData.category || '');
+  const [priceRange, setPriceRange] = useState(
+    filteredProductsData.priceRange || ''
+  );
+  const [sortOption, setSortOption] = useState(0);
+
+  // ✅ 當 Redux 內的 `filteredProductsData` 更新時，更新 state
+  useEffect(() => {
+    setSearchValue(filteredProductsData.searchValue || '');
+    setFestival(filteredProductsData.festival || '');
+    setRelation(filteredProductsData.relation || '');
+    setCategory(filteredProductsData.category || '');
+    setPriceRange(filteredProductsData.priceRange || '');
+  }, [filteredProductsData]);
+  // 取得所有商品
+
+
+  // ✅ 根據篩選條件過濾商品
+  const [filteredProducts, setFilteredProducts] = useState([]);
+  const handleFilterProducts = () => {
+    let result = [...products];
+
+    // 🔍 關鍵字搜尋
+    if (searchValue) {
+      result = result.filter((product) => product.title.includes(searchValue));
+    }
+
+    // 🎉 節慶 / 場合
+    if (festival) {
+      result = result.filter((product) => product.tages?.includes(festival));
+    }
+
+    // 👥 送禮關係
+    if (relation) {
+      result = result.filter((product) => product.tages?.includes(relation));
+    }
+
+    // 🎁 禮物類別
+    if (category) {
+      result = result.filter((product) => product.category === category);
+    }
+
+    // 💰 價格範圍
+    if (priceRange) {
+      result = result.filter((product) => {
+        const price = product.price;
+        switch (priceRange) {
+          case '500 元以下':
+            return price < 500;
+          case '500 ~ 1,000 元':
+            return price >= 500 && price <= 1000;
+          case '1,000 ~ 3,000 元':
+            return price > 1000 && price <= 3000;
+          case '3,000 元以上':
+            return price > 3000;
+          default:
+            return true;
+        }
+      });
+    }
+
+    // 🔥 價格排序（確保 React 能偵測到變更）
+    let sortedResult = [...result]; // 先創建新的陣列，避免直接修改原陣列
+    if (sortOption === 1) {
+      // 最高到最低
+      sortedResult.sort((a, b) => b.price - a.price);
+    } else if (sortOption === 2) {
+      // 最低到最高
+      sortedResult.sort((a, b) => a.price - b.price);
+    }
+
+    setFilteredProducts(sortedResult); // ✅ 設定新的 `filteredProducts`
+  }
+  useEffect(() => {
+    handleFilterProducts();
+  }, [
+    festival,
+    relation,
+    category,
+    priceRange,
+    sortOption,
+    products,
+  ]); // 🔥 加入 `sortOption` 確保變更時重新執行
 
   // 控制 select 與 inputSearch 的斷點
   const [isLarge, setIsLarge] = useState(window.innerWidth >= 992);
@@ -95,22 +190,12 @@ const ProductsListPage = () => {
 
   const searchTitleRef = useRef(null);
 
-  // 透過 useSelector 取得 Redux state 存放的所有產品資料
-  const products = useSelector((state) => state.products.products);
-
   // 取得最高人氣的禮物區塊 (6 筆)
   const [mostPopularProducts, setMostPopularProducts] = useState([]);
   useEffect(() => {
     setMostPopularProducts(products?.filter((p) => p.is_hot).slice(0, 6));
   }, [products]);
 
-  // 篩選條件
-  const [festival, setFestival] = useState('');
-  const [relation, setRelation] = useState('');
-  const [category, setCategory] = useState('');
-  const [priceRange, setPriceRange] = useState('');
-  const [sortOption, setSortOption] = useState(0);
-  const [filteredProducts, setFilteredProducts] = useState([]);
   const [triggerSearch, setTriggerSearch] = useState(false); // 控制關鍵字搜尋
 
   // 分頁
@@ -121,67 +206,6 @@ const ProductsListPage = () => {
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
-
-  // 商品篩選
-  useEffect(() => {
-    let result = [...products];
-
-    // 關鍵字搜尋
-    if (searchValue && triggerSearch) {
-      result = result.filter((product) => product.title.includes(searchValue));
-    }
-
-    // 節慶 / 場合
-    if (festival) {
-      result = result.filter((product) => product.tages?.includes(festival));
-    }
-    // 送禮關係
-    if (relation) {
-      result = result.filter((product) => product.tages?.includes(relation));
-    }
-    // 禮物類別
-    if (category) {
-      result = result.filter((product) => product.category === category);
-    }
-    // 價格範圍
-    if (priceRange) {
-      result = result.filter((product) => {
-        const price = product.price;
-        switch (priceRange) {
-          case '500 元以下':
-            return price < 500;
-          case '500 ~ 1,000 元':
-            return price >= 500 && price <= 1000;
-          case '1,000 ~ 3,000 元':
-            return price > 1000 && price <= 3000;
-          case '3,000 元以上':
-            return price > 3000;
-          default:
-            return true;
-        }
-      });
-    }
-
-    // 價格排序
-    if (sortOption === 1) {
-      // 最高到最低
-      result.sort((a, b) => b.price - a.price);
-    } else if (sortOption === 2) {
-      // 最低到最高
-      result.sort((a, b) => a.price - b.price);
-    }
-
-    setFilteredProducts(result);
-  }, [
-    searchValue,
-    triggerSearch,
-    festival,
-    relation,
-    category,
-    priceRange,
-    sortOption,
-    products,
-  ]);
 
   // 當關鍵字清空時，自動執行一次篩選
   useEffect(() => {
@@ -196,7 +220,7 @@ const ProductsListPage = () => {
     scrollToSearchTitle();
   };
 
-  // `select` 變更時，行動版不滑動，桌機才會滑動
+  //  `select` 變更時，行動版不滑動，桌機才會滑動
   const handleFestivalChange = (e) => {
     setFestival(e.target.value);
     setCurrentPage(1);
@@ -225,12 +249,14 @@ const ProductsListPage = () => {
   const handleSearchValueChange = (val) => {
     setSearchValue(val);
     if (val === '') {
-      setTriggerSearch(false);
-    } else {
-      setTriggerSearch(true);
+      handleFilterProducts();
     }
+  };
+
+  const onSearch = () => {
+    handleFilterProducts();
     setCurrentPage(1);
-    scrollToSearchTitle(); // 桌機 & 行動版都會滑動
+    scrollToSearchTitle(); 
   };
 
   return (
@@ -263,6 +289,7 @@ const ProductsListPage = () => {
                           size={isLarge ? 'lg' : 'standard'}
                           value={searchValue}
                           onChange={handleSearchValueChange}
+                          onSearch={onSearch}
                         />
                       </div>
 

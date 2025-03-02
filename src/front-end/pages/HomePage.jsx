@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { setFilteredProductsData } from '../../slices/ProductsSlice.js';
 
-const selectData = ['資料01', '資料02', '資料03', '資料04', '資料05'];
 import ReactHelmetAsync from '../../plugins/ReactHelmetAsync';
 import ProductCategoryList from '../components/ProductCategoryList';
 import HomeBannerSwiper from '../components/HomeBannerSwiper';
@@ -60,43 +60,48 @@ const priceRangeOptions = [
 ];
 
 const HomePage = () => {
-  // 透過 useSelector 取得 Redux state 存放的所有產品資料
-  const products = useSelector((state) => state.products.products);
 
   // 控制 select 與 inputSearch 的斷點
   const [isLarge, setIsLarge] = useState(window.innerWidth >= 992);
-
   useEffect(() => {
     const handleResize = () => setIsLarge(window.innerWidth >= 992);
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const [searchValue, setSearchValue] = useState('');
+  // 透過 useSelector 取得 Redux state 存放的所有產品資料
+  const products = useSelector((state) => state.products.products);
+  const [searchFormData, setSearchFormData] = useState({
+    searchValue: '',
+    festival: '',
+    relation: '',
+    category: '',
+    priceRange: '',
+  });
 
-  const [festival, setFestival] = useState('');
-  const [relation, setRelation] = useState('');
-  const [category, setCategory] = useState('');
-  const [priceRange, setPriceRange] = useState('');
+  const dispatch = useDispatch();
 
+  const handleSearchValueChange = (val) => {
+    setSearchFormData((prev) => ({ ...prev, searchValue: val }));
+  };
   const handleFestivalChange = (e) => {
-    setFestival(e.target.value);
+    setSearchFormData((prev) => ({ ...prev, festival: e.target.value }));
   };
-
   const handleRelationChange = (e) => {
-    setRelation(e.target.value);
+    setSearchFormData((prev) => ({ ...prev, relation: e.target.value }));
   };
-
   const handleCategoryChange = (e) => {
-    setCategory(e.target.value);
+    setSearchFormData((prev) => ({ ...prev, category: e.target.value }));
   };
-
   const handlePriceRangeChange = (e) => {
-    setPriceRange(e.target.value);
+    setSearchFormData((prev) => ({ ...prev, priceRange: e.target.value }));
   };
 
-  const handleSearchValueChange = (e) => {
-    setSearchValue(e);
+  // 按下搜尋按鈕或 Enter 時，才更新 Redux 並轉址
+  const handleSearch = () => {
+    dispatch(setFilteredProductsData(searchFormData));
+    console.log('已存入 Redux 的篩選條件:', searchFormData);
+    navigate('/products-list');
   };
 
   // 各分類商品資料，每筆取前 6 個
@@ -161,7 +166,7 @@ const HomePage = () => {
                   className={`form-select mb-4 mb-md-0 ${
                     isLarge ? 'form-select-lg' : ''
                   }`}
-                  value={festival}
+                  value={searchFormData.festival}
                   onChange={handleFestivalChange}
                 >
                   <option value="">節慶 / 場合</option>
@@ -177,7 +182,7 @@ const HomePage = () => {
                   className={`form-select mb-4 mb-md-0 ${
                     isLarge ? 'form-select-lg' : ''
                   }`}
-                  value={relation}
+                  value={searchFormData.relation}
                   onChange={handleRelationChange}
                 >
                   <option value="">送禮關係</option>
@@ -190,10 +195,8 @@ const HomePage = () => {
               </div>
               <div className="col-6 col-md-3">
                 <select
-                  className={`form-select  ${
-                    isLarge ? 'form-select-lg' : ''
-                  }`}
-                  value={category}
+                  className={`form-select  ${isLarge ? 'form-select-lg' : ''}`}
+                  value={searchFormData.category}
                   onChange={handleCategoryChange}
                 >
                   <option value="">禮物類別</option>
@@ -206,10 +209,8 @@ const HomePage = () => {
               </div>
               <div className="col-6 col-md-3">
                 <select
-                  className={`form-select  ${
-                    isLarge ? 'form-select-lg' : ''
-                  }`}
-                  value={priceRange}
+                  className={`form-select  ${isLarge ? 'form-select-lg' : ''}`}
+                  value={searchFormData.priceRange}
                   onChange={handlePriceRangeChange}
                 >
                   <option value="">價格範圍</option>
@@ -224,8 +225,9 @@ const HomePage = () => {
 
             <InputSearchDefault
               size={isLarge ? 'lg' : 'standard'}
-              value={searchValue}
+              value={searchFormData.searchValue}
               onChange={handleSearchValueChange}
+              onSearch={handleSearch}
             />
           </form>
         </div>
