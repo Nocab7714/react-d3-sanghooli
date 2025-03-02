@@ -12,8 +12,8 @@ function AdminLoginPage() {
    
   //登入資訊
     const [account, setAccount] = useState({
-        username: "example@test.com",
-        password: "example",
+        username: '',
+        password: '',
       });
 
     const handleInputChange = (event) => {
@@ -42,7 +42,7 @@ function AdminLoginPage() {
         axios.defaults.headers.common['Authorization'] = token;
         
         alert('登入成功');
-        navigate('/admin/order'); //後台登入直接進到訂單管理頁面
+        navigate('/admin/orders'); //後台登入直接進到訂單管理頁面
 
       } catch(error){
         alert("登入失敗，請稍作等待後，再嘗試重新登入");
