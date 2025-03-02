@@ -17,9 +17,10 @@ import LayoutBacked from '../back-end/layout/LayoutBacked.jsx';
 import AdminLoginPage from '../back-end/Pages/AdminLoginPage.jsx';
 import OrdersManagementPage from '../back-end/Pages/OrdersManagementPage.jsx'
 import ProductsManagementPage from '../back-end/Pages/ProductsManagementPage.jsx'
-
+import CouponManagementPage from '../back-end/Pages/CouponManagementPage.jsx';
 
 import { createHashRouter } from 'react-router-dom';
+
 
 
 // 路由表
@@ -88,6 +89,10 @@ const routes = [
         path: 'products', 
         element: <ProductsManagementPage /> // 新增產品登入頁面
       },      
+      { 
+        path: 'coupon', 
+        element: <CouponManagementPage /> // 新增產品登入頁面
+      },  
     ]
   },
   //最後放置 catch-all 路由:
