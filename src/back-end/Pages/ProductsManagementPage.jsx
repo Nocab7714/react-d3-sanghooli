@@ -1,11 +1,10 @@
 // 外部資源
 import axios from 'axios';
 import { useEffect, useRef, useState } from 'react';
-import { Modal } from 'bootstrap';
+import ReactHelmetAsync from '../../plugins/ReactHelmetAsync';
 
 // 環境變數
-const BASE_URL = import.meta.env.VITE_BASE_URL ;
-const API_PATH = import.meta.env.VITE_API_PATH ;
+const { VITE_BASE_URL: baseUrl } = import.meta.env;
 
 
 const ProductsManagementPage = () =>{
@@ -52,6 +51,7 @@ const ProductsManagementPage = () =>{
 
     return (
       <>
+      <ReactHelmetAsync title="後台系統-產品管理頁面"/>
       <div className="container">
         <div className="row">
           <div className="col pt-19 pb-19">

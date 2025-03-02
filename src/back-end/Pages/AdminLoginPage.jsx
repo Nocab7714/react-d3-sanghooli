@@ -1,7 +1,8 @@
 import axios from 'axios';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Outlet } from 'react-router-dom';
+import ReactHelmetAsync from '../../plugins/ReactHelmetAsync';
+
 
 const routes = [{ path: '/', name: '回到首頁' }];
 
@@ -52,6 +53,7 @@ function AdminLoginPage() {
 
     return (
      <>
+      <ReactHelmetAsync title="後台系統-傳送門" />
        {/* //已完成的登入模板 */}
         <div className="d-flex flex-column justify-content-center align-items-center vh-100">
             <h1 className="mb-5 ">SANGHOOI 後台登入</h1>
@@ -86,9 +88,6 @@ function AdminLoginPage() {
               <button type="submit" className="btn btn-primary mt-3">登入</button>
           </form>
       </div>
-
-        {/* 顯示動態內容 */}
-        <Outlet/>
      </>
     );
   }

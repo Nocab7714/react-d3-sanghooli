@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Modal } from 'bootstrap';
 import C3Chart from '../components/C3Chart';
+import ReactHelmetAsync from '../../plugins/ReactHelmetAsync';
 
 // 內部資源
 
@@ -54,6 +55,7 @@ const OrdersManagementPage = () =>{
   
   return (
       <>
+      <ReactHelmetAsync title="後台系統-訂單管理頁面" />
         <div className="container">
           <div className="row">
             <div className="col pt-19 pb-19">
