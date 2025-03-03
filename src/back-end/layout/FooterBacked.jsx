@@ -3,30 +3,8 @@ import { Link } from 'react-router-dom';
 
 import logo from '@/assets/img/illustration/logo-SANGHOOLI.svg';
 
-const footerPageLinks = [
-  {
-    name: '關於我們',
-    link: 'about-us',
-  },
-  {
-    name: '商品一覽',
-    link: 'products-list',
-  },
-  {
-    name: '隱私權服務條款',
-    link: 'privacy-policy',
-  },
-  {
-    name: '購物流程與常見Q&A',
-    link: 'how-to-buy',
-  },
-  {
-    name: '後台登入',
-    link: '/admin/login',
-  },
-];
 
-const FooterFront = () => {
+const FooterBacked = () => {
   return (
     <>
       <footer>
@@ -49,18 +27,7 @@ const FooterFront = () => {
                   height="40"
                 />
               </div>
-              <ul className="footer-page-links list-unstyled d-flex flex-column flex-md-row align-items-center my-4 my-md-6">
-                {footerPageLinks.map((links) => (
-                  <li key={links.name}>
-                    <Link
-                      to={links.link}
-                      className="d-inline-block fs-6 link-neutral60 px-4 py-3 mx-0 mx-md-1 "
-                    >
-                      {links.name}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
+              <ul className="footer-page-links list-unstyled d-flex flex-column flex-md-row align-items-center my-4 my-md-6"></ul>
               <ul className="social-links list-unstyled d-flex mb-0">
                 <li>
                   <Link to="/" className="d-block rounded-3 mx-2">
@@ -127,4 +94,4 @@ const FooterFront = () => {
   s;
 };
 
-export default FooterFront;
+export default FooterBacked;
