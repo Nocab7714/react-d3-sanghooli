@@ -1,7 +1,7 @@
 import { Outlet } from 'react-router-dom';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { getProducts } from '../../slices/ProductsSlice.js';
+import { getProducts } from '../../slices/productsSlice';
 
 import HeaderFront from './HeaderFront.jsx';
 import FooterFront from './FooterFront.jsx';
@@ -12,7 +12,7 @@ import AutoScrollToTop from '../../plugins/AutoScrollToTop.jsx';
 
 function LayoutFront() {
 
-  // 透過外層 Layout 取得所有商品資料
+  // 透過外層 Layout 取得所有商品資料，並存入 Redux > productsSlice > products 的資狀態中
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getProducts());

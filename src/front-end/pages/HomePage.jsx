@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { setFilteredProductsData } from '../../slices/ProductsSlice.js';
+import { setFilteredProductsData } from '../../slices/productsSlice';
 
 import ReactHelmetAsync from '../../plugins/ReactHelmetAsync';
 import ProductCategoryList from '../components/ProductCategoryList';
@@ -60,7 +60,6 @@ const priceRangeOptions = [
 ];
 
 const HomePage = () => {
-
   // 控制 select 與 inputSearch 的斷點
   const [isLarge, setIsLarge] = useState(window.innerWidth >= 992);
   useEffect(() => {
@@ -71,6 +70,7 @@ const HomePage = () => {
 
   // 透過 useSelector 取得 Redux state 存放的所有產品資料
   const products = useSelector((state) => state.products.products);
+  // 商品篩選 - 定義商品篩選條件
   const [searchFormData, setSearchFormData] = useState({
     searchValue: '',
     festival: '',
@@ -79,29 +79,32 @@ const HomePage = () => {
     priceRange: '',
   });
 
+  // 商品篩選 - 更新篩選條件
+  // 這個函式負責處理表單輸入變更，並動態更新 `searchFormData`。
+  // 適用於 `<select>` (event 物件) 及 `InputSearchDefault` (直接傳遞值)。
+  const handleInputChange = (eOrValue) => {
+    // 來自 InputSearchDefault 的輸入
+    // `InputSearchDefault` 會直接傳遞輸入的值，而不是 event 物件
+    if (typeof eOrValue === 'string') {
+      setSearchFormData((prev) => ({ ...prev, searchValue: eOrValue }));
+    } else {
+      // 來自 `<select>` 選單的輸入
+      // `eOrValue` 是 event 物件，從 `event.target` 取得 `name` 和 `value`
+      const { name, value } = eOrValue.target;
+      setSearchFormData((prev) => ({ ...prev, [name]: value }));
+    }
+  };
+
+  // 商品篩選 - 提交篩選條件並跳轉至產品列表頁面
+  // 這個函式在使用者按下搜尋按鈕或按 Enter 時執行
   const dispatch = useDispatch();
-
-  const handleSearchValueChange = (val) => {
-    setSearchFormData((prev) => ({ ...prev, searchValue: val }));
-  };
-  const handleFestivalChange = (e) => {
-    setSearchFormData((prev) => ({ ...prev, festival: e.target.value }));
-  };
-  const handleRelationChange = (e) => {
-    setSearchFormData((prev) => ({ ...prev, relation: e.target.value }));
-  };
-  const handleCategoryChange = (e) => {
-    setSearchFormData((prev) => ({ ...prev, category: e.target.value }));
-  };
-  const handlePriceRangeChange = (e) => {
-    setSearchFormData((prev) => ({ ...prev, priceRange: e.target.value }));
-  };
-
-  // 按下搜尋按鈕或 Enter 時，才更新 Redux 並轉址
   const handleSearch = () => {
+    // 1. 將當前的篩選條件存入 Redux 的 `filteredProductsData`
     dispatch(setFilteredProductsData(searchFormData));
-    console.log('已存入 Redux 的篩選條件:', searchFormData);
-    navigate('/products-list');
+    // 2. 在開發階段，確認 Redux 是否正確儲存篩選條件
+    // console.log('已存入 Redux 的篩選條件:', searchFormData);
+    // 3. 跳轉到商品列表頁，並滑動到搜尋結果標題視窗位置，顯示篩選後的商品
+    navigate('/products-list', { state: { scrollToResults: true } });
   };
 
   // 各分類商品資料，每筆取前 6 個
@@ -166,8 +169,9 @@ const HomePage = () => {
                   className={`form-select mb-4 mb-md-0 ${
                     isLarge ? 'form-select-lg' : ''
                   }`}
+                  name="festival"
                   value={searchFormData.festival}
-                  onChange={handleFestivalChange}
+                  onChange={handleInputChange}
                 >
                   <option value="">節慶 / 場合</option>
                   {festivalOptions.map((option) => (
@@ -182,8 +186,9 @@ const HomePage = () => {
                   className={`form-select mb-4 mb-md-0 ${
                     isLarge ? 'form-select-lg' : ''
                   }`}
+                  name="relation"
                   value={searchFormData.relation}
-                  onChange={handleRelationChange}
+                  onChange={handleInputChange}
                 >
                   <option value="">送禮關係</option>
                   {relationOptions.map((option) => (
@@ -196,8 +201,9 @@ const HomePage = () => {
               <div className="col-6 col-md-3">
                 <select
                   className={`form-select  ${isLarge ? 'form-select-lg' : ''}`}
+                  name="category"
                   value={searchFormData.category}
-                  onChange={handleCategoryChange}
+                  onChange={handleInputChange}
                 >
                   <option value="">禮物類別</option>
                   {categoryOptions.map((option) => (
@@ -210,8 +216,9 @@ const HomePage = () => {
               <div className="col-6 col-md-3">
                 <select
                   className={`form-select  ${isLarge ? 'form-select-lg' : ''}`}
+                  name="priceRange"
                   value={searchFormData.priceRange}
-                  onChange={handlePriceRangeChange}
+                  onChange={handleInputChange}
                 >
                   <option value="">價格範圍</option>
                   {priceRangeOptions.map((option) => (
@@ -226,7 +233,7 @@ const HomePage = () => {
             <InputSearchDefault
               size={isLarge ? 'lg' : 'standard'}
               value={searchFormData.searchValue}
-              onChange={handleSearchValueChange}
+              onChange={handleInputChange}
               onSearch={handleSearch}
             />
           </form>

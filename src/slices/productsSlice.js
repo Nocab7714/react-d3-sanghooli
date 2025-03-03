@@ -24,9 +24,9 @@ export const productsSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(getProducts.fulfilled, (state, action) => {
-        console.log('Redux state 更新前:', state.products); // 測試 Redux state 更新前
+        // console.log('Redux state 更新前:', state.products); // 測試 Redux state 更新前
         state.products = action.payload; // 更新 Redux state
-        console.log('Redux state 更新後:', state.products); //  測試 Redux state 更新後
+        // console.log('Redux state 更新後:', state.products); //  測試 Redux state 更新後
       })
       .addCase(getProducts.rejected, (state, action) => {
         console.error('API 請求失敗:', action.payload);
