@@ -1,13 +1,22 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import MarqueeText from './MarqueeText';
 import { Link, NavLink } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 
 import logo from '@/assets/img/illustration/logo-SANGHOOLI.svg';
+import { asyncGetCart } from '../../redux/slice/cartSlice';
 
 const HeaderFront = () => {
+  const dispatch = useDispatch();
+  const basketQty = useSelector((state) => state.cart.basketQty);
+
   // 控制修正 header 使用 fix top 的高度使用
   const headerRef = useRef(null);
   const [headerHeight, setHeaderHeight] = useState(0);
+
+  useEffect(() => {
+    dispatch(asyncGetCart());
+  }, [dispatch])
 
   return (
     <>
@@ -88,6 +97,13 @@ const HeaderFront = () => {
                   >
                     1
                   </span> */}
+                  {
+                    basketQty !== 0  && (
+                      <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                        {basketQty}
+                      </span>
+                    )
+                  }
                 </NavLink>
               </li>
             </ul>

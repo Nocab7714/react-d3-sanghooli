@@ -1,5 +1,5 @@
 // 外部資源
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import axios from "axios";
 import SwiperComponent from "../components/SwiperComponent";
 
@@ -8,29 +8,16 @@ import { Link } from "react-router-dom";
 import { formatNumber } from "../../utils/formatNumber";
 import EmptyBasket from "../components/EmptyBasket";
 import CartStep from "../components/CartStep";
+import { useDispatch, useSelector } from "react-redux";
+import { asyncGetCart } from "../../redux/slice/cartSlice";
 
 // 環境變數
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 const API_PATH = import.meta.env.VITE_API_PATH;
 
 function CartPage() {
-  // 取得購物車列表
-  const [cart, setCart] = useState([]);
-  const [basketQty, setBasketQty] = useState(0);
-
-  const getCart = async () => {
-    try {
-      const url = `${BASE_URL}/api/${API_PATH}/cart`;
-      const response = await axios.get(url);
-      const cartData = response.data.data;
-      console.log(cartData);
-
-      setCart(cartData);
-      setBasketQty(cartData.carts?.reduce((sum, cart) => sum + cart.qty, 0));
-    } catch (error) {
-      console.dir(error);
-    }
-  };
+  const cart = useSelector((state) => state.cart);
+  const dispatch = useDispatch();
 
   const updateCart = async (cartId, productId, qty) => {
     try {
@@ -43,9 +30,8 @@ function CartPage() {
           qty: qty,
         },
       };
-      const response = await axios.put(url, data);
-      console.log(response);
-      getCart()
+      await axios.put(url, data);
+      dispatch(asyncGetCart());
     } catch (error) {
       console.dir(error);
     }
@@ -54,16 +40,16 @@ function CartPage() {
   const deleteCartOne = async(cartId) => {
     try {
       const url = `${BASE_URL}/api/${API_PATH}/cart/${cartId}`;
-      const response = await axios.delete(url);
-      console.log(response);
-      getCart();
+      await axios.delete(url);
+      dispatch(asyncGetCart());
     } catch (error) {
       console.dir(error)
     }
   }
+
   useEffect(() => {
-    getCart();
-  }, []);
+    dispatch(asyncGetCart());
+  }, [dispatch]);
 
   return (
     <>
@@ -84,50 +70,6 @@ function CartPage() {
                 // {/* 購物車 */}
                 <div>
                 {/* 流程 */}
-                {/* <div className="bg-white rounded-4 overflow-hidden mb-xl-19">
-                  <ul className="fs-7 d-flex py-5 mb-0 px-0 flex-wrap">
-                    <ol className="cart-step d-flex align-items-center gap-4 px-6">
-                      <span className="material-symbols-outlined text-primary-dark bg-primary-light rounded-circle p-4 fs-2">
-                        local_mall
-                      </span>
-                      <div>
-                        <h6 className="fs-7">Step1 : 購物車</h6>
-                        <span>確認您的產品</span>
-                      </div>
-                    </ol>
-                    <ol className="cart-step d-flex align-items-center gap-4 px-6">
-                      <span className="material-symbols-outlined text-primary-dark bg-primary-light rounded-circle p-4 fs-2">
-                        local_mall
-                      </span>
-                      <div>
-                        <h6 className="fs-7">Step2 : 填寫資料</h6>
-                        <span>
-                          填寫訂購人相關資訊，進行客製化服務挑選並建立訂單
-                        </span>
-                      </div>
-                    </ol>
-                    <ol className="cart-step d-flex align-items-center gap-4 px-6">
-                      <span className="material-symbols-outlined text-primary-dark bg-primary-light rounded-circle p-4 fs-2">
-                        local_mall
-                      </span>
-                      <div>
-                        <h6 className="fs-7">Step3 : 訂單付款</h6>
-                        <span>選擇您的付款方式並進行付款</span>
-                      </div>
-                    </ol>
-                  </ul>
-                  <div
-                    className="progress"
-                    role="progressbar"
-                    aria-label="Basic example"
-                    aria-valuenow="33"
-                    aria-valuemin="0"
-                    aria-valuemax="100"
-                    style={{ height: "3px" }}
-                  >
-                    <div className="progress-bar" style={{ width: "33%" }}></div>
-                  </div>
-                </div> */}
                 <CartStep step={1}/>
                 <h1 className="fs-3 fs-lg-1 mb-4">購物車</h1>
                 {/* 內容 - 手機 */}
