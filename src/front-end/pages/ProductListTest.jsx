@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { useSelector } from 'react-redux';
-import { useLocation } from 'react-router-dom';
+import axios from 'axios';
 
 import Pagination from '../components/Pagination.jsx';
 import Breadcrumb from '../components/Breadcrumb.jsx';
@@ -8,6 +7,8 @@ import ReactHelmetAsync from '../../plugins/ReactHelmetAsync';
 import ProductCard from '../components/ProductCard';
 import ProductCategoryList from '../components/ProductCategoryList';
 import InputSearchDefault from '../components/form/InputSearchDefault';
+
+const { VITE_BASE_URL: baseUrl, VITE_API_PATH: apiPath } = import.meta.env;
 
 const breadcrumbItem = [
   { page: '首頁', link: '/' },
@@ -63,6 +64,9 @@ const priceRangeOptions = [
 ];
 
 const ProductsListPage = () => {
+  // 商品搜尋關鍵字
+  const [searchValue, setSearchValue] = useState('');
+
   // 控制 select 與 inputSearch 的斷點
   const [isLarge, setIsLarge] = useState(window.innerWidth >= 992);
 
@@ -80,218 +84,170 @@ const ProductsListPage = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // 取得 Redux 內的所有商品
-  const products = useSelector((state) => state.products.products);
+  // 小工具：捲動到搜尋結果標題
+  const scrollToSearchTitle = () => {
+    if (searchTitleRef.current) {
+      searchTitleRef.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      });
+    }
+  };
 
-  // 取得 Redux 內的篩選條件
-  const filteredProductsData = useSelector(
-    (state) => state.products.filteredProductsData
-  );
+  const searchTitleRef = useRef(null);
 
-  // 取得最高人氣的禮物區塊 (6 筆商品資料)
+  // 取得所有商品
+  const [products, setProducts] = useState([]);
+  useEffect(() => {
+    (async () => {
+      try {
+        const res = await axios.get(`${baseUrl}/api/${apiPath}/products/all`);
+        setProducts(res.data.products);
+      } catch (error) {
+        console.error(error);
+      }
+    })();
+  }, []);
+
+  // 取得最高人氣的禮物區塊 (6 筆)
   const [mostPopularProducts, setMostPopularProducts] = useState([]);
   useEffect(() => {
     setMostPopularProducts(products?.filter((p) => p.is_hot).slice(0, 6));
   }, [products]);
 
-  // 設定狀態，並初始化為 Redux 內的 `filteredProductsData`
-  const [searchValue, setSearchValue] = useState(
-    filteredProductsData.searchValue || ''
-  );
-  const [festival, setFestival] = useState(filteredProductsData.festival || '');
-  const [relation, setRelation] = useState(filteredProductsData.relation || '');
-  const [category, setCategory] = useState(filteredProductsData.category || '');
-  const [priceRange, setPriceRange] = useState(
-    filteredProductsData.priceRange || ''
-  );
+  // 篩選條件
+  const [festival, setFestival] = useState('');
+  const [relation, setRelation] = useState('');
+  const [category, setCategory] = useState('');
+  const [priceRange, setPriceRange] = useState('');
   const [sortOption, setSortOption] = useState(0);
-
-  // 當 Redux 內的 `filteredProductsData` 更新時，更新 state
-  useEffect(() => {
-    setSearchValue(filteredProductsData.searchValue || '');
-    setFestival(filteredProductsData.festival || '');
-    setRelation(filteredProductsData.relation || '');
-    setCategory(filteredProductsData.category || '');
-    setPriceRange(filteredProductsData.priceRange || '');
-  }, [filteredProductsData]);
-
-  // 根據篩選條件過濾商品
   const [filteredProducts, setFilteredProducts] = useState([]);
-  const handleFilterProducts = () => {
+  const [triggerSearch, setTriggerSearch] = useState(false); // 控制關鍵字搜尋
+
+  // 分頁
+  const itemsPerPage = 12;
+  const [currentPage, setCurrentPage] = useState(1);
+  const total_pages = Math.ceil(filteredProducts.length / itemsPerPage);
+  const paginatedProducts = filteredProducts.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
+  // 商品篩選
+  useEffect(() => {
     let result = [...products];
 
-    // 定義篩選條件
-    const filters = {
-      searchValue: (product) =>
-        searchValue ? product.title.includes(searchValue) : true,
-      festival: (product) =>
-        festival ? product.tages?.includes(festival) : true,
-      relation: (product) =>
-        relation ? product.tages?.includes(relation) : true,
-      category: (product) => (category ? product.category === category : true),
-      priceRange: (product) => {
-        if (!priceRange) return true;
-        const price = product.price;
-        const priceRanges = {
-          '500 元以下': price < 500,
-          '500 ~ 1,000 元': price >= 500 && price <= 1000,
-          '1,000 ~ 3,000 元': price > 1000 && price <= 3000,
-          '3,000 元以上': price > 3000,
-        };
-        return priceRanges[priceRange] ?? true;
-      },
-    };
+    // 關鍵字搜尋
+    if (searchValue && triggerSearch) {
+      result = result.filter((product) => product.title.includes(searchValue));
+    }
 
-    // 套用篩選條件
-    result = result.filter((product) =>
-      Object.values(filters).every((filter) => filter(product))
-    );
+    // 節慶 / 場合
+    if (festival) {
+      result = result.filter((product) => product.tages?.includes(festival));
+    }
+    // 送禮關係
+    if (relation) {
+      result = result.filter((product) => product.tages?.includes(relation));
+    }
+    // 禮物類別
+    if (category) {
+      result = result.filter((product) => product.category === category);
+    }
+    // 價格範圍
+    if (priceRange) {
+      result = result.filter((product) => {
+        const price = product.price;
+        switch (priceRange) {
+          case '500 元以下':
+            return price < 500;
+          case '500 ~ 1,000 元':
+            return price >= 500 && price <= 1000;
+          case '1,000 ~ 3,000 元':
+            return price > 1000 && price <= 3000;
+          case '3,000 元以上':
+            return price > 3000;
+          default:
+            return true;
+        }
+      });
+    }
 
     // 價格排序
-    if (sortOption === 'HIGH_TO_LOW') {
+    if (sortOption === 1) {
+      // 最高到最低
       result.sort((a, b) => b.price - a.price);
-    } else if (sortOption === 'LOW_TO_HIGH') {
+    } else if (sortOption === 2) {
+      // 最低到最高
       result.sort((a, b) => a.price - b.price);
     }
 
     setFilteredProducts(result);
-  };
+  }, [
+    searchValue,
+    triggerSearch,
+    festival,
+    relation,
+    category,
+    priceRange,
+    sortOption,
+    products,
+  ]);
 
-  // 當篩選條件變更時，自動執行篩選
+  // 當關鍵字清空時，自動執行一次篩選
   useEffect(() => {
-    handleFilterProducts();
-  }, [festival, relation, category, priceRange, sortOption, products]);
+    if (searchValue === '') {
+      setTriggerSearch((prev) => !prev);
+    }
+  }, [searchValue]);
 
-  /**
-   * 分頁功能設定
-   * 這部分負責處理分頁邏輯，包括：
-   * 1. 設定每頁顯示的商品數量 (`itemsPerPage`)
-   * 2. 計算總頁數 (`total_pages`)
-   * 3. 依據當前頁數 (`currentPage`) 來分割 `filteredProducts`，取得當前頁面的商品 (`paginatedProducts`)
-   */
-
-  // 每頁顯示的商品數量
-  const itemsPerPage = 12;
-
-  // 當前頁碼 (預設為第一頁)
-  const [currentPage, setCurrentPage] = useState(1);
-
-  // 計算總頁數，`Math.ceil` 確保有多餘商品時仍能顯示完整的一頁
-  const total_pages = Math.ceil(filteredProducts.length / itemsPerPage);
-
-  // 依據 `currentPage` 來計算當前頁面應顯示的商品
-  const paginatedProducts = filteredProducts.slice(
-    (currentPage - 1) * itemsPerPage, // 計算當前頁面起始索引
-    currentPage * itemsPerPage // 計算當前頁面結束索引
-  );
-
-  /**
-   * 處理分頁變更
-   * 當使用者切換頁碼時：
-   * 1. 更新 `currentPage`
-   * 2. 讓頁面自動捲動至搜尋結果標題 (`scrollToSearchTitle()`)，
-   *    讓使用者可以立即看到新頁面的商品。
-   */
+  // 分頁行為：切換頁碼時，捲動到搜尋結果標題
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
     scrollToSearchTitle();
   };
 
-  /**
-   * 商品篩選 - 更新篩選條件
-   * 此函式負責處理 `<select>` 選單的變更，根據 `name` 屬性
-   * 更新對應的狀態變數 (`setFestival`, `setRelation` 等)。
-   *
-   * 另外，此函式還會：
-   * 1. 重置分頁 (將 `currentPage` 設為 `1`)，確保篩選後從第一頁開始顯示結果。
-   * 2. 在桌機版時，自動捲動到搜尋結果標題，讓使用者看到篩選結果。
-   */
-  const handleFilterChange = (e) => {
-    const { name, value } = e.target; // 從事件物件中取得 `name` 和 `value`
+// 3️⃣ `select` 變更時，行動版不滑動，桌機才會滑動
+const handleFestivalChange = (e) => {
+  setFestival(e.target.value);
+  setCurrentPage(1);
+  if (!isMobile) scrollToSearchTitle(); // 只有桌機才會滑動
+};
 
-    // 根據 `name` 屬性更新對應的狀態
-    switch (name) {
-      case 'festival':
-        setFestival(value);
-        break;
-      case 'relation':
-        setRelation(value);
-        break;
-      case 'category':
-        setCategory(value);
-        break;
-      case 'priceRange':
-        setPriceRange(value);
-        break;
-      default:
-        break;
-    }
+const handleRelationChange = (e) => {
+  setRelation(e.target.value);
+  setCurrentPage(1);
+  if (!isMobile) scrollToSearchTitle();
+};
 
-    // 篩選後自動跳回第一頁，確保使用者從第一頁開始瀏覽篩選結果
-    setCurrentPage(1);
+const handleCategoryChange = (e) => {
+  setCategory(e.target.value);
+  setCurrentPage(1);
+  if (!isMobile) scrollToSearchTitle();
+};
 
-    // 如果是桌機版本，則自動捲動到搜尋結果區域
-    if (!isMobile) {
-      scrollToSearchTitle();
-    }
-  };
+const handlePriceRangeChange = (e) => {
+  setPriceRange(e.target.value);
+  setCurrentPage(1);
+  if (!isMobile) scrollToSearchTitle();
+};
 
-  /**
-   * 處理 `input` 內的關鍵字搜尋變更
-   * 這個函式負責監聽使用者輸入的關鍵字，並即時更新 `searchValue` 狀態。
-   */
-  const handleSearchValueChange = (val) => {
-    setSearchValue(val);
-  };
-
-  /**
-   * 執行篩選並跳轉到搜尋結果區域
-   * 此函式負責在使用者按下搜尋按鈕或按下 Enter 時觸發搜尋：
-   * 1. 呼叫 `handleFilterProducts()` 來過濾符合條件的商品。
-   * 2. 將分頁重置為第 1 頁，確保使用者從第一頁開始瀏覽結果。
-   * 3. 自動捲動到搜尋結果標題 (`scrollToSearchTitle()`)，讓使用者立即看到結果。
-   */
-  const onSearch = () => {
-    handleFilterProducts();
-    setCurrentPage(1);
-    scrollToSearchTitle();
-  };
-
-  // 當 `searchValue` 變為空白時，自動恢復所有商品
-  useEffect(() => {
-    if (searchValue === '') {
-      handleFilterProducts();
-    }
-  }, [searchValue]);
-
-  // 滾動到搜尋結果標題
-  const searchTitleRef = useRef(null);
-  const location = useLocation();
-
-  const scrollToSearchTitle = () => {
-    if (searchTitleRef.current) {
-      const offsetTop =
-        searchTitleRef.current.getBoundingClientRect().top + window.scrollY;
-      const offsetAdjustment = 180;
-      window.scrollTo({
-        top: offsetTop - offsetAdjustment,
-        behavior: 'smooth',
-      });
-    }
-  };
-
-  // 確保畫面載入後才滾動
-  useEffect(() => {
-    if (location.state?.scrollToResults && filteredProducts.length > 0) {
-      setTimeout(() => {
-        scrollToSearchTitle();
-      }, 300); // 確保畫面載入完成
-    }
-  }, [location, filteredProducts]);
+// 4️⃣ `input` 關鍵字搜尋時，桌機 & 行動版都會滑動
+const handleSearchValueChange = (val) => {
+  setSearchValue(val);
+  if (val === '') {
+    setTriggerSearch(false);
+  } else {
+    setTriggerSearch(true);
+  }
+  setCurrentPage(1);
+  scrollToSearchTitle(); // 桌機 & 行動版都會滑動
+};
 
   return (
     <>
       <ReactHelmetAsync title="禮物清單" />
+
       <div className="py-10 py-md-19">
         <div className="container mb-6 mb-md-10">
           <section className="products-list-banner rounded-4 d-flex align-items-md-center justify-content-center justify-content-md-start">
@@ -300,9 +256,11 @@ const ProductsListPage = () => {
             </h2>
           </section>
         </div>
+
         <section className="container mb-6 mb-md-10">
           <Breadcrumb breadcrumbItem={breadcrumbItem} />
         </section>
+
         <div className="container">
           <section className="productsList-list">
             <div className="row">
@@ -316,7 +274,6 @@ const ProductsListPage = () => {
                           size={isLarge ? 'lg' : 'standard'}
                           value={searchValue}
                           onChange={handleSearchValueChange}
-                          onSearch={onSearch}
                         />
                       </div>
 
@@ -325,9 +282,8 @@ const ProductsListPage = () => {
                           className={`form-select ${
                             isLarge ? 'form-select-lg' : ''
                           }`}
-                          name="festival"
                           value={festival}
-                          onChange={handleFilterChange}
+                          onChange={handleFestivalChange}
                         >
                           <option value="">節慶 / 場合</option>
                           {festivalOptions.map((option) => (
@@ -342,9 +298,8 @@ const ProductsListPage = () => {
                           className={`form-select ${
                             isLarge ? 'form-select-lg' : ''
                           }`}
-                          name="relation"
                           value={relation}
-                          onChange={handleFilterChange}
+                          onChange={handleRelationChange}
                         >
                           <option value="">送禮關係</option>
                           {relationOptions.map((option) => (
@@ -359,9 +314,8 @@ const ProductsListPage = () => {
                           className={`form-select ${
                             isLarge ? 'form-select-lg' : ''
                           }`}
-                          name="category"
                           value={category}
-                          onChange={handleFilterChange}
+                          onChange={handleCategoryChange}
                         >
                           <option value="">禮物類別</option>
                           {categoryOptions.map((option) => (
@@ -376,9 +330,8 @@ const ProductsListPage = () => {
                           className={`form-select ${
                             isLarge ? 'form-select-lg' : ''
                           }`}
-                          name="priceRange"
                           value={priceRange}
-                          onChange={handleFilterChange}
+                          onChange={handlePriceRangeChange}
                         >
                           <option value="">價格範圍</option>
                           {priceRangeOptions.map((option) => (
@@ -413,6 +366,7 @@ const ProductsListPage = () => {
                       <h2
                         className="fs-5 fs-md-4 m-0 d-flex flex-column"
                         ref={searchTitleRef}
+                        style={{ scrollMarginTop: '210px' }}
                       >
                         目前搜尋結果
                         <span className="fs-7 text-neutral60 fw-normal mt-1 d-md-none d-block">
@@ -429,16 +383,16 @@ const ProductsListPage = () => {
                       <select
                         className="form-select"
                         value={sortOption}
-                        onChange={(e) => setSortOption(e.target.value)}
+                        onChange={(e) => setSortOption(Number(e.target.value))}
                       >
-                        <option value="">請選擇價格排序</option>
-                        <option value="HIGH_TO_LOW">價格最高到最低</option>
-                        <option value="LOW_TO_HIGH">價格最低到最高</option>
+                        <option value={0}>請選擇價格排序</option>
+                        <option value={1}>價格最高到最低</option>
+                        <option value={2}>價格最低到最高</option>
                       </select>
                     </div>
                   </div>
 
-                  {/* 若無商品，顯示提示文字 */}
+                  {/* ★ 若無商品，顯示提示文字 */}
                   <ul className="list-unstyled row gy-10">
                     {paginatedProducts.length > 0 ? (
                       paginatedProducts.map((product) => (

@@ -10,7 +10,7 @@ import userImg03 from '@/assets/img/other/user03.png';
 
 import Breadcrumb from '../components/Breadcrumb.jsx';
 import ReactHelmetAsync from '../../plugins/ReactHelmetAsync';
-import InputCalculate from '../components/InputCalculate.jsx';
+import InputCalculate from '../components/form/InputCalculate.jsx';
 import SwiperProducts from '../components/SwiperProducts.jsx';
 
 const SingleProductPage = () => {
