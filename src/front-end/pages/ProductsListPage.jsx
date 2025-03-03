@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch,useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
+
+import {clearFilters} from '../../slices/productsSlice';
 
 import Pagination from '../components/Pagination.jsx';
 import Breadcrumb from '../components/Breadcrumb.jsx';
@@ -282,12 +284,20 @@ const ProductsListPage = () => {
 
   // 確保畫面載入後才滾動
   useEffect(() => {
-    if (location.state?.scrollToResults && filteredProducts.length > 0) {
+    if (location.state?.scrollToResults ) {
       setTimeout(() => {
         scrollToSearchTitle();
       }, 300); // 確保畫面載入完成
     }
-  }, [location, filteredProducts]);
+  }, [location]);
+
+  // 當進入商品列表頁時，根據是否來自首頁篩選功能來決定是否清除篩選條件
+  const dispatch = useDispatch();
+  useEffect(() => {
+    if (!location.state?.scrollToResults) {
+      dispatch(clearFilters()); // 清空篩選條件
+    }
+  }, [location, dispatch]);
 
   return (
     <>
