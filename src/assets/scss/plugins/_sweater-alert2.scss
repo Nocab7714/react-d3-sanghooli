@@ -10,8 +10,6 @@
   background-color: $primary !important; /* 自訂進度條顏色 */
 }
 
-
-
 /* 自訂成功 (success) 圖示的顏色 */
 .custom-toast .swal2-icon.swal2-success {
   border-color: $primary-light !important; /* 外框顏色 */
@@ -28,8 +26,6 @@
   background-color: $primary !important; /* 內部勾勾的顏色 */
 }
 
-
-
 /* 自訂錯誤 (error) 圖示的顏色 */
 .custom-toast .swal2-icon.swal2-error {
   border-color: $secondary-light !important; /* 圖示外框顏色 */
@@ -45,4 +41,54 @@
 /* 調整 error 圖示的外框 */
 .custom-toast .swal2-icon.swal2-error .swal2-x-mark {
   border-color: $secondary !important; /* X 符號外框顏色 */
+}
+
+/* 自訂 Alert 的樣式 */
+.custom-alert {
+  background-color: white !important; /* 背景色 */
+  color: $neutral80 !important; /* 文字顏色 */
+  border-radius: 12px;
+}
+
+/* 自訂成功 (success) 圖示的顏色 */
+.custom-alert .swal2-icon.swal2-success {
+  border-color: $primary-light !important;
+  color: $primary-light !important;
+}
+
+.custom-alert .swal2-icon.swal2-success .swal2-success-ring {
+  border-color: $primary-light !important;
+}
+
+.custom-alert .swal2-icon.swal2-success .swal2-success-line-tip,
+.custom-alert .swal2-icon.swal2-success .swal2-success-line-long {
+  background-color: $primary !important;
+}
+
+/* 自訂錯誤 (error) 圖示的顏色 */
+.custom-alert .swal2-icon.swal2-error {
+  border-color: $secondary-light !important;
+  color: $secondary-light !important;
+}
+
+.custom-alert .swal2-icon.swal2-error .swal2-x-mark-line-left,
+.custom-alert .swal2-icon.swal2-error .swal2-x-mark-line-right {
+  background-color: $secondary !important;
+}
+
+.custom-alert .swal2-icon.swal2-error .swal2-x-mark {
+  border-color: $secondary !important;
+}
+
+/* 自訂按鈕顏色 */
+.custom-confirm-btn {
+  background-color: $primary !important; 
+  color: white !important;
+  border: none !important;
+  border-radius: 8px !important;
+  box-shadow: none !important;
+}
+
+.custom-confirm-btn:hover {
+  background-color: $primary-dark !important; 
 }

@@ -81,7 +81,11 @@ const SingleProductPage = () => {
       setToast({ show: true, title: res.data.message, icon: 'success' });
       setIsLoadingAddCart(false);
     } catch (error) {
-      setToast({ show: true, title: `加入購物車失敗！${error.response.data.message} `, icon: 'error' });
+      setToast({
+        show: true,
+        title: `加入購物車失敗！${error.response.data.message} `,
+        icon: 'error',
+      });
     } finally {
       setIsLoadingAddCart(false);
     }
