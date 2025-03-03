@@ -21,6 +21,16 @@ export const productsSlice = createSlice({
       state.filteredProductsData = action.payload;
       console.log('Redux state 更新後 (篩選條件):', state.filteredProductsData);
     },
+    clearFilters: (state) => {
+      state.filteredProductsData = {
+        festival: '',
+        relation: '',
+        category: '',
+        priceRange: '',
+        searchValue: '',
+      }; // 清空篩選條件
+      console.log('Redux state 已清除篩選條件:', state.filteredProductsData);
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -54,5 +64,5 @@ export const getProducts = createAsyncThunk(
   }
 );
 
-export const { setFilteredProductsData } = productsSlice.actions;
+export const { setFilteredProductsData, clearFilters } = productsSlice.actions;
 export default productsSlice.reducer;

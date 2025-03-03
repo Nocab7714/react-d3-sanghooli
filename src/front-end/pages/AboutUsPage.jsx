@@ -138,12 +138,12 @@ const AboutUsPage = () => {
                         className="img-fluid rounded-4 mb-5"
                         width="400"
                         height="400"
-                        data-aos="fade-right"
+                        data-aos="fade-up"
                       />
                     </div>
                   </div>
                   <div className="col-sm-6 d-flex flex-column align-items-center justify-content-center" >
-                    <div className="bg-white rounded-4 p-8" data-aos="fade-left">
+                    <div className="bg-white rounded-4 p-8" data-aos="fade-up">
                       <h3 className="fs-5 fs-md-3 text-center mb-2 mb-md-3">
                         缺乏靈感與建議
                       </h3>
@@ -157,7 +157,7 @@ const AboutUsPage = () => {
                 <div className="d-none d-sm-block">
                   <div className="row mb-10">
                     <div className="col-sm-6 d-flex flex-column align-items-center justify-content-center ">
-                      <div className="bg-white rounded-4 p-8" data-aos="fade-right">
+                      <div className="bg-white rounded-4 p-8" data-aos="fade-up">
                         <h3 className="fs-5 fs-md-3 text-center mb-2 mb-md-3">
                           缺乏個人化體驗
                         </h3>
@@ -174,7 +174,7 @@ const AboutUsPage = () => {
                           className="img-fluid rounded-4 mb-5"
                           width="400"
                           height="400"
-                          data-aos="fade-left"
+                          data-aos="fade-up"
                         />
                       </div>
                     </div>
@@ -190,12 +190,12 @@ const AboutUsPage = () => {
                           className="img-fluid rounded-4 mb-5"
                           width="400"
                           height="400"
-                          data-aos="fade-left"
+                          data-aos="fade-up"
                         />
                       </div>
                     </div>
                     <div className="col-sm-6 d-flex flex-column align-items-center justify-content-center ">
-                      <div className="bg-white rounded-4 p-8" data-aos="fade-right">
+                      <div className="bg-white rounded-4 p-8" data-aos="fade-up">
                         <h3 className="fs-5 fs-md-3 text-center mb-2 mb-md-3">
                           缺乏個人化體驗
                         </h3>
@@ -215,12 +215,12 @@ const AboutUsPage = () => {
                         className="img-fluid rounded-4 mb-5"
                         width="400"
                         height="400"
-                        data-aos="fade-right"
+                        data-aos="fade-up"
                       />
                     </div>
                   </div>
                   <div className="col-sm-6 d-flex flex-column align-items-center justify-content-center ">
-                    <div className="bg-white rounded-4 p-8" data-aos="fade-left">
+                    <div className="bg-white rounded-4 p-8" data-aos="fade-up">
                       <h3 className="fs-5 fs-md-3 text-center mb-2 mb-md-3">
                         購物流程繁瑣
                       </h3>
