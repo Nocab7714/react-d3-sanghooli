@@ -27,6 +27,7 @@
     "react-loading": "^2.0.3",
     "react-redux": "^9.2.0",
     "react-router-dom": "^7.1.5",
+    "sweetalert2": "^11.17.2",
     "swiper": "^11.2.4"
   },
   "devDependencies": {
