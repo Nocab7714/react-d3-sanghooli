@@ -14,6 +14,7 @@ export const productsSlice = createSlice({
       priceRange: '',
       searchValue: '',
     }, // 存放篩選條件
+    isLoading: false, // Loading 狀態
   },
   reducers: {
     setFilteredProductsData: (state, action) => {
@@ -23,13 +24,18 @@ export const productsSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      .addCase(getProducts.pending, (state) => {
+        state.isLoading = true; // 當開始請求 API，設定 isLoading 為 true
+      })
       .addCase(getProducts.fulfilled, (state, action) => {
         // console.log('Redux state 更新前:', state.products); // 測試 Redux state 更新前
         state.products = action.payload; // 更新 Redux state
         // console.log('Redux state 更新後:', state.products); //  測試 Redux state 更新後
+        state.isLoading = false; // 請求成功後，隱藏 Loading
       })
       .addCase(getProducts.rejected, (state, action) => {
         console.error('API 請求失敗:', action.payload);
+        state.isLoading = false; // 發生錯誤時，隱藏 Loading
       });
   },
 });
