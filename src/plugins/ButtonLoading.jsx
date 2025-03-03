@@ -2,8 +2,8 @@ const ButtonLoading = ({ isLoading = false }) => {
   return (
     <>
       {isLoading && (
-        <span class="spinner-border spinner-border-sm" role="status">
-          <span class="visually-hidden">Loading...</span>
+        <span className="spinner-border spinner-border-sm" role="status">
+          <span className="visually-hidden">Loading...</span>
         </span>
       )}
     </>

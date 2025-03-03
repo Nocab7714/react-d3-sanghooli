@@ -14,10 +14,13 @@ import InputCalculate from '../components/form/InputCalculate.jsx';
 import SwiperProducts from '../components/SwiperProducts.jsx';
 import ScreenLoading from '../../plugins/ScreenLoading';
 import ButtonLoading from '../../plugins/ButtonLoading.jsx';
+import Toast from '../../plugins/Toast.jsx';
 
 const SingleProductPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingAddCart, setIsLoadingAddCart] = useState(false);
+  const [toast, setToast] = useState({ show: false, title: '', icon: '' });
+
   const [product, setProduct] = useState({});
   const [productTitle, setProductTitle] = useState('');
   const [productStockQty, setProductStockQty] = useState(0);
@@ -69,17 +72,16 @@ const SingleProductPage = () => {
   const addCartItem = async (product_id) => {
     setIsLoadingAddCart(true);
     try {
-      await axios.post(`${baseUrl}/api/${apiPath}/cart`, {
+      const res = await axios.post(`${baseUrl}/api/${apiPath}/cart`, {
         data: {
           product_id,
           qty: Number(productQty),
         },
       });
-      alert(`成功將商品加入購物車,數量${productQty}`);
+      setToast({ show: true, title: res.data.message, icon: 'success' });
       setIsLoadingAddCart(false);
     } catch (error) {
-      alert('加入購物車失敗');
-      console.log(error);
+      setToast({ show: true, title: `加入購物車失敗！${error.response.data.message} `, icon: 'error' });
     } finally {
       setIsLoadingAddCart(false);
     }
@@ -115,6 +117,13 @@ const SingleProductPage = () => {
   return (
     <>
       <ReactHelmetAsync title={productTitle} />
+      <ScreenLoading isLoading={isLoading} />
+      <Toast
+        show={toast.show}
+        title={toast.title}
+        icon={toast.icon}
+        onClose={() => setToast({ show: false, title: '', icon: '' })}
+      />
       <div>
         {/* breadcrumb */}
         <div className="container pt-10 pt-md-19 mb-6 mb-md-10">
@@ -506,7 +515,7 @@ const SingleProductPage = () => {
                   onClick={() => addCartItem(product.id)}
                   type="button"
                   className="btn btn-primary fs-6 w-100 px-2 d-flex align-items-center justify-content-center"
-                  disabled={product.qty === 0 || isLoadingAddCart} 
+                  disabled={product.qty === 0 || isLoadingAddCart}
                 >
                   <span className={!isLoading ? 'me-2' : ''}>
                     <ButtonLoading isLoading={isLoadingAddCart} />
@@ -521,7 +530,6 @@ const SingleProductPage = () => {
           </div>
         </div>
       </div>
-      <ScreenLoading isLoading={isLoading} />
     </>
   );
 };
