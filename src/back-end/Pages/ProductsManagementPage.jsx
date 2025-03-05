@@ -1,10 +1,13 @@
 // 外部資源
 import axios from 'axios';
 import ReactHelmetAsync from '../../plugins/ReactHelmetAsync';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PaginationBackend from '../components/PaginationBackend';
-import ReactLoading from 'react-loading';
+import ReactLoading from 'react-loading';
+
+//內部資源
+import DelProductModal from '../components/DelProductModal';
 
 
 // 環境變數
@@ -127,7 +130,7 @@ const ProductsManagementPage = () =>{
 
       setIsProductModalOpen(true);// 改成用 isOpen 做開關判斷 :不能直接取得getInstance邏輯 → 要改成：setIsProductModalOpen(true);：告訴Modal現在要開
     }
-   
+  
     
     // 控制分頁元件：新增一個「頁面資訊 pageInfo」的狀態 → 用來儲存頁面資訊
     const [ pageInfo , setPageInfo ] = useState({});
@@ -235,6 +238,14 @@ const ProductsManagementPage = () =>{
                       pageInfo={pageInfo} 
                       handlePageChenge={handlePageChenge} />
                   )}
+
+                {/* 刪除產品 Modal */}
+                <DelProductModal
+                    tempProduct={tempProduct}
+                    isOpen={isDelProductModalOpen}
+                    setIsOpen={setIsDelProductModalOpen}
+                    getProducts={getProducts}
+                />
 
                   {/* 全螢幕Loading */}
                   { isScreenLoading && (
