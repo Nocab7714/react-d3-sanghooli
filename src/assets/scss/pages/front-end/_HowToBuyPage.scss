@@ -43,9 +43,9 @@
   
   .timeline-item.active {
     font-weight: bold; 
-    color: $primary; /* 橙色選中:$primary(#FFBB6D) */
+    color: $primary !important ; /* 橙色選中:$primary(#FFBB6D) */
   }
   
   .timeline-item.active::before {
-    background:$primary; /* 橙色圓點:$primary(#FFBB6D) */
+    background:$primary !important; /* 橙色圓點:$primary(#FFBB6D) */
   }

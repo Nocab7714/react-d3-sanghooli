@@ -25,13 +25,15 @@ const HowToBuyPage = () => {
     
     //錨點：修改 handleClick 函式
     const handleClick = (id) => {
-      setActiveLink(id);
+      setActiveLink(id); // 確保點擊後立即更新 activeLink
       
       //錨點連動與樣式設定
       if (id === "shipping") {
         shippingRef.current?.scrollIntoView({ 
           behavior: "smooth", 
-          block: "nearest" });
+          block: "center",
+          inline: "nearest" 
+        });
       } else if (id === "return-policy") {
         returnPolicyRef.current?.scrollIntoView({ 
           behavior: "smooth", 
@@ -39,17 +41,18 @@ const HowToBuyPage = () => {
       }
     };
 
-    // 監聽滾動事件：內部控制 activeLink，確保點擊 GoToTop 時，左側的「隱私權政策」錨點會亮起
-    useEffect(() => {
-      const handleScroll = () => {
-      if (window.scrollY < 50) {
-          setActiveLink("shipping");
-      }
-      };
+    // 監聽滾動事件：內部控制 activeLink，確保點擊 GoToTop 時，左側的「」錨點會亮起
+    // 0305發現：會影響推換貨規則點擊的 activeLin呈現效果，因此先隱藏設定
+    // useEffect(() => {
+    //   const handleScroll = () => {
+    //   if (window.scrollY < 50) {
+    //       setActiveLink("shipping");
+    //   }
+    //   };
 
-      window.addEventListener("scroll", handleScroll);
-      return () => window.removeEventListener("scroll", handleScroll);
-    }, []);
+    //   window.addEventListener("scroll", handleScroll);
+    //   return () => window.removeEventListener("scroll", handleScroll);
+    // }, []);
 
 
     return(

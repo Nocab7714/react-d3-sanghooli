@@ -28,8 +28,10 @@ const PrivacyPolicyPage = () => {
       //錨點連動與樣式設定
       if (id === "privacy-policy") {
         privacyPolicyRef.current?.scrollIntoView({ 
-          behavior: "smooth", 
-          block: "nearest" });
+          behavior: "smooth",
+          block: "center",
+          inline: "nearest" 
+     });
       } else if (id === "service-policy") {
         servicePolicyRef.current?.scrollIntoView({ 
           behavior: "smooth", 
@@ -38,16 +40,17 @@ const PrivacyPolicyPage = () => {
     };
 
     // 監聽滾動事件：內部控制 activeLink，確保點擊 GoToTop 時，左側的「隱私權政策」錨點會亮起
-    useEffect(() => {
-        const handleScroll = () => {
-        if (window.scrollY < 50) {
-            setActiveLink("privacy-policy");
-        }
-        };
+    // 0305發現：會影響推換貨規則點擊的 activeLin呈現效果，因此先隱藏設定
+    // useEffect(() => {
+    //     const handleScroll = () => {
+    //     if (window.scrollY < 50) {
+    //         setActiveLink("privacy-policy");
+    //     }
+    //     };
 
-        window.addEventListener("scroll", handleScroll);
-        return () => window.removeEventListener("scroll", handleScroll);
-    }, []);
+    //     window.addEventListener("scroll", handleScroll);
+    //     return () => window.removeEventListener("scroll", handleScroll);
+    // }, []);
 
 
     return(
