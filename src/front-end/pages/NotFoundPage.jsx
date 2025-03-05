@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import ReactHelmetAsync from '../../plugins/ReactHelmetAsync';
+
 const NotFoundPage = () => {
   const navigate = useNavigate();
   const [countdown, setCountdown] = useState(10);
@@ -20,10 +22,11 @@ const NotFoundPage = () => {
 
   return (
     <>
+      <ReactHelmetAsync title="頁面不存在" />
       <div className="container">
         <div
           className="d-flex align-items-center justify-content-center flex-column"
-          style={{ height: '55vh' }}
+          style={{ height: '100vh' }}
         >
           <h2 className="display-1 d-none d-md-block">ERROR 404</h2>
           <h2 className="display-5 d-block d-md-none">ERROR 404</h2>

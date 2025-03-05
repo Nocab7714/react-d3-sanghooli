@@ -63,10 +63,15 @@ npm run dev
 - React Router
 - React Hook Form
 - Redux
+- Redux toolkit
+- prop-types
 - Swiper
-<!-- 技術內容待更新，下方為保留 -->
-<!-- - AOS 3.0.0-beta.6 -->
-<!-- - GSAP 3.12.5 -->
+- d3.js
+- c3.js
+- react-loading
+- react-helmet-async
+- AOS
+- sweetalert2
 
 ## 聯絡作者
 

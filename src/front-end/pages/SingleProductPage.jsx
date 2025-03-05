@@ -10,10 +10,17 @@ import userImg03 from '@/assets/img/other/user03.png';
 
 import Breadcrumb from '../components/Breadcrumb.jsx';
 import ReactHelmetAsync from '../../plugins/ReactHelmetAsync';
-import InputCalculate from '../components/InputCalculate.jsx';
+import InputCalculate from '../components/form/InputCalculate.jsx';
 import SwiperProducts from '../components/SwiperProducts.jsx';
+import ScreenLoading from '../../plugins/ScreenLoading';
+import ButtonLoading from '../../plugins/ButtonLoading.jsx';
+import Toast from '../../plugins/Toast.jsx';
 
 const SingleProductPage = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingAddCart, setIsLoadingAddCart] = useState(false);
+  const [toast, setToast] = useState({ show: false, title: '', icon: '' });
+
   const [product, setProduct] = useState({});
   const [productTitle, setProductTitle] = useState('');
   const [productStockQty, setProductStockQty] = useState(0);
@@ -34,6 +41,7 @@ const SingleProductPage = () => {
   // 取得單一商品資料
   useEffect(() => {
     const getProduct = async () => {
+      setIsLoading(true);
       try {
         const res = await axios.get(
           `${baseUrl}/api/${apiPath}/product/${product_id}`
@@ -48,10 +56,12 @@ const SingleProductPage = () => {
             link: `/single-product/${res.data.product.id}`,
           },
         ]);
+        setIsLoading(false);
       } catch (error) {
         alert('取得產品失敗');
         navigate('/404');
       } finally {
+        setIsLoading(false);
       }
     };
     getProduct();
@@ -60,19 +70,24 @@ const SingleProductPage = () => {
   // 加入購物車
   const [productQty, setProductQty] = useState(1);
   const addCartItem = async (product_id) => {
+    setIsLoadingAddCart(true);
     try {
-      await axios.post(`${baseUrl}/api/${apiPath}/cart`, {
+      const res = await axios.post(`${baseUrl}/api/${apiPath}/cart`, {
         data: {
           product_id,
           qty: Number(productQty),
         },
       });
-      alert(`成功將商品加入購物車,數量${productQty}`);
+      setToast({ show: true, title: res.data.message, icon: 'success' });
+      setIsLoadingAddCart(false);
     } catch (error) {
-      alert('加入購物車失敗');
-      console.log(error);
+      setToast({
+        show: true,
+        title: `加入購物車失敗！${error.response.data.message} `,
+        icon: 'error',
+      });
     } finally {
-      // console.log(typeof productQty ,productQty)
+      setIsLoadingAddCart(false);
     }
   };
 
@@ -106,6 +121,13 @@ const SingleProductPage = () => {
   return (
     <>
       <ReactHelmetAsync title={productTitle} />
+      <ScreenLoading isLoading={isLoading} />
+      <Toast
+        show={toast.show}
+        title={toast.title}
+        icon={toast.icon}
+        onClose={() => setToast({ show: false, title: '', icon: '' })}
+      />
       <div>
         {/* breadcrumb */}
         <div className="container pt-10 pt-md-19 mb-6 mb-md-10">
@@ -222,7 +244,7 @@ const SingleProductPage = () => {
                       {/* 未收藏狀態按鈕 */}
                       <button
                         type="button"
-                        className="btn btn-outline-neutral60 w-100"
+                        className="btn btn-outline-neutral60 w-100 d-flex align-items-center justify-content-center"
                       >
                         <span className="material-symbols-outlined align-middle me-1">
                           favorite
@@ -232,7 +254,7 @@ const SingleProductPage = () => {
                       {/* 已收藏狀態按鈕 */}
                       {/* <button
                       type="button"
-                      className="btn btn-outline-neutral60 w-100"
+                      className="btn btn-outline-neutral60 w-100 d-flex align-items-center justify-content-center"
                     >
                       <span className="material-symbols-outlined material-filled align-middle me-1 ">
                         favorite
@@ -245,10 +267,13 @@ const SingleProductPage = () => {
                       <button
                         onClick={() => addCartItem(product.id)}
                         type="button"
-                        className="btn btn-primary w-100"
-                        disabled={product.qty === 0}
+                        className="btn btn-primary w-100 d-flex align-items-center justify-content-center"
+                        disabled={product.qty === 0 || isLoadingAddCart}
                       >
-                        <span className="material-symbols-outlined align-middle me-1">
+                        <span className={isLoading ? 'me-3' : ''}>
+                          <ButtonLoading isLoading={isLoadingAddCart} />
+                        </span>
+                        <span className="material-symbols-outlined  me-1">
                           local_mall
                         </span>
                         加入購物車
@@ -470,7 +495,7 @@ const SingleProductPage = () => {
                 {/* 未收藏狀態按鈕 */}
                 <button
                   type="button"
-                  className="btn btn-outline-neutral60 fs-6 w-100 px-2"
+                  className="btn btn-outline-neutral60 fs-6 w-100 px-2 d-flex align-items-center justify-content-center"
                 >
                   <span className="material-symbols-outlined fs-5 align-middle  me-1">
                     favorite
@@ -480,7 +505,7 @@ const SingleProductPage = () => {
                 {/* 已收藏狀態按鈕 */}
                 {/* <button
                       type="button"
-                      className="btn btn-outline-neutral60 fs-6 w-100 px-2"
+                      className="btn btn-outline-neutral60 fs-6 w-100 px-2 d-flex align-items-center justify-content-center"
                     >
                       <span className="material-symbols-outlined material-filled align-middle fs-5 me-1 ">
                         favorite
@@ -493,9 +518,12 @@ const SingleProductPage = () => {
                 <button
                   onClick={() => addCartItem(product.id)}
                   type="button"
-                  className="btn btn-primary fs-6 w-100 px-2"
-                  disabled={product.qty === 0}
+                  className="btn btn-primary fs-6 w-100 px-2 d-flex align-items-center justify-content-center"
+                  disabled={product.qty === 0 || isLoadingAddCart}
                 >
+                  <span className={isLoading ? 'me-2' : ''}>
+                    <ButtonLoading isLoading={isLoadingAddCart} />
+                  </span>
                   <span className="material-symbols-outlined fs-5 align-middle me-1">
                     local_mall
                   </span>
