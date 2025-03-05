@@ -59,33 +59,18 @@ const ProductsManagementPage = () =>{
   }, []);
 
   const [productList, setProductList] = useState([]); //先給 productList 一個狀態：後續會從API撈回資料塞回productList 中 
-
-
-  //獲取產品列表的 API + 讀取Page資料變數動作
-  const [paginationData, setPaginationData] = useState({
-    total_pages: 1,
-    current_page: 1,
-    has_pre: false,
-    has_next: false
-  });
   
   
   //在登入成功時，呼叫：管理控制台- 產品（Products）> Get API
-  const getProducts = async () => {
+  const getProducts = async ( page = 1 ) => {
     try {
       const res = await axios.get(
-        `${baseUrl}/api/${apiPath}/admin/products`
+        `${baseUrl}/api/${apiPath}/admin/products?page=${page}`
       );
       setProductList(res.data.products);
 
       //從 產品 API 取得頁面資訊getProduct，並存進狀態中（把res.data.Pagination 塞進去 setPageInfo 裡面）
-      // 確保 `paginationData` 存在，否則提供預設值
-      setPageInfo(res.data.pagination || {
-        total_pages: 1,
-        current_page: 1,
-        has_pre: false,
-        has_next: false
-      });
+      setPageInfo(res.data.pagination );
     } catch (error) {
       alert("取得產品資訊失敗，請稍作等待後，再重新嘗試操作");
     }
@@ -135,16 +120,16 @@ const ProductsManagementPage = () =>{
 
       setIsProductModalOpen(true);// 改成用 isOpen 做開關判斷 :不能直接取得getInstance邏輯 → 要改成：setIsProductModalOpen(true);：告訴Modal現在要開
     }
-
    
+    
     // 控制分頁元件：新增一個「頁面資訊 pageInfo」的狀態 → 用來儲存頁面資訊
-    const [ pageInfo , setPageInfo ] = useState({ total_pages: 1, current_page: 1 });
+    const [ pageInfo , setPageInfo ] = useState({});
 
     //讀取當前頁面的「頁碼」 資料的判斷式條件＆動作：
     const handlePageChenge = (page) => {
       getProducts(page);
+      window.scrollTo({ top: 380, behavior: 'auto' }); // 滑動回到頁面頂部
     }
-
 
     return (
       <>
@@ -238,7 +223,11 @@ const ProductsManagementPage = () =>{
                 )}
 
                 {/* 分頁元件，條件設定只有當 productList 有數據時，才顯示分頁 */}
-                <PaginationBackend pageInfo={pageInfo} handlePageChenge={handlePageChenge} />
+                {orderList?.length > 0 && (
+                    <PaginationBackend 
+                      pageInfo={pageInfo} 
+                      handlePageChenge={handlePageChenge} />
+                  )}
 
               </div>
             </div>
