@@ -46,7 +46,6 @@ const HeaderBacked = ()=>{
       navigate('/admin/login'); // 登出後回後台首頁
   };
 
-
   return(
    <>
     {/* 登入狀態 navbar */}
@@ -87,7 +86,7 @@ const HeaderBacked = ()=>{
               
               {/* 根據登入狀態決定顯示哪些選單:登入狀態 navbar 顯示_使用 .map() 渲染導覽列按鈕 */}
               {(isLoggedIn ? loggedInRoutes : guestRoutes).map((item) => (
-                <li key={item.path} className="nav-item position-relative me-4 me-md-1">
+                <li key={item.path} className="nav-item position-relative me-4 me-md-1 adminNav-deco">
                 
                   {/* NavLink負責頁面切換： */}
                   <NavLink 
@@ -105,12 +104,11 @@ const HeaderBacked = ()=>{
 
               {/* 測試用的登入/登出按鈕 */}
                 <li className="nav-item ms-4">
-                  <NavLink to='/admin/orders'
-                    className="btn material-symbols-outlined"
-                    onClick={() => setIsLoggedIn(!isLoggedIn)}
-                  >
-                    {isLoggedIn ? '登出' : '施工中'}
-                  </NavLink>
+                <button 
+                  className="btn btn-primary material-symbols-outlined " 
+                  onClick={isLoggedIn ? handleLogout : handleLogin}>
+                  {isLoggedIn ? '登出' : '施工中'}
+                </button>
                 </li>
             </ul>
           </div>

@@ -1,9 +1,13 @@
 // 外部資源
 import axios from 'axios';
 import ReactHelmetAsync from '../../plugins/ReactHelmetAsync';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PaginationBackend from '../components/PaginationBackend';
+import ReactLoading from 'react-loading';
+
+//內部資源
+import DelProductModal from '../components/DelProductModal';
 
 
 // 環境變數
@@ -58,36 +62,27 @@ const ProductsManagementPage = () =>{
     checkUserLogin(); //戳checkUserLogin API :
   }, []);
 
+  
+  const [ isScreenLoading , setIsScreenLoading ] = useState(false);
+  
   const [productList, setProductList] = useState([]); //先給 productList 一個狀態：後續會從API撈回資料塞回productList 中 
-
-
-  //獲取產品列表的 API + 讀取Page資料變數動作
-  const [paginationData, setPaginationData] = useState({
-    total_pages: 1,
-    current_page: 1,
-    has_pre: false,
-    has_next: false
-  });
   
   
   //在登入成功時，呼叫：管理控制台- 產品（Products）> Get API
-  const getProducts = async () => {
+  const getProducts = async ( page = 1 ) => {
+    setIsScreenLoading(true); //顯示 Loading 畫面
     try {
       const res = await axios.get(
-        `${baseUrl}/api/${apiPath}/admin/products`
+        `${baseUrl}/api/${apiPath}/admin/products?page=${page}`
       );
       setProductList(res.data.products);
 
       //從 產品 API 取得頁面資訊getProduct，並存進狀態中（把res.data.Pagination 塞進去 setPageInfo 裡面）
-      // 確保 `paginationData` 存在，否則提供預設值
-      setPageInfo(res.data.pagination || {
-        total_pages: 1,
-        current_page: 1,
-        has_pre: false,
-        has_next: false
-      });
+      setPageInfo(res.data.pagination );
     } catch (error) {
       alert("取得產品資訊失敗，請稍作等待後，再重新嘗試操作");
+    } finally {
+      setIsScreenLoading(false); // 無論成功或失敗，都關閉 Loading 畫面
     }
   };
 
@@ -135,16 +130,16 @@ const ProductsManagementPage = () =>{
 
       setIsProductModalOpen(true);// 改成用 isOpen 做開關判斷 :不能直接取得getInstance邏輯 → 要改成：setIsProductModalOpen(true);：告訴Modal現在要開
     }
-
-   
+  
+    
     // 控制分頁元件：新增一個「頁面資訊 pageInfo」的狀態 → 用來儲存頁面資訊
-    const [ pageInfo , setPageInfo ] = useState({ total_pages: 1, current_page: 1 });
+    const [ pageInfo , setPageInfo ] = useState({});
 
     //讀取當前頁面的「頁碼」 資料的判斷式條件＆動作：
     const handlePageChenge = (page) => {
       getProducts(page);
+      window.scrollTo({ top: 380, behavior: 'auto' }); // 滑動回到頁面頂部
     }
-
 
     return (
       <>
@@ -238,8 +233,34 @@ const ProductsManagementPage = () =>{
                 )}
 
                 {/* 分頁元件，條件設定只有當 productList 有數據時，才顯示分頁 */}
-                <PaginationBackend pageInfo={pageInfo} handlePageChenge={handlePageChenge} />
+                {productList?.length > 0 && (
+                    <PaginationBackend 
+                      pageInfo={pageInfo} 
+                      handlePageChenge={handlePageChenge} />
+                  )}
 
+                {/* 刪除產品 Modal */}
+                <DelProductModal
+                    tempProduct={tempProduct}
+                    isOpen={isDelProductModalOpen}
+                    setIsOpen={setIsDelProductModalOpen}
+                    getProducts={getProducts}
+                />
+
+                  {/* 全螢幕Loading */}
+                  { isScreenLoading && (
+                  <div
+                    className="d-flex justify-content-center align-items-center"
+                    style={{
+                      position: "fixed", //固定在畫面上，不會隨滾動條移動
+                      inset: 0, //讓 div 充滿整個畫面
+                      backgroundColor: "rgba(255,255,255,0.3)", //半透明白色背景
+                      zIndex: 999, //確保 Loading 畫面顯示在最上層
+                    }}
+                  >
+                    <ReactLoading type="spin" color="black" width="4rem" height="4rem" />
+                  </div>
+                  )}
               </div>
             </div>
           </div>
