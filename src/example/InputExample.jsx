@@ -24,7 +24,9 @@ const InputExample = () => {
           className="btn btn-add position-absolute translate-middle rounded-1 p-1  "
           type="button"
         >
-          <span className="material-symbols-outlined align-middle fs-5">add</span>
+          <span className="material-symbols-outlined align-middle fs-5">
+            add
+          </span>
         </button>
       </div>
       {/* input-group-calculate */}
@@ -48,7 +50,9 @@ const InputExample = () => {
           className="btn btn-add position-absolute translate-middle rounded-1 p-1  "
           type="button"
         >
-          <span className="material-symbols-outlined align-middle fs-5">add</span>
+          <span className="material-symbols-outlined align-middle fs-5">
+            add
+          </span>
         </button>
       </div>
       {/* input-group-calculate-lg-disabled */}
@@ -71,7 +75,9 @@ const InputExample = () => {
           className="btn btn-add position-absolute translate-middle rounded-1 p-2  "
           type="button"
         >
-          <span className="material-symbols-outlined align-middle fs-4">add</span>
+          <span className="material-symbols-outlined align-middle fs-4">
+            add
+          </span>
         </button>
       </div>
       {/* input-group-calculate-lg */}
@@ -95,7 +101,9 @@ const InputExample = () => {
           className="btn btn-add position-absolute translate-middle rounded-1 p-2  "
           type="button"
         >
-          <span className="material-symbols-outlined align-middle fs-4">add</span>
+          <span className="material-symbols-outlined align-middle fs-4">
+            add
+          </span>
         </button>
       </div>
 

@@ -12,6 +12,8 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.6.0",
+    "animate.css": "^4.1.1",
+    "aos": "^2.3.4",
     "axios": "^1.7.9",
     "bootstrap": "^5.3.3",
     "c3": "^0.7.20",
@@ -25,6 +27,7 @@
     "react-loading": "^2.0.3",
     "react-redux": "^9.2.0",
     "react-router-dom": "^7.1.5",
+    "sweetalert2": "^11.17.2",
     "swiper": "^11.2.4"
   },
   "devDependencies": {

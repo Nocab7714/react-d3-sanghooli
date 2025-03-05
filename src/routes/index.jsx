@@ -15,6 +15,10 @@ import SuccessPage from '../front-end/pages/SuccessPage.jsx';
 
 // 後台
 import LayoutBacked from '../back-end/layout/LayoutBacked.jsx';
+import AdminLoginPage from '../back-end/Pages/AdminLoginPage.jsx';
+import OrdersManagementPage from '../back-end/Pages/OrdersManagementPage.jsx'
+import ProductsManagementPage from '../back-end/Pages/ProductsManagementPage.jsx'
+import CouponManagementPage from '../back-end/Pages/CouponManagementPage.jsx';
 
 import { createHashRouter } from 'react-router-dom';
 
@@ -68,22 +72,40 @@ const routes = [
         path : 'success/:orderId',
         element: <SuccessPage />
       },
-      {
-        path : '*',
-        element: <NotFoundPage />
-      },
+      // {
+      //   path : '*',
+      //   element: <NotFoundPage />
+      // },
     ]
   },
   { 
-    // 前台路由設定
+    // 後台路由設定
     path: '/admin',
     element: <LayoutBacked />,
     children:[
-      {
-        path : '*',
-        element: <NotFoundPage />
+      { 
+        path: 'login', 
+        element: <AdminLoginPage /> // 新增後台登入頁面
       },
+      { 
+        path: 'orders', 
+        element: <OrdersManagementPage /> // 新增訂單管理頁面
+      },
+      { 
+        path: 'products', 
+        element: <ProductsManagementPage /> // 新增產品登入頁面
+      },      
+      { 
+        path: 'coupon', 
+        element: <CouponManagementPage /> // 新增產品登入頁面
+      },  
     ]
+  },
+  //最後放置 catch-all 路由:
+  //Catch-All路由:通常用來處理所有未被定義的 API 路徑，並回應 404 錯誤
+  {
+    path : '*',
+    element: <NotFoundPage />
   },
 ];
 

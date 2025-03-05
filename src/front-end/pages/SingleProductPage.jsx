@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const { VITE_BASE_URL: baseUrl, VITE_API_PATH: apiPath } = import.meta.env;
@@ -10,12 +10,20 @@ import userImg03 from '@/assets/img/other/user03.png';
 
 import Breadcrumb from '../components/Breadcrumb.jsx';
 import ReactHelmetAsync from '../../plugins/ReactHelmetAsync';
-import InputCalculate from '../components/InputCalculate.jsx';
+import InputCalculate from '../components/form/InputCalculate.jsx';
+import SwiperProducts from '../components/SwiperProducts.jsx';
+import ScreenLoading from '../../plugins/ScreenLoading';
+import ButtonLoading from '../../plugins/ButtonLoading.jsx';
+import Toast from '../../plugins/Toast.jsx';
 
 const SingleProductPage = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingAddCart, setIsLoadingAddCart] = useState(false);
+  const [toast, setToast] = useState({ show: false, title: '', icon: '' });
+
   const [product, setProduct] = useState({});
   const [productTitle, setProductTitle] = useState('');
-  const [productStockQty, setProductStockQty] =useState(0)
+  const [productStockQty, setProductStockQty] = useState(0);
   const { id: product_id } = useParams();
   const [breadcrumbItem, setBreadcrumbItem] = useState([
     {
@@ -28,47 +36,98 @@ const SingleProductPage = () => {
     },
   ]);
 
-  // 取得商品資料
+  const navigate = useNavigate();
+
+  // 取得單一商品資料
   useEffect(() => {
     const getProduct = async () => {
+      setIsLoading(true);
       try {
         const res = await axios.get(
           `${baseUrl}/api/${apiPath}/product/${product_id}`
         );
         setProduct(res.data.product);
         setProductTitle(res.data.product.title);
-        setProductStockQty(res.data.product.qty)
-        setBreadcrumbItem((pre) => [...pre, { page: res.data.product.title }]);
+        setProductStockQty(res.data.product.qty);
+        setBreadcrumbItem((prev) => [
+          ...prev.slice(0, 2),
+          {
+            page: res.data.product.title,
+            link: `/single-product/${res.data.product.id}`,
+          },
+        ]);
+        setIsLoading(false);
       } catch (error) {
         alert('取得產品失敗');
+        navigate('/404');
       } finally {
+        setIsLoading(false);
       }
     };
     getProduct();
-  }, []);
+  }, [product_id]);
 
   // 加入購物車
   const [productQty, setProductQty] = useState(1);
   const addCartItem = async (product_id) => {
+    setIsLoadingAddCart(true);
     try {
-      await axios.post(`${baseUrl}/api/${apiPath}/cart`, {
+      const res = await axios.post(`${baseUrl}/api/${apiPath}/cart`, {
         data: {
           product_id,
           qty: Number(productQty),
         },
       });
-      alert(`成功將商品加入購物車,數量${productQty}`);
+      setToast({ show: true, title: res.data.message, icon: 'success' });
+      setIsLoadingAddCart(false);
     } catch (error) {
-      alert('加入購物車失敗');
-      console.log(error);
+      setToast({
+        show: true,
+        title: `加入購物車失敗！${error.response.data.message} `,
+        icon: 'error',
+      });
     } finally {
-      // console.log(typeof productQty ,productQty)
+      setIsLoadingAddCart(false);
     }
+  };
+
+  //  取得所有商品
+  const [products, setProducts] = useState([]);
+  useEffect(() => {
+    (async () => {
+      try {
+        const res = await axios.get(`${baseUrl}/api/${apiPath}/products/all`);
+        setProducts(getRandomProducts(res.data.products));
+      } catch (error) {
+        console.log(error);
+      }
+    })();
+  }, []);
+
+  // 取得隨機 10 筆商品的方法
+  const getRandomProducts = (products) => {
+    if (!products || products.length === 0) return [];
+    // 複製陣列，避免修改原始陣列
+    const shuffled = [...products];
+    // Fisher-Yates 洗牌演算法 ( 超過 100 筆的陣列適用 )
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    // 取前 10 筆
+    return shuffled.slice(0, 10);
   };
 
   return (
     <>
       <ReactHelmetAsync title={productTitle} />
+      <ScreenLoading isLoading={isLoading} />
+      <Toast
+        show={toast.show}
+        title={toast.title}
+        icon={toast.icon}
+        onClose={() => setToast({ show: false, title: '', icon: '' })}
+      />
       <div>
         {/* breadcrumb */}
         <div className="container pt-10 pt-md-19 mb-6 mb-md-10">
@@ -168,11 +227,15 @@ const SingleProductPage = () => {
                   {/* product-quantity-selector */}
                   <div className="d-flex align-items-center mb-0 mb-md-8">
                     <div className="me-6">
-                      <InputCalculate inputSize='lg' productQty={productQty} setProductQty={setProductQty} productStockQty={productStockQty} />
+                      <InputCalculate
+                        inputSize="lg"
+                        productQty={productQty}
+                        setProductQty={setProductQty}
+                        productStockQty={productStockQty}
+                      />
                     </div>
                     <span className="fs-6 text-neutral60">
                       庫存尚有{product.qty}件
-
                     </span>
                   </div>
                   {/* add-to-cart & add-to-favorite */}
@@ -181,7 +244,7 @@ const SingleProductPage = () => {
                       {/* 未收藏狀態按鈕 */}
                       <button
                         type="button"
-                        className="btn btn-outline-neutral60 w-100"
+                        className="btn btn-outline-neutral60 w-100 d-flex align-items-center justify-content-center"
                       >
                         <span className="material-symbols-outlined align-middle me-1">
                           favorite
@@ -191,7 +254,7 @@ const SingleProductPage = () => {
                       {/* 已收藏狀態按鈕 */}
                       {/* <button
                       type="button"
-                      className="btn btn-outline-neutral60 w-100"
+                      className="btn btn-outline-neutral60 w-100 d-flex align-items-center justify-content-center"
                     >
                       <span className="material-symbols-outlined material-filled align-middle me-1 ">
                         favorite
@@ -204,10 +267,13 @@ const SingleProductPage = () => {
                       <button
                         onClick={() => addCartItem(product.id)}
                         type="button"
-                        className="btn btn-primary w-100"
-                        disabled={product.qty === 0}
+                        className="btn btn-primary w-100 d-flex align-items-center justify-content-center"
+                        disabled={product.qty === 0 || isLoadingAddCart}
                       >
-                        <span className="material-symbols-outlined align-middle me-1">
+                        <span className={isLoading ? 'me-3' : ''}>
+                          <ButtonLoading isLoading={isLoadingAddCart} />
+                        </span>
+                        <span className="material-symbols-outlined  me-1">
                           local_mall
                         </span>
                         加入購物車
@@ -220,17 +286,18 @@ const SingleProductPage = () => {
           </section>
         </div>
         {/* product-recommendations-swiper */}
-        <section className="product-recommendations-swiper py-10 py-md-19">
+        <section className="product-recommendations-swiper pt-10 pt-md-19">
           <div className="container">
             <div className="d-flex align-items-center justify-content-between mb-8 mb-md-10 ">
               <h2 className="fs-5 fs-md-4 m-0 ">你可能會喜歡的商品</h2>
               <div className="flex-grow-1 mx-3 mx-md-4 border-top border-neutral40" />
             </div>
-            <div className="swiper-content fs-1 bg-neutral20  text-center">
-              swiper 預留空間
-            </div>
           </div>
         </section>
+        <div className="pb-10 pb-md-19">
+          <SwiperProducts carouselData={products} autoplay={true} />
+        </div>
+
         {/* consumer-reviews */}
         <section className="consumer-reviews py-10 py-md-19">
           <div className="container">
@@ -413,7 +480,11 @@ const SingleProductPage = () => {
           <div className="pt-4 pb-6 px-3">
             {/* product-quantity-selector */}
             <div className="d-flex align-items-center justify-content-between mb-4">
-            <InputCalculate productQty={productQty} setProductQty={setProductQty} productStockQty={productStockQty} />
+              <InputCalculate
+                productQty={productQty}
+                setProductQty={setProductQty}
+                productStockQty={productStockQty}
+              />
               <span className="fs-6 text-neutral60">
                 庫存尚有{product.qty}件
               </span>
@@ -424,7 +495,7 @@ const SingleProductPage = () => {
                 {/* 未收藏狀態按鈕 */}
                 <button
                   type="button"
-                  className="btn btn-outline-neutral60 fs-6 w-100 px-2"
+                  className="btn btn-outline-neutral60 fs-6 w-100 px-2 d-flex align-items-center justify-content-center"
                 >
                   <span className="material-symbols-outlined fs-5 align-middle  me-1">
                     favorite
@@ -434,7 +505,7 @@ const SingleProductPage = () => {
                 {/* 已收藏狀態按鈕 */}
                 {/* <button
                       type="button"
-                      className="btn btn-outline-neutral60 fs-6 w-100 px-2"
+                      className="btn btn-outline-neutral60 fs-6 w-100 px-2 d-flex align-items-center justify-content-center"
                     >
                       <span className="material-symbols-outlined material-filled align-middle fs-5 me-1 ">
                         favorite
@@ -447,9 +518,12 @@ const SingleProductPage = () => {
                 <button
                   onClick={() => addCartItem(product.id)}
                   type="button"
-                  className="btn btn-primary fs-6 w-100 px-2"
-                  disabled={product.qty === 0}
+                  className="btn btn-primary fs-6 w-100 px-2 d-flex align-items-center justify-content-center"
+                  disabled={product.qty === 0 || isLoadingAddCart}
                 >
+                  <span className={isLoading ? 'me-2' : ''}>
+                    <ButtonLoading isLoading={isLoadingAddCart} />
+                  </span>
                   <span className="material-symbols-outlined fs-5 align-middle me-1">
                     local_mall
                   </span>
