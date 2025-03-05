@@ -25,7 +25,6 @@ const PrivacyPolicyPage = () => {
     
     const handleClick = (id) => {
       setActiveLink(id);
-
       //錨點連動與樣式設定
       if (id === "privacy-policy") {
         privacyPolicyRef.current?.scrollIntoView({ 
