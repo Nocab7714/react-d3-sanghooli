@@ -9,7 +9,8 @@ import { formatNumber } from "../../utils/formatNumber";
 import EmptyBasket from "../components/EmptyBasket";
 import CartStep from "../components/CartStep";
 import { useDispatch, useSelector } from "react-redux";
-import { asyncGetCart } from "../../slice/cartSlice";
+import { asyncGetCart } from "../../slices/cartSlice";
+import { setGlobalLoading } from "../../slices/loadingSlice";
 
 // 環境變數
 const BASE_URL = import.meta.env.VITE_BASE_URL;
@@ -20,6 +21,7 @@ function CartPage() {
   const dispatch = useDispatch();
 
   const updateCart = async (cartId, productId, qty) => {
+    dispatch(setGlobalLoading(true))
     try {
       qty = Number(qty);
       if (isNaN(qty) || qty < 1) qty = 1;
@@ -34,16 +36,21 @@ function CartPage() {
       dispatch(asyncGetCart());
     } catch (error) {
       console.dir(error);
+    } finally {
+      dispatch(setGlobalLoading(false))
     }
   };
 
   const deleteCartOne = async(cartId) => {
+    dispatch(setGlobalLoading(true))
     try {
       const url = `${BASE_URL}/api/${API_PATH}/cart/${cartId}`;
       await axios.delete(url);
       dispatch(asyncGetCart());
     } catch (error) {
       console.dir(error)
+    } finally {
+      dispatch(setGlobalLoading(false))
     }
   }
 

@@ -1,6 +1,8 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
+import { setGlobalLoading } from "./loadingSlice";
+
 // 環境變數
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 const API_PATH = import.meta.env.VITE_API_PATH;
@@ -8,8 +10,9 @@ const API_PATH = import.meta.env.VITE_API_PATH;
 
 const asyncGetCart = createAsyncThunk(
   'cart/asyncGetCart',
-  async function(payload, { dispatch }){
-    // setIsLoadingScreen(true);
+  async function({ skipGlobalLoading = false } = {}, { dispatch }){
+    console.log('getCart');
+    if(!skipGlobalLoading) dispatch(setGlobalLoading(true))
     try {
       const url = `${BASE_URL}/api/${API_PATH}/cart`;
       const response = await axios.get(url);
@@ -18,7 +21,7 @@ const asyncGetCart = createAsyncThunk(
       // dispatch(createAsyncMessage(error.response.data)) // {success: false, message: '您所查看的API不存在 >_<'}
       console.dir(error)
     } finally{
-      // setIsLoadingScreen(false)
+      if(!skipGlobalLoading) dispatch(setGlobalLoading(false))
     }
   }
 )

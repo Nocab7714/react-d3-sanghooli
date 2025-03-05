@@ -15,8 +15,12 @@ import SwiperProducts from '../components/SwiperProducts.jsx';
 import ScreenLoading from '../../plugins/ScreenLoading';
 import ButtonLoading from '../../plugins/ButtonLoading.jsx';
 import Toast from '../../plugins/Toast.jsx';
+import { useDispatch } from 'react-redux';
+import { asyncGetCart } from '../../slices/cartSlice.js';
 
 const SingleProductPage = () => {
+  const dispatch = useDispatch();
+
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingAddCart, setIsLoadingAddCart] = useState(false);
   const [toast, setToast] = useState({ show: false, title: '', icon: '' });
@@ -80,6 +84,7 @@ const SingleProductPage = () => {
       });
       setToast({ show: true, title: res.data.message, icon: 'success' });
       setIsLoadingAddCart(false);
+      dispatch(asyncGetCart({skipGlobalLoading: true}));
     } catch (error) {
       setToast({
         show: true,

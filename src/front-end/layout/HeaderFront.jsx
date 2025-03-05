@@ -4,7 +4,7 @@ import { Link, NavLink } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
 import logo from '@/assets/img/illustration/logo-SANGHOOLI.svg';
-import { asyncGetCart } from '../../slice/cartSlice';
+import { asyncGetCart } from '../../slices/cartSlice';
 
 const HeaderFront = () => {
   const dispatch = useDispatch();

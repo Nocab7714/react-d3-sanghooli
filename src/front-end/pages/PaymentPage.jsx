@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import CartStep from "../components/CartStep";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 
 import orderFail from "../../assets/img/illustration/orderFail.png"
 import NotFoundPage from "./NotFoundPage";
+import { useDispatch } from "react-redux";
+import { setGlobalLoading } from "../../slices/loadingSlice";
 
 // 環境變數
 const BASE_URL = import.meta.env.VITE_BASE_URL;
@@ -16,8 +18,10 @@ export default function PaymentPage(){
   // const [isPaid, setIsPaid] = useState();
   const [isPaySuccess, setIsPaySuccess] = useState(null);
   const navigate = useNavigate();
+  const dispatch = useDispatch();;
   
   const getOrder = async(orderId) => {
+    dispatch(setGlobalLoading(true))
     try {
       const url = `${BASE_URL}/api/${API_PATH}/order/${orderId}`;
       const response = await axios.get(url);
@@ -25,6 +29,8 @@ export default function PaymentPage(){
       setOrderData(response.data.order);
     } catch (error) {
       console.dir(error.response)
+    } finally {
+      dispatch(setGlobalLoading(false))
     }
   }
 
