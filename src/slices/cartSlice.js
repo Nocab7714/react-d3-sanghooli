@@ -11,11 +11,10 @@ const API_PATH = import.meta.env.VITE_API_PATH;
 const asyncGetCart = createAsyncThunk(
   'cart/asyncGetCart',
   async function({ skipGlobalLoading = false } = {}, { dispatch }){
-    console.log('getCart');
     if(!skipGlobalLoading) dispatch(setGlobalLoading(true))
     try {
       const url = `${BASE_URL}/api/${API_PATH}/cart`;
-      const response = await axios.get(url);
+      const response = await axios.get(url);      
       return response.data.data
     } catch (error) {
       // dispatch(createAsyncMessage(error.response.data)) // {success: false, message: '您所查看的API不存在 >_<'}

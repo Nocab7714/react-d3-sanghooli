@@ -18,6 +18,7 @@ const API_PATH = import.meta.env.VITE_API_PATH;
 
 function CartPage() {
   const cart = useSelector((state) => state.cart);
+  const products = useSelector((state) => state.products);
   const dispatch = useDispatch();
 
   const updateCart = async (cartId, productId, qty) => {
@@ -53,6 +54,39 @@ function CartPage() {
       dispatch(setGlobalLoading(false))
     }
   }
+
+  // 找出出現最多次數的 category
+  const mostFrequentCategory = cart?.carts?.length ? (
+    Object.entries( // 轉換為一個二維陣列，如 [["category1", count1], ["category2", count2], ...]
+      cart.carts.reduce((acc, item) => {  // 統計每個 category 出現的次數，並返回一個 categorySummary 物件
+        acc[item.product.category] = (acc[item.product.category] || 0) + 1;
+        return acc;
+      }, {})  
+    ).reduce((a, b) => (b[1] > a[1] ? b : a), ["", 0])[0]
+    // .reduce(...) 用來找出出現最多次數的 category，並將結果返回  // [0] 用來獲取 category 的名稱
+  ) : null; // 如果 cart 沒有資料則設為 null
+
+
+  // 根據 mostFrequentCategory，隨機取出 10 個同類商品
+  const randomProducts = (() => {
+    // 取得 mostFrequentCategory 的所有產品
+    const filteredProducts = mostFrequentCategory === null 
+      ? products.products 
+      : products.products.filter((item) => item.category === mostFrequentCategory);
+  
+    // 若 filteredProducts 產品數量小於 count 的 10 筆，就回傳所有 filteredProducts
+    if (filteredProducts.length < 10) return filteredProducts;
+  
+    // 產生 10 個不重複的隨機索引
+    const selectedIndexes = new Set();
+    while (selectedIndexes.size < 10) {
+      const randomIndex = Math.floor(Math.random() * filteredProducts.length);
+      selectedIndexes.add(randomIndex);
+    }
+  
+    // 根據這些索引，從 filteredProducts 陣列中取出對應的產品
+    return Array.from(selectedIndexes).map((index) => filteredProducts[index]);
+  })();
 
   useEffect(() => {
     dispatch(asyncGetCart());
@@ -286,8 +320,6 @@ function CartPage() {
                 cart?.carts?.length === 0 ? <EmptyBasket /> : ''
               )
             }
-            
-            
           </section>
         </div>
         <section className="py-10 py-lg-19">
@@ -295,7 +327,7 @@ function CartPage() {
             <h5 className="fw-semibold">你可能會喜歡的商品</h5>
             <div className="border-top border-neutral40 flex-grow-1"></div>
           </div>
-          {/* <SwiperProducts /> */}
+          <SwiperProducts carouselData={randomProducts}/>
         </section>
       </main>
     </>
