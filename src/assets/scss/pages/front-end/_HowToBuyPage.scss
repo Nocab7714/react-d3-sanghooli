@@ -1,11 +1,15 @@
-
-.timeline {
+//0305新增position: sticky效果讓錨點處
+  .timeline {
     display: flex;
     flex-direction: column;
-    position: relative;
-    padding: 0;
+    position: sticky; /* 讓錨點固定 */
+    top: 140px; /* 距離畫面頂部 120px，避免與 Header/Breadcrumb 重疊 */
+    left: 0; /* 確保其保持在左側 */
+    padding: 0 10px; /* 增加內邊距，避免貼齊邊界 */
+    background-color: #fff; /* 如果背景有透明度，避免滾動時與內容重疊 */
+    z-index: 120; /* 確保不被其他元素蓋住 */
+}
 
-  }
 
   .timeline::before {
       content: "";  /*線條可能沒有顯示*/
