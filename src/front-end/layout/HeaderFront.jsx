@@ -4,7 +4,7 @@ import { Link, NavLink } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
 import logo from '@/assets/img/illustration/logo-SANGHOOLI.svg';
-import { asyncGetCart } from '../../redux/slice/cartSlice';
+import { asyncGetCart } from '../../slice/cartSlice';
 
 const HeaderFront = () => {
   const dispatch = useDispatch();
@@ -91,15 +91,12 @@ const HeaderFront = () => {
                     local_mall
                   </span>
                   {/* 購物車項目數量 badge */}
-                  {/* <span
-                    className="position-absolute translate-middle badge rounded-pill text-bg-secondary text-white z-3"
-                    style={{ top: '8px' }}
-                  >
-                    1
-                  </span> */}
                   {
-                    basketQty !== 0  && (
-                      <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                    basketQty !== 0 && (
+                      <span
+                        className="position-absolute translate-middle badge rounded-pill text-bg-secondary text-white z-3"
+                        style={{ top: '8px' }}
+                      >
                         {basketQty}
                       </span>
                     )

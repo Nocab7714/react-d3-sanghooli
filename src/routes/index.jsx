@@ -10,12 +10,14 @@ import PrivacyPolicyPage from '../front-end/pages/PrivacyPolicyPage.jsx';
 import HowToBuyPage from '../front-end/pages/HowToBuyPage.jsx';
 import CartPage from '../front-end/pages/CartPage.jsx';
 import CheckoutPage from '../front-end/pages/CheckoutPage.jsx';
+import PaymentPage from '../front-end/pages/PaymentPage.jsx';
 import SuccessPage from '../front-end/pages/SuccessPage.jsx';
 
 // 後台
 import LayoutBacked from '../back-end/layout/LayoutBacked.jsx';
 
 import { createHashRouter } from 'react-router-dom';
+
 
 
 
@@ -57,6 +59,10 @@ const routes = [
       {
         path : 'checkout',
         element: <CheckoutPage />
+      },
+      {
+        path : 'payment/:orderId',
+        element: <PaymentPage />
       },
       {
         path : 'success/:orderId',

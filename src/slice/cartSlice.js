@@ -48,7 +48,7 @@ const asyncAddCart = createAsyncThunk(
 )
 
 const initialState = {
-  carts: [],
+  carts: null,
   total: 0,
   final_total: 0,
   basketQty: 0,

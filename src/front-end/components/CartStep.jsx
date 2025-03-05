@@ -27,7 +27,16 @@ export default function CartStep({step = 1}){
   const progressBar = progressMap[step - 1].completionRate;
   return (
     <>
-      <div className="bg-white rounded-4 overflow-hidden mb-xl-19">
+      <div className="text-neutral60 pt-6 mb-10">
+        <a
+          href="#"
+          className="link-neutral60 d-inline-flex align-items-center gap-1 justify-content-start"
+        >
+          <span className="material-symbols-outlined">arrow_back</span>
+          <h5 className="fw-semibold">回到首頁</h5>
+        </a>
+      </div>
+      <div className="bg-white rounded-4 overflow-hidden mb-10 mb-xl-19">
       {/* 手機 */}
       <ul className="fs-7 d-flex d-lg-none py-5 mb-0 px-0 flex-wrap">
         {
