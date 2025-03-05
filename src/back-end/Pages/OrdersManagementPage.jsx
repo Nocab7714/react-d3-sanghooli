@@ -5,6 +5,7 @@ import C3Chart from '../components/C3Chart';
 import ReactHelmetAsync from '../../plugins/ReactHelmetAsync';
 import { useNavigate } from 'react-router-dom';
 import PaginationBackend from '../components/PaginationBackend';
+import ReactLoading from 'react-loading';
 
 
 // 環境變數
@@ -37,11 +38,14 @@ const OrdersManagementPage = () =>{
     getOrders(); // 頁面載入時獲取訂單
   }, []);
 
+  const [ isScreenLoading , setIsScreenLoading ] = useState(false);
+
   const [orderList, setOrderList] = useState([]);//先給 orderList 一個狀態：後續會從API撈回資料塞回orderList 中 
   const [tempOrder, setTempOrder] = useState({});
 
  // 在登入成功時，呼叫：管理控制台- 訂單（Orders）> Get API
  const getOrders = async ( page = 1 ) => {
+  setIsScreenLoading(true); //顯示 Loading 畫面
    try {
      const res = await axios.get(
        `${baseUrl}/api/${apiPath}/admin/orders?page=${page}`
@@ -53,12 +57,15 @@ const OrdersManagementPage = () =>{
      setPageInfo(res.data.pagination);
    } catch (error) {
      alert("取得訂單失敗，請稍作等待後，再重新嘗試操作敗");
-   }
+   } finally {
+    setIsScreenLoading(false); // 無論成功或失敗，都關閉 Loading 畫面
+  }
  };
  
 
   //串接更新訂單 API
   const updateOrder = async () => {
+  setIsScreenLoading(true); //顯示 Loading 畫面
    try {
      await axios.put(`${baseUrl}/api/${apiPath}/admin/order/${tempOrder.id}`,{
        data:{
@@ -73,12 +80,11 @@ const OrdersManagementPage = () =>{
      getOrders(); // 更新後重新載入訂單
    } catch (error) {
      alert('更新訂單資料失敗');
-   }
+   } finally {
+    setIsScreenLoading(false); // 無論成功或失敗，都關閉 Loading 畫面
+  }
  }
 
-//  useEffect(() => {
-//   getOrders();  // 正確的：載入時獲取訂單列表
-//  }, [])
   
   // 控制分頁元件：新增一個「頁面資訊 pageInfo」的狀態 → 用來儲存頁面資訊
   const [ pageInfo , setPageInfo ] = useState({});
@@ -170,6 +176,21 @@ const OrdersManagementPage = () =>{
                     <PaginationBackend 
                       pageInfo={pageInfo} 
                       handlePageChenge={handlePageChenge} />
+                  )}
+
+                  {/* 全螢幕Loading */}
+                  { isScreenLoading && (
+                  <div
+                    className="d-flex justify-content-center align-items-center"
+                    style={{
+                      position: "fixed", //固定在畫面上，不會隨滾動條移動
+                      inset: 0, //讓 div 充滿整個畫面
+                      backgroundColor: "rgba(255,255,255,0.3)", //半透明白色背景
+                      zIndex: 999, //確保 Loading 畫面顯示在最上層
+                    }}
+                  >
+                    <ReactLoading type="spin" color="black" width="4rem" height="4rem" />
+                  </div>
                   )}
 
                 </div>

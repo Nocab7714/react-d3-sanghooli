@@ -4,6 +4,7 @@ import ReactHelmetAsync from '../../plugins/ReactHelmetAsync';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PaginationBackend from '../components/PaginationBackend';
+import ReactLoading from 'react-loading';
 
 
 // 環境變數
@@ -58,11 +59,15 @@ const ProductsManagementPage = () =>{
     checkUserLogin(); //戳checkUserLogin API :
   }, []);
 
+  
+  const [ isScreenLoading , setIsScreenLoading ] = useState(false);
+  
   const [productList, setProductList] = useState([]); //先給 productList 一個狀態：後續會從API撈回資料塞回productList 中 
   
   
   //在登入成功時，呼叫：管理控制台- 產品（Products）> Get API
   const getProducts = async ( page = 1 ) => {
+    setIsScreenLoading(true); //顯示 Loading 畫面
     try {
       const res = await axios.get(
         `${baseUrl}/api/${apiPath}/admin/products?page=${page}`
@@ -73,6 +78,8 @@ const ProductsManagementPage = () =>{
       setPageInfo(res.data.pagination );
     } catch (error) {
       alert("取得產品資訊失敗，請稍作等待後，再重新嘗試操作");
+    } finally {
+      setIsScreenLoading(false); // 無論成功或失敗，都關閉 Loading 畫面
     }
   };
 
@@ -223,12 +230,26 @@ const ProductsManagementPage = () =>{
                 )}
 
                 {/* 分頁元件，條件設定只有當 productList 有數據時，才顯示分頁 */}
-                {orderList?.length > 0 && (
+                {productList?.length > 0 && (
                     <PaginationBackend 
                       pageInfo={pageInfo} 
                       handlePageChenge={handlePageChenge} />
                   )}
 
+                  {/* 全螢幕Loading */}
+                  { isScreenLoading && (
+                  <div
+                    className="d-flex justify-content-center align-items-center"
+                    style={{
+                      position: "fixed", //固定在畫面上，不會隨滾動條移動
+                      inset: 0, //讓 div 充滿整個畫面
+                      backgroundColor: "rgba(255,255,255,0.3)", //半透明白色背景
+                      zIndex: 999, //確保 Loading 畫面顯示在最上層
+                    }}
+                  >
+                    <ReactLoading type="spin" color="black" width="4rem" height="4rem" />
+                  </div>
+                  )}
               </div>
             </div>
           </div>
