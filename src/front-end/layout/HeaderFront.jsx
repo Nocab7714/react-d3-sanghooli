@@ -1,13 +1,22 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import MarqueeText from './MarqueeText';
 import { Link, NavLink } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 
 import logo from '@/assets/img/illustration/logo-SANGHOOLI.svg';
+import { asyncGetCart } from '../../slice/cartSlice';
 
 const HeaderFront = () => {
+  const dispatch = useDispatch();
+  const basketQty = useSelector((state) => state.cart.basketQty);
+
   // 控制修正 header 使用 fix top 的高度使用
   const headerRef = useRef(null);
   const [headerHeight, setHeaderHeight] = useState(0);
+
+  useEffect(() => {
+    dispatch(asyncGetCart());
+  }, [dispatch])
 
   return (
     <>
@@ -82,12 +91,16 @@ const HeaderFront = () => {
                     local_mall
                   </span>
                   {/* 購物車項目數量 badge */}
-                  {/* <span
-                    className="position-absolute translate-middle badge rounded-pill text-bg-secondary text-white z-3"
-                    style={{ top: '8px' }}
-                  >
-                    1
-                  </span> */}
+                  {
+                    basketQty !== 0 && (
+                      <span
+                        className="position-absolute translate-middle badge rounded-pill text-bg-secondary text-white z-3"
+                        style={{ top: '8px' }}
+                      >
+                        {basketQty}
+                      </span>
+                    )
+                  }
                 </NavLink>
               </li>
             </ul>
