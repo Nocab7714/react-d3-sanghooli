@@ -1,0 +1,22 @@
+.cart-img{
+  width: 120px;
+  height: 120px;
+  @include media-breakpoint-up(lg){
+    width: 200px;
+    height: 200px;
+  }
+}
+.cart-step{
+  width: 100%;
+  @include media-breakpoint-up(lg){
+    width: 33.33%;
+  }
+}
+.cart-img{
+  max-width: 102px;
+  height: auto;
+  border-radius: 12px;
+  @include media-breakpoint-up(lg){
+    max-width: 80px;
+  }
+}

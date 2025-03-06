@@ -1,0 +1,11 @@
+.header-Backedpage-links{
+    li a:hover{
+      color: $primary-dark !important;
+    }
+  }
+
+.adminNav-deco .active {
+  // font-weight: bold;
+  color:$primary-dark !important ;  /* 強制橘色 */
+  border-bottom: 3px solid $primary-dark; /* 增加底部線條 */
+}

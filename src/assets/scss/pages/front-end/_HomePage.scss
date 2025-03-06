@@ -1,0 +1,143 @@
+// banner swiper
+.home-banner-swiper {
+  // 設定 slide 圖片 RWD 大小、高度調整
+
+  .home-banner-swiper-slide-img {
+    height: 210px !important;
+
+    @include media-breakpoint-up(sm) {
+      height: 300px !important;
+    }
+
+    @include media-breakpoint-up(md) {
+      height: 480px !important;
+    }
+
+    width: 100%;
+    object-fit: cover;
+  }
+
+  // 設定 slide 的 active 樣式，非 active 狀態為半透明
+  .swiper-slide {
+    opacity: 40%;
+  }
+  // 設定 slide 的 active 樣式，active 為 100% 透明度
+  .swiper-slide-active {
+    opacity: 100% !important;
+  }
+
+  // pagination 樣式設定
+  .swiper-pagination-bullet {
+    background-color: rgba(255, 255, 255, 0.8) !important;
+    backdrop-filter: blur(4px) !important;
+
+    height: 4px !important;
+    width: 16px !important;
+    border-radius: 8px !important;
+
+    @include media-breakpoint-up(sm) {
+      height: 8px !important;
+      width: 24px !important;
+    }
+  }
+  .swiper-pagination-bullet-active {
+    background-color: $primary !important;
+  }
+
+  .swiper-pagination-bullets .swiper-pagination-bullet,
+  .swiper-pagination-horizontal.swiper-pagination-bullets
+    .swiper-pagination-bullet {
+    margin: 0 4px !important;
+
+    @include media-breakpoint-up(sm) {
+      margin: 0 6px !important;
+    }
+  }
+}
+
+// 加入願望清單按鈕
+.btn-favorite {
+  z-index: 500;
+  top: 16px;
+  right: 16px;
+  background: rgba(40, 40, 40, 0.6);
+  backdrop-filter: blur(10px);
+
+  &:hover {
+    background: rgba(40, 40, 40, 0.4) !important;
+  }
+
+  &:active {
+    background: rgba(40, 40, 40, 0.8) !important;
+    border: 1px solid rgb(81, 81, 81) !important;
+  }
+}
+
+// .product-card 用於觸發 card-bg 的 hover 背景效果
+.product-card {
+  &:hover {
+    .card-bg {
+      opacity: 1;
+    }
+  }
+}
+
+// 卡片元件設定
+.card-bg {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: radial-gradient(
+    47.43% 26.42% at 50% 73.58%,
+    #ffeedb 0%,
+    rgba(255, 238, 219, 0) 100%
+  );
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.hot-sale {
+  top: 5px;
+  left: 12px;
+}
+
+// new-product-item hover 效果
+.new-product-item {
+  position: relative;
+
+  &:hover {
+    .new-product-item-bg {
+      opacity: 1;
+    }
+  }
+}
+
+.new-product-item-bg {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: radial-gradient(
+    51.79% 51.79% at 50% 100%,
+    #ffeedb 0%,
+    rgba(255, 238, 219, 0) 100%
+  );
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+}
+
+// 隨機選禮區塊背景設定
+.random-product-bg {
+  @include media-breakpoint-up(md) {
+    background-image: url('@/assets/img/banner/banner05.png');
+    height: auto;
+  }
+  background-image: url('@/assets/img/banner/banner05-sm.png');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  height: 351px;
+}

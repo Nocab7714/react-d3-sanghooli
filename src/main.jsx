@@ -1,6 +1,16 @@
 // import { StrictMode } from 'react' // 暫時先將 StrictMode 移除，有需要可以打開加入
-import './assets/scss/all.scss'
-import { createRoot } from 'react-dom/client'
-import App from './App.jsx'
+import { createRoot } from 'react-dom/client';
 
-createRoot(document.getElementById('root')).render(<App />)
+import router from './routes';
+import { RouterProvider } from 'react-router-dom';
+
+import { store } from './store';
+import { Provider } from 'react-redux';
+
+import './assets/scss/all.scss';
+
+createRoot(document.getElementById('root')).render(
+  <Provider store={store}>
+    <RouterProvider router={router} />
+  </Provider>
+);

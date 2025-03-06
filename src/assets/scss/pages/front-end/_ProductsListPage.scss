@@ -1,0 +1,20 @@
+.products-list-banner {
+  @include media-breakpoint-up(md) {
+    background-image: url('@/assets/img/banner/banner04.png');
+    height: 326px;
+  }
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  background-image: url('@/assets/img/banner/banner04-sm.png');
+  height: 351px;
+}
+
+.productsList-search-form {
+  @include media-breakpoint-up(sm) {
+    border-radius: 20px;
+  }
+  @include media-breakpoint-up(lg) {
+    top: 160px; // 預留 .sticky-top 頂部空間
+  }
+}
