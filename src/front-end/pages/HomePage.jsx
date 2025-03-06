@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { setFilteredProductsData } from '../../slice/productsSlice';
+import { setFilteredProductsData } from '../../slices/productsSlice';
 
 import ReactHelmetAsync from '../../plugins/ReactHelmetAsync';
 import ProductCategoryList from '../components/ProductCategoryList';
