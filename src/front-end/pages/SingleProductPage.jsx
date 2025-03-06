@@ -53,6 +53,7 @@ const SingleProductPage = () => {
         setProduct(res.data.product);
         setProductTitle(res.data.product.title);
         setProductStockQty(res.data.product.qty);
+        setProductQty(1);
         setBreadcrumbItem((prev) => [
           ...prev.slice(0, 2),
           {

@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useDispatch,useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 
-import {clearFilters} from '../../slices/productsSlice';
+import {clearFilters} from '../../slice/productsSlice';
 
 import Pagination from '../components/Pagination.jsx';
 import Breadcrumb from '../components/Breadcrumb.jsx';
