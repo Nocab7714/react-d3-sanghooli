@@ -8,7 +8,7 @@ import Input from "../components/form/Input";
 import Textarea from "../components/form/Textarea";
 import CheckboxRadio from "../components/form/CheckboxRadio";
 import CartStep from "../components/CartStep";
-import { asyncGetCart } from "../../slice/cartSlice";
+import { asyncGetCart } from "../../slices/cartSlice";
 import EmptyBasket from "../components/EmptyBasket";
 
 // 環境變數
@@ -51,7 +51,6 @@ export default function CheckoutPage(){
       const url = `${BASE_URL}/api/${API_PATH}/order`;
       const response = await axios.post(url, data);
       console.log(response.data);
-      
       alert(response.data.message);
       dispatch(asyncGetCart());
       navigate(`/payment/${response.data.orderId}`)
@@ -61,7 +60,7 @@ export default function CheckoutPage(){
   }
 
   useEffect(() => {
-    dispatch(asyncGetCart)
+    dispatch(asyncGetCart());
   }, [dispatch])
 
   return (
