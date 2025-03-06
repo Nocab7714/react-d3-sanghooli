@@ -5,12 +5,15 @@ import CartStep from "../components/CartStep";
 import { useCallback, useEffect, useState } from "react";
 import axios from "axios";
 import NotFoundPage from "./NotFoundPage";
+import { useDispatch } from "react-redux";
+import { setGlobalLoading } from "../../slices/loadingSlice";
 
 // 環境變數
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 const API_PATH = import.meta.env.VITE_API_PATH;
 
 export default function SuccessPage(){
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const {orderId} = useParams();
   const [orderData, setOrderData] = useState({});
@@ -18,6 +21,7 @@ export default function SuccessPage(){
   // const [orderData, setOrderData] = useState({});
 
   const getOrder = useCallback(async(orderId) => {
+    dispatch(setGlobalLoading(true))
     try {
       const url = `${BASE_URL}/api/${API_PATH}/order/${orderId}`;
       const response = await axios.get(url);
@@ -28,8 +32,10 @@ export default function SuccessPage(){
       }
     } catch (error) {
       console.log('catch', error.response);
+    } finally {
+      dispatch(setGlobalLoading(false))
     }
-  }, [navigate]) 
+  }, [navigate, dispatch]) 
 
   useEffect(() => {
     getOrder(orderId);

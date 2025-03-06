@@ -1,7 +1,7 @@
 import { Outlet } from 'react-router-dom';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getProducts } from '../../slice/productsSlice';
+import { getProducts } from '../../slices/productsSlice';
 
 import HeaderFront from './HeaderFront.jsx';
 import FooterFront from './FooterFront.jsx';

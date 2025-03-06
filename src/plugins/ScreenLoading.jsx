@@ -5,11 +5,13 @@ import ReactLoading from 'react-loading';
 import 'animate.css';
 
 import logo from '@/assets/img/illustration/logo-SANGHOOLI.svg';
+import { useSelector } from 'react-redux';
 
 const ScreenLoading = ({ isLoading = false }) => {
+  const { globalLoading } = useSelector((state) => state.loading)
   return (
     <>
-      {isLoading && (
+      { (isLoading || globalLoading) && (
         <div
           className="d-flex justify-content-center align-items-center"
           style={{
