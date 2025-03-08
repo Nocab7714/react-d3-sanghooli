@@ -13,12 +13,21 @@
 - 資料視覺化呈現（使用 D3.js 和 C3.js）
 - 流暢的頁面轉場與互動效果
 
+## 網頁畫面
+
+![首頁](./public/img/read-me-01.png)
+![商品列表](./public/img/read-me-02.png)
+![商品資訊](./public/img/read-me-03.png)
+![購物車](./public/img/read-me-04.png)
+![填寫購物車資訊](./public/img/read-me-05.png)
+![後台系統](./public/img/read-me-06.png)
+
 ## 技術堆疊
 
 本專案使用以下技術開發：
 
 - **核心框架**：
-  - [Vite](https://vitejs.dev/) `6.0.7` - 快速的前端構建工具
+  - [Vite](https://vitejs.dev/) `6.0.5` - 快速的前端構建工具
   - [React](https://react.dev/) `18.3.1` - 用戶界面構建庫
   - [Bootstrap](https://getbootstrap.com/) `5.3.3` - 響應式前端框架
 
