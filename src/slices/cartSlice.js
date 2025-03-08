@@ -54,6 +54,7 @@ const initialState = {
   total: 0,
   final_total: 0,
   basketQty: 0,
+  cartCategories: []
 }
 
 const cartSlice = createSlice({
@@ -67,7 +68,8 @@ const cartSlice = createSlice({
         state.carts = carts;
         state.total = total;
         state.final_total = final_total;
-        state.basketQty = carts.reduce((sum, item) => sum + item.qty, 0)
+        state.basketQty = carts.reduce((sum, item) => sum + item.qty, 0);
+        state.cartCategories = [...new Set(carts.map((cart) => cart.product.category))];
       })
   }
 })
