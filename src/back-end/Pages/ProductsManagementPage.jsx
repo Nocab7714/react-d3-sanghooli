@@ -8,6 +8,7 @@ import ReactLoading from 'react-loading';
 
 //內部資源
 import DelProductModal from '../components/DelProductModal';
+import ProductModal from '../components/ProductModal';
 
 
 // 環境變數
@@ -188,19 +189,19 @@ const ProductsManagementPage = () =>{
                           <td>{product.price}</td>
                           <td>{product.qty}</td>
                           <td>{product.is_enabled? (
-                          <span className="text-success">啟用中</span>
+                          <span className="text-primary-dark">啟用中</span>
                               ) : (
                               <>
-                                  <span className="text-danger">未啟用</span>
+                                  <span className="text-neutral60">未啟用</span>
                               </>
                               )
                           }
                           </td>
                           <td>{product.is_hot? (
-                          <span className="text-success">熱銷商品</span>
+                          <span className="text-primary-dark">熱銷商品</span>
                               ) : (
                               <>
-                                  <span className="text-secondary">一般商品</span>
+                                  <span className="text-neutral60">一般商品</span>
                               </>
                               )
                           }
@@ -239,6 +240,15 @@ const ProductsManagementPage = () =>{
                       handlePageChenge={handlePageChenge} />
                   )}
 
+                {/* 新增與編輯 modal */}
+                <ProductModal
+                    modalMode={modalMode}
+                    getProducts={getProducts}
+                    tempProduct={tempProduct}
+                    isOpen={isProductModalOpen}
+                    setIsOpen={setIsProductModalOpen} 
+                />
+                
                 {/* 刪除產品 Modal */}
                 <DelProductModal
                     tempProduct={tempProduct}
