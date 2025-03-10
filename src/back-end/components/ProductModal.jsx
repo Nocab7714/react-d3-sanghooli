@@ -322,7 +322,7 @@ return(
 
                     <div className="mb-2">
                         <label htmlFor="primary-image" className="form-label">
-                        主圖
+                        主要商品形象圖
                         </label>
                         <div className="input-group mb-3">
                         <input
@@ -341,7 +341,6 @@ return(
                         className="img-fluid rounded-4"
                         />
                     </div>
-                    
 
                     {/* 副圖 */}
                     <div className="border border-2 border-dashed rounded-3 p-3">
@@ -351,21 +350,21 @@ return(
                                 htmlFor={`imagesUrl-${index + 1}`}
                                 className="form-label"
                             >
-                            副圖 {index + 1}
+                            更多商品圖 {index + 1}
                             </label>
                             <input
                                 value={image}
                                 onChange={ (e) => handleImageChange( e , index ) }
                                 id={`imagesUrl-${index + 1}`}
                                 type="text"
-                                placeholder={`圖片網址 ${index + 1}`}
+                                placeholder={`請輸入圖片 ${index + 1}連結`}
                                 className="form-control mb-2 rounded-4"
                             />
                             {image && (
                             <img
                                 src={image}
-                                alt={`副圖 ${index + 1}`}
-                                className="img-fluid mb-2 rounded-4"
+                                alt=''
+                                className="img-fluid mb-2 rounded-4 "
                             />
                             )}
                         </div>

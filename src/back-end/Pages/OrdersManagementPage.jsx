@@ -161,7 +161,7 @@ const OrdersManagementPage = () =>{
                             {/* 編輯資料按鈕欄位 */}
                             <td className="text-center">
                               <div className="btn-group">
-                                <button type="button" className="btn btn-primary">編輯</button>
+                                <button type="button" className="btn btn-primary btn-outline-primary-dark">編輯</button>
                                 <button type="button" className="btn btn-outline-danger">刪除</button>
                               </div>
                             </td>

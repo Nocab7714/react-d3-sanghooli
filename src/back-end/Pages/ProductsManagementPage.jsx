@@ -182,23 +182,23 @@ const ProductsManagementPage = () =>{
                     </thead>
                     <tbody>
                       {productList.map((product)=>(
-                      <tr key={product.id}>
-                          <th scope="row">{product.category}</th>
-                          <td>{product.title}</td>
-                          <td>{product.origin_price}</td>
-                          <td>{product.price}</td>
+                      <tr key={product.id} className="align-middle">
+                          <th scope="row" className='text-neutral60'>{product.category}</th>
+                          <td className='h6'>{product.title}</td>
+                          <td className='text-neutral40 text-decoration-line-through'>{product.origin_price.toLocaleString()}</td>
+                          <td>{product.price.toLocaleString()}</td>
                           <td>{product.qty}</td>
                           <td>{product.is_enabled? (
                           <span className="text-primary-dark">啟用中</span>
                               ) : (
                               <>
-                                  <span className="text-neutral60">未啟用</span>
+                                  <span className="text-neutral40">未啟用</span>
                               </>
                               )
                           }
                           </td>
                           <td>{product.is_hot? (
-                          <span className="text-primary-dark">熱銷商品</span>
+                            <span className="text-primary-dark">熱銷商品</span>
                               ) : (
                               <>
                                   <span className="text-neutral60">一般商品</span>
@@ -213,7 +213,7 @@ const ProductsManagementPage = () =>{
                               <button 
                                 onClick={() => handleOpenProductModal('edit', product)}
                                 type="button" 
-                                className="btn btn-primary"
+                                className="btn btn-primary btn-outline-primary-dark"
                               >
                                 編輯
                               </button>
@@ -221,7 +221,7 @@ const ProductsManagementPage = () =>{
                               <button 
                                 onClick={()=>handleOpenDelProductModal(product)} 
                                 type="button" 
-                                className="btn btn-danger "
+                                className="btn btn-outline-danger"
                               >
                                 刪除
                               </button>
