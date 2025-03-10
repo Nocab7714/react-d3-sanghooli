@@ -15,8 +15,12 @@ import SwiperProducts from '../components/SwiperProducts.jsx';
 import ScreenLoading from '../../plugins/ScreenLoading';
 import ButtonLoading from '../../plugins/ButtonLoading.jsx';
 import Toast from '../../plugins/Toast.jsx';
+import { useDispatch } from 'react-redux';
+import { asyncGetCart } from '../../slices/cartSlice.js';
 
 const SingleProductPage = () => {
+  const dispatch = useDispatch();
+
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingAddCart, setIsLoadingAddCart] = useState(false);
   const [toast, setToast] = useState({ show: false, title: '', icon: '' });
@@ -49,6 +53,7 @@ const SingleProductPage = () => {
         setProduct(res.data.product);
         setProductTitle(res.data.product.title);
         setProductStockQty(res.data.product.qty);
+        setProductQty(1);
         setBreadcrumbItem((prev) => [
           ...prev.slice(0, 2),
           {
@@ -80,6 +85,7 @@ const SingleProductPage = () => {
       });
       setToast({ show: true, title: res.data.message, icon: 'success' });
       setIsLoadingAddCart(false);
+      dispatch(asyncGetCart({skipGlobalLoading: true}));
     } catch (error) {
       setToast({
         show: true,
@@ -270,7 +276,7 @@ const SingleProductPage = () => {
                         className="btn btn-primary w-100 d-flex align-items-center justify-content-center"
                         disabled={product.qty === 0 || isLoadingAddCart}
                       >
-                        <span className={isLoading ? 'me-3' : ''}>
+                        <span className={!isLoading ? 'me-3' : ''}>
                           <ButtonLoading isLoading={isLoadingAddCart} />
                         </span>
                         <span className="material-symbols-outlined  me-1">
@@ -521,7 +527,7 @@ const SingleProductPage = () => {
                   className="btn btn-primary fs-6 w-100 px-2 d-flex align-items-center justify-content-center"
                   disabled={product.qty === 0 || isLoadingAddCart}
                 >
-                  <span className={isLoading ? 'me-2' : ''}>
+                  <span className={!isLoading ? 'me-2' : ''}>
                     <ButtonLoading isLoading={isLoadingAddCart} />
                   </span>
                   <span className="material-symbols-outlined fs-5 align-middle me-1">
