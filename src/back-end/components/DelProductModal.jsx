@@ -1,7 +1,8 @@
 // 外部資源
 import axios from 'axios';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Modal } from 'bootstrap';
+import Toast from '../../plugins/Toast.jsx';
 
 
 // 環境變數
@@ -17,6 +18,8 @@ const DelProductModal= ({
 
 //透過 useRef 取得 DOM
 const delProductModalRef = useRef(null); //透過 useRef 取得刪除確認 Modal 的 DOM
+
+const [toast, setToast] = useState({ show: false, title: '', icon: '' });
 
 //透過 useEffect ​的 hook，在頁面渲染後取得 productModalRef的 DOM元素
 useEffect(()=>{
@@ -47,9 +50,14 @@ useEffect (()=>{
  {/* 串接刪除商品 API */}
  const deleteProduct = async () => {
     try {
-      await axios.delete(`${baseUrl}/api/${apiPath}/admin/product/${tempProduct.id}`) ;
+        const res = await axios.delete(`${baseUrl}/api/${apiPath}/admin/product/${tempProduct.id}`) ;
+      setToast({ show: true, title: res.data.message, icon: 'success' });
     } catch (error) {
-      alert('刪除產品失敗');
+      setToast({
+        show: true,
+        title: `刪除產品失敗！${error.response.data.message} `,
+        icon: 'error',
+      });
     }
   };
 
@@ -57,20 +65,30 @@ useEffect (()=>{
  const handleDeleteProduct = async () => {
     try {
       await deleteProduct();
-
       getProducts(); //成功刪除產品deleteProduct()，需要呼叫getProducts();更新產品列表
-
       handleCloseDelProductModal(); //getProducts();更新成功後 > 把刪除的Ｍodal 關閉
 
     } catch (error) {
-      alert('刪除產品失敗'); //如果刪除失敗：顯示「刪除產品失敗」的告警訊息
+      alert('刪除產品失敗'); 
+      setToast({
+        show: true,
+        title: `刪除產品失敗！${error.response.data.message} `, //如果刪除失敗：顯示「刪除產品失敗」的告警訊息
+        icon: 'error',
+      });
     }
   };
 
 
-
 return(
-  //加入刪除產品 Modal
+    <>
+     <Toast
+        show={toast.show}
+        title={toast.title}
+        icon={toast.icon}
+        onClose={() => setToast({ show: false, title: '', icon: '' })}
+    />
+
+  {/* //加入刪除產品 Modal */}
     <div
         ref={delProductModalRef}
         className="modal fade"
@@ -112,6 +130,7 @@ return(
         </div>
     </div>
     </div>
+    </>
   )
 };
 export default DelProductModal;

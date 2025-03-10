@@ -1,6 +1,8 @@
 import axios from 'axios';
 import { useEffect, useRef, useState } from 'react';
 import { Modal } from 'bootstrap';
+import Toast from '../../plugins/Toast.jsx';
+
 
 // 環境變數
 const { VITE_BASE_URL: baseUrl, VITE_API_PATH: apiPath } = import.meta.env;
@@ -17,6 +19,39 @@ const categoryOptions = [
     '嬰幼兒與兒童',
   ];
 
+const festivalOptions = [
+    '畢業季',
+    '生日',
+    '婚禮',
+    '喬遷',
+    '情人節',
+    '母親節',
+    '父親節',
+    '兒童滿月',
+    '春節',
+    '兒童節',
+    '中秋節',
+    '聖誕節',
+];
+
+const relationOptions = [
+    '父母',
+    '父親',
+    '母親',
+    '祖父母',
+    '子女',
+    '男性朋友',
+    '女性朋友',
+    '男性情人',
+    '女性情人',
+    '丈夫',
+    '妻子',
+    '師長',
+    '同事',
+    '商業夥伴',
+  ];
+
+
 const ProductModal = ({
     modalMode, 
     tempProduct,
@@ -25,10 +60,11 @@ const ProductModal = ({
     getProducts 
 }) => {
 
+
 //不希望Modal改到tempProduct：再建立新的狀態，預設值帶入tempProduct
 const [ modalData , setModalData ] = useState(tempProduct);
 
-const [errorMessage, setErrorMessage] = useState(null); // 儲存錯誤訊息
+const [toast, setToast] = useState({ show: false, title: '', icon: '' });
 
 
 useEffect(() => {
@@ -50,7 +86,7 @@ useEffect(() => {
                 notes: ""
             },
             imageUrl: "",
-            imagesUrl: [],
+            imagesUrl: [], // 初始值設為空陣列
             is_hot: false,
             is_enabled: false
         });
@@ -58,11 +94,12 @@ useEffect(() => {
         // 編輯模式帶入商品資料
         setModalData({
             ...tempProduct,
-            is_hot: tempProduct.is_hot ?? false // 修改useEffect初始化(modalData):在 useEffect 裡加上 is_hot 預設值false，避免 undefined
+            // 修改useEffect初始化(modalData):在 useEffect 裡加上 is_hot 預設值false，避免 undefined
+            is_hot: tempProduct.is_hot ?? false 
         });
     }
 }, [tempProduct]); //當tempPeoduct更新後，重新讓setModalData也更新一份
- 
+
      
 //以下為將ProductModal 邏輯對應的函式動作
 const productModalRef = useRef(null); //透過 useRef 取得 DOM
@@ -98,22 +135,12 @@ const handleModalInputChange =(e)=>{
     const { value , name , checked , type } = e.target;
 
     // 如果修改的是 content 內的屬性
-    if (["material_contents", "expiry_date", "origin", "notes"].includes(name)) {
-        setModalData({
-            ...modalData,
-            content: {
-                ...modalData.content,  // 保留 content 內的其他屬性
-                [name]: value
-            }
-        });
-    } else {
         setModalData({
             //展開TempProduct->改為：modalData
             ...modalData,
             //當值(type)為 checkbox 時，就會傳入`checked`值 ; 若type不為 checkbox 時，就會將`value`傳入`name`的屬性裡
             [name]: type === "checkbox" ? checked : value,
         });
-    }
 };
     
 
@@ -156,7 +183,7 @@ setModalData({
 {/* 串接新增商品 API */}
 const createProduct = async () => {
     try {
-    await axios.post(`${baseUrl}/api/${apiPath}/admin/product`,{
+    const res = await axios.post(`${baseUrl}/api/${apiPath}/admin/product`,{
         data:{
         ...modalData,
         origin_price:Number(modalData.origin_price),
@@ -165,15 +192,22 @@ const createProduct = async () => {
         is_hot:modalData.is_hot ? 1 : 0 
         },
     });
+    setToast({ show: true, title: res.data.message, icon: 'success' });
     } catch (error) {
-        alert('新增產品失敗');
+        // console.error("API Error:", error);
+        // console.error("Error Response:", error.response?.data);
+        setToast({
+            show: true,
+            title: `新增產品失敗！${error.response.data.message} `,
+            icon: 'error',
+          });
     }
 };
 
 {/* 串接編輯商品 API */}
 const updateProduct = async () => {
     try {
-    await axios.put(`${baseUrl}/api/${apiPath}/admin/product/${modalData.id}`,{
+     const res = await axios.put(`${baseUrl}/api/${apiPath}/admin/product/${modalData.id}`,{
         data:{
         ...modalData,
         origin_price:Number(modalData.origin_price),
@@ -182,23 +216,40 @@ const updateProduct = async () => {
         is_hot:modalData.is_hot ? 1 : 0 //熱銷產品 is_hot
         },
     }) ;
-
+    setToast({ show: true, title: res.data.message, icon: 'success' });
     } catch (error) {
-    alert('編輯產品失敗');
+        setToast({
+            show: true,
+            title: `編輯產品失敗！${error.response.data.message} `,
+            icon: 'error',
+          });
     }
 };
 
 {/* 點擊Modal 的「確認」按鈕條件：會呼叫 「新增產品」的API指令 */}
 const handlUpdateProduct = async () => {
+    if (!modalData.title || !modalData.category || !modalData.price) {
+        setToast({
+            show: true,
+            title: '請填寫完整的產品資訊！',
+            icon: 'error',
+        });
+        return; // 如果欄位不完整，直接顯示錯誤，不執行 API
+    }
+
     const apiCall = modalMode === 'create' ? createProduct : updateProduct;
     try{
-    await apiCall();
-
-    getProducts();
-
-    handleCloseProductModal(); //新增完產品，點擊[確認]按鈕後，要關閉 Modal 視窗(只在成功時關閉 Modal)
+        await apiCall();
+        getProducts();
+        handleCloseProductModal(); //新增完產品，點擊[確認]按鈕後，要關閉 Modal 視窗(只在成功時關閉 Modal)
+        setToast({ show: true, title: '產品已成功更新', icon: 'success' });
     } catch (error){
-    alert('更新產品失敗，請檢查輸入內容'); // API 失敗時僅顯示錯誤訊息，不關閉 Modal
+        // 失敗時僅顯示錯誤訊息，不關閉 Modal
+        setToast({
+            show: true,
+            title: `更新產品失敗，請檢查輸入內容！ ${error.response.data.message} `, // API 失敗時僅顯示錯誤訊息，不關閉 Modal
+            icon: 'error',
+          });
     }
 };
 
@@ -227,9 +278,16 @@ setModalData({
     }
 };
 
-
 return(
-    //加入產品 Modal
+    <>
+    {/* //加入產品 Modal */}
+        <Toast
+        show={toast.show}
+        title={toast.title}
+        icon={toast.icon}
+        onClose={() => setToast({ show: false, title: '', icon: '' })}
+    />
+
         <div ref={productModalRef} id="productModal" className="modal" style={{ backgroundColor: "rgba(0,0,0,0.5)" }}>
             <div className="modal-dialog modal-dialog-centered modal-xl">
             <div className="modal-content border-0 shadow">
@@ -301,7 +359,7 @@ return(
                                 id={`imagesUrl-${index + 1}`}
                                 type="text"
                                 placeholder={`圖片網址 ${index + 1}`}
-                                className="form-control mb-2 rounded-4 "
+                                className="form-control mb-2 rounded-4"
                             />
                             {image && (
                             <img
@@ -315,7 +373,7 @@ return(
 
                         {/* 撰寫產品 Modal 多圖按鈕顯示邏輯 */}
                         <div className="btn-group w-100">
-                            {modalData.imagesUrl.length < 5 &&
+                            {modalData.imagesUrl?.length < 5 &&
                             (modalData.imagesUrl[modalData.imagesUrl.length - 1] !== '' ) && (
                                 <button 
                                 onClick={handleAddImage} 
@@ -325,7 +383,7 @@ return(
                                 </button>
                             )}
 
-                            {modalData.imagesUrl.length >= 1 && (
+                            {modalData.imagesUrl?.length >= 1 && (
                                 <button onClick={handleRemoveImage} 
                                 className="btn btn-outline-danger w-100"
                                 >
@@ -355,7 +413,7 @@ return(
                     <div className="row gx-4 gx-md-6 mb-4 mb-lg-6">
                         <div className="col-6 col-md-4">
                             <label htmlFor="category" className="form-label">
-                                分類
+                                禮物類別
                                 </label>
                             <select
                                 className="form-select"
@@ -392,18 +450,18 @@ return(
                             商品庫存數量
                             </label>
                             <input
-                            value={modalData.qty}
-                            onChange={handleModalInputChange}
-                            name="qty"
-                            id="qty"
-                            type="text"
-                            className="form-control"
-                            placeholder="請輸入商品庫存數量"
+                                value={modalData.qty}
+                                onChange={handleModalInputChange}
+                                name="qty"
+                                id="qty"
+                                type="text"
+                                className="form-control"
+                                placeholder="請輸入商品庫存數量"
                             />
                         </div>
                     </div>
 
-                    <div className="row g-3 mb-3">
+                    <div className="row g-3 mb-5">
                         <div className="col-6">
                         <label htmlFor="origin_price" className="form-label">
                             原價
@@ -416,7 +474,6 @@ return(
                             type="number"
                             className="form-control text-neutral60"
                             placeholder="請輸入原價"
-                            min="0"  // 限制最小值為 0，0211致凱助教建議：原價、售價 input 記得加上 min=0，否則會可以選擇負的數值
                         />
                         </div>
 
@@ -432,10 +489,70 @@ return(
                             type="number"
                             className="form-control"
                             placeholder="請輸入售價"
-                            min="0"  // 限制最小值為 0，0211致凱助教建議：原價、售價 input 記得加上 min=0，否則會可以選擇負的數值
                         />
                         </div>
                     </div>
+
+                    {/* tag: 節慶 / 場合 */}
+                    <div className="mt-10">
+                        <h3 className="card-title fs-5 border-bottom border-neutral40 fw-semibold pb-4 mb-4">
+                        節慶 / 場合
+                        </h3>                        
+                    </div>
+
+                    <div className="col-12 mb-5">
+                        <div className="row">
+                            {festivalOptions.map((option)=>(
+                                <div key={option} className="form-check col-6 col-md-3 mb-2">
+                                    <div className="form-check text-neutral60">
+                                        <input
+                                            type="checkbox"
+                                            className="form-check-input"
+                                            id={`festival-${option}`}
+                                            value={option}
+                                            checked={modalData.tages} // 確認 `tages` 中是否包含此選項
+                                            onChange={handleModalInputChange}
+                                        />
+                                        <label className="form-check-label" htmlFor={`festival-${option}`}>
+                                            {option}
+                                        </label>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* tag: 送禮關係 */}
+                    <div className="mt-10">
+                        <h3 className="card-title fs-5 border-bottom border-neutral40 fw-semibold pb-4 mb-4">
+                        送禮關係
+                        </h3>                        
+                    </div>
+
+                    <div className="col-12 mb-5">
+                        <div className="row">
+                            {relationOptions.map((option)=>(
+                                <div key={option} className="form-check col-6 col-md-3 mb-2">
+                                    <div className="form-check text-neutral60">
+                                        <input
+                                            type="checkbox"
+                                            className="form-check-input "
+                                            id={`relation-${option}`}
+                                            value={option}
+                                            checked={modalData.relation} 
+                                            onChange={handleModalInputChange}
+                                        />
+                                        <label className="form-check-label" htmlFor={`relation-${option}`}>
+                                            {option}
+                                        </label>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
+
+
 
                     <div className="mb-3">
                         <label htmlFor="description" className="form-label">
@@ -571,7 +688,8 @@ return(
                 </div>
             </div>
             </div>
-    </div>
-    )
+     </div>
+  </>
+  )
 };
 export default ProductModal;
