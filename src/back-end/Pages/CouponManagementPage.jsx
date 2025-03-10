@@ -151,7 +151,7 @@ const handlePageChenge = (page) => {
                     </table>
                     )}
 
-                    {/* 分頁元件，條件設定只有當 productList 有數據時，才顯示分頁 */}
+                    {/* 分頁元件，條件設定只有當 couponList 有數據時，才顯示分頁 */}
                     {couponList?.length > 0 && (
                         <PaginationBackend
                             pageInfo={pageInfo} 
