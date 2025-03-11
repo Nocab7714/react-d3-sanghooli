@@ -90,28 +90,6 @@ const OrdersManagementPage = () =>{
       setIsOrdersModalOpen(true);// 改成用 isOpen 做開關判斷 :不能直接取得getInstance邏輯 → 要改成：setIsProductModalOpen(true);：告訴Modal現在要開
     };
 
-//   //串接更新訂單 API
-//   const updateOrder = async () => {
-//   setIsScreenLoading(true); //顯示 Loading 畫面
-//    try {
-//      await axios.put(`${baseUrl}/api/${apiPath}/admin/order/${tempOrder.id}`,{
-//        data:{
-//          ...tempOrder,
-//          origin_price:Number(tempOrder.origin_price),
-//         //  id:Number(tempOrder.products.id),
-//         //  price:Number(tempOrder.price),
-//          qty:Number(tempOrder.products?.qty || 1),
-//          is_paid:tempOrder.is_paid ? 1 : 0,
-//        }
-//      }) ;
-//      getOrders(); // 更新後重新載入訂單
-//    } catch (error) {
-//      alert('更新訂單資料失敗');
-//    } finally {
-//     setIsScreenLoading(false); // 無論成功或失敗，都關閉 Loading 畫面
-//   }
-//  }
-
 //|刪除「全部」訂單列表資料函式
 const removeOrders = async( ) => {
   if (!window.confirm("確定要刪除所有訂單嗎？")) return;
@@ -134,7 +112,7 @@ const removeOrderItem = async( orderItem_id ) => {
       const res = await axios.delete(`${baseUrl}/api/${apiPath}/admin/order/${orderItem_id}`)
       getOrders();
   } catch (error) {
-      alert ('該筆訂單刪除失敗');
+      alert ('該筆訂單刪除失敗，請再試一次');
   }finally{
       setIsScreenLoading(false)
   }
@@ -209,11 +187,16 @@ const removeOrderItem = async( orderItem_id ) => {
                                   </>
                                 )}
                             </th>
-                            <td>{order.user.name}</td>
-                            <td>{order.user.tel}</td>
-                            <td>{order.user.email}</td>
-                            <td>{order.user.address}</td>
-                            <td>{new Date(order.create_at * 1000).toLocaleString()}</td>
+                            <td>{order.user?.name}</td>
+                            <td>{order.user?.tel}</td>
+                            <td>{order.user?.email}</td>
+                            <td>{order.user?.address}</td>
+                            <td>
+                              {order.create_at && !isNaN(order.create_at) 
+                                ? new Date(order.create_at * 1000).toLocaleString() 
+                                : '時間無效'}
+                            </td>
+
                     
                             {/* 編輯資料按鈕欄位 */}
                             <td className="text-center">

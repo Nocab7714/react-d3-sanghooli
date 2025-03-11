@@ -69,63 +69,86 @@ const handleCloseOrdersModal =() =>{
   // 處理輸入變更
   const handleModalInputChange =(e)=>{
     const { value , name } = e.target;
+    const newValue = name === "is_paid" ? Number(value) : value;// ✅ value是文字類型，但 name、email 等欄位 不應該轉換為數字，只有 is_paid 轉成數字
 
         setModalData((prevData)=>({
               //modalData.is_paid 能正確反映當前訂單的付款狀態設定
               ...prevData,
-              [name]: name === "is_paid" ? Number(value) : value,  // ✅ value是文字類型，但 name、email 等欄位 不應該轉換為數字，只有 is_paid 轉成數字
+              [name]: name === "is_paid" ? Number(value) : value,  
             }));
-          };
 
-// 客戶購物 - 結帳
-const [cartOrderList, setCartOrderList] = useState({ carts: [] });
+        setCartOrderList(prevCart => ({
+            ...prevCart,
+            [name]: newValue
+        }));
+        };
 
-useEffect(() => {
-const fetchCart = async() => {
+const [cartOrderList, setCartOrderList] = useState(null);
+
+// 取得訂單詳細資料
+const fetchOrderDetails = async (orderId) => {
     try {
-      const res = await axios.get(`${baseUrl}/api/${apiPath}/cart`)      
-      alert(res.data.message);
-      setCartOrderList(res.data.data); // 確保 data 結構符合 { carts: [...] }
+      const res = await axios.get(`${baseUrl}/api/${apiPath}/admin/order/${orderId}`);
+      setCartOrderList(res.data.order);
     } catch (error) {
-      console.dir(error)
+      console.error('取得訂單資料失敗:', error);
+      setToast({
+        show: true,
+        title: '取得訂單資料失敗！',
+        icon: 'error',
+      });
     }
   };
-  fetchCart();
-}, []);
 
-
-
-//串接更新訂單 API
-  const updateOrder = async () => {
-    setIsScreenLoading(true); //顯示 Loading 畫面
-     try {
-        const res = await axios.put(`${baseUrl}/api/${apiPath}/admin/order/${tempOrder.id}`,{
-         data:{
-           ...tempOrder,
-           is_paid:tempOrder.is_paid ? 1 : 0,  // 轉換為數字
-         }
-       }) ;
-       getOrders(); // 更新後重新載入訂單
-       setToast({ show: true, title: res.data.message, icon: 'success' });
-       handleCloseOrdersModal(); // 成功後關閉 Modal
-     } catch (error) {
-       setToast({
-            show: true,
-            title: `更新訂單資料失敗！${error.response.data.message} `,
-            icon: 'error',
-      });
-     } finally {
-      setIsScreenLoading(false); // 無論成功或失敗，都關閉 Loading 畫面
+  // 監聽 modal 開啟並獲取訂單資料
+useEffect(() => {
+    if (isOpen && modalData?.id) {
+      fetchOrderDetails(modalData.id);
     }
-   }
+  }, [isOpen, modalData?.id]);
+ 
+  // 更新訂單
+const updateOrder = async () => {
+    if (!cartOrderList) return;
+    
+    setIsScreenLoading(true);
+    try {
+      const res = await axios.put(`${baseUrl}/api/${apiPath}/admin/order/${cartOrderList.id}`, {
+        data: {
+          ...cartOrderList,
+          origin_price: Number(cartOrderList.origin_price),
+          qty: Number(cartOrderList.products?.qty || 1),
+          is_paid: cartOrderList.is_paid ? 1 : 0,
+        },
+      });
+  
+      // 更新成功後，直接重新獲取訂單資料
+      //await fetchOrderDetails(cartOrderList.id);
+      // 確保 getOrders() 在 modal 關閉前完成
+      await getOrders();
+  
+      setToast({ show: true, title: res.data.message, icon: 'success'});
+      handleCloseOrdersModal();
+    } catch (error) {
+      console.error('更新訂單失敗:', error);
+      setToast({
+        show: true,
+        title: `更新訂單資料失敗！${error.response?.data?.message || '請稍後再試'}`,
+        icon: 'error',
+      });
+    } finally {
+      setIsScreenLoading(false);
+    }
+  };
 
 
    {/* 點擊Modal 的「確認修改」按鈕條件：會呼叫 「」的API指令 */}
     const handlUpdateOrders = async () => {
-    const apiCall = modalMode === 'update' ? updateOrder : '';
+        const apiCall = modalMode === 'update' ? createOrders : updateOrder; // 如果不是更新模式，直接跳出函式
     try{
-        await apiCall(); 
-        getOrders();
+        await apiCall();
+        await updateOrder();
+        //getOrders();// 重新取得訂單資料
         handleCloseOrdersModal(); //點擊[確認]按鈕後，要關閉 Modal 視窗(只在成功時關閉 Modal)
         setToast({ show: true, title: '訂單已成功更新', icon: 'success' });
     } catch (error){
@@ -180,7 +203,7 @@ const fetchCart = async() => {
                                 name="order_id"
                                 id="order_id"
                                 type="text"
-                                className="form-control"
+                                className="form-control text-neutral40"
                                 placeholder="訂單編號"
                                 readOnly
                             />
@@ -196,7 +219,7 @@ const fetchCart = async() => {
                                 name="create_at"
                                 id="create_at"
                                 type="text"
-                                className="form-control"
+                                className="form-control text-neutral40"
                                 placeholder="訂單成立時間"
                                 readOnly
                             />
@@ -214,8 +237,8 @@ const fetchCart = async() => {
                                     >
                                     <option value="">付款狀態</option>
                                     {isPaidOptions.map((option) => (
-                                        <option key={option} value={option}>
-                                        {option === 1 ? '已付款' : option === 0 ? '未付款' : ''}
+                                        <option key={option} value={String(option)}>
+                                            {option === 1 ? '已付款' : '未付款'}
                                         </option>
                                     ))}
                                 </select>
@@ -298,6 +321,7 @@ const fetchCart = async() => {
                                 id="user_message"
                                 type="text"
                                 className="form-control"
+                                rows={4}
                                 placeholder="提供給SANGHOOI管理者的訂購商品客製化細節訊息"
                             ></textarea>
                         </div>
@@ -313,82 +337,77 @@ const fetchCart = async() => {
                                 <tr className='rounded-3'>
                                 <th scope="col">商品資料</th>
                                 <th scope="col" >單件價格</th>
+                                <th scope="col" >使用優惠券</th>
                                 <th scope="col" >數量</th>
                                 <th scope="col" >小計</th>
                                 </tr>
                             </thead>
                             <tbody>
-                            {cartOrderList.carts?.map((cartItem) => (
-                                <tr key={cartItem.id} className="align-items-center align-middle gap-3 mb-4">
-                                    {/* 商品資料 */}
-                                    <td>
-                                        <div className="d-flex align-items-center gap-3">
-                                            <img 
-                                                className="cart-img rounded-3" 
-                                                src={cartItem.product.imageUrl} 
-                                                alt={cartItem.product.title} 
-                                                width="60"
-                                            />
-                                            <div>
-                                                <span className="fs-7 text-neutral60">{cartItem.product.category}</span>
-                                                <p className="h6 text-neutral80">{cartItem.product.title}</p>
-                                            </div>
-                                        </div>
-                                    </td>
+                                {modalData?.products && Object.keys(modalData.products).length > 0 ? (
+                                    Object.values(modalData.products).map((item) => (
+                                        <tr key={item.product_id} className="align-items-center align-middle gap-3 mb-4">
+                                            {/* 商品資料 */}
+                                            <td>
+                                                <div className="d-flex align-items-center gap-4">
+                                                    <img 
+                                                        className="cart-img rounded-3" 
+                                                        src={item.product?.imageUrl} 
+                                                        alt={item.product?.title} 
+                                                        width="80"
+                                                    />
+                                                    <div>
+                                                        <span className="fs-7 text-neutral60">{item.product?.category}</span>
+                                                        <p className="h6 text-neutral80">{item.product?.title}</p>
+                                                    </div>
+                                                </div>
+                                            </td>
 
-                                    {/* 單件價格（優惠價＋原價） */}
-                                    <td>
-                                        <p className="h6 text-neutral80">NT$ {cartItem.product.price.toLocaleString()}</p>
-                                        {cartItem.product.price !== cartItem.product.origin_price && (
-                                            <del className="text-neutral40 fs-7">
-                                                NT$ {cartItem.product.origin_price.toLocaleString()}
-                                            </del>
-                                        )}
-                                    </td>
+                                            {/* 單件價格（優惠價＋原價） */}
+                                            <td>
+                                                <p className="h6 text-neutral80">NT$ {item.product?.price?.toLocaleString()}</p>
+                                                {item.product?.price !== item.product?.origin_price && (
+                                                    <del className="text-neutral40 fs-7">
+                                                        NT$ {item.product?.origin_price?.toLocaleString()}
+                                                    </del>
+                                                )}
+                                            </td>
 
-                                    {/* 數量 */}
-                                    <td>{cartItem.qty}</td>
+                                            {/* 使用優惠券 */}
+                                            <td>{item.coupon ? item.coupon.code : "未使用優惠券"}</td>
+                                            
+                                            {/* 數量 */}
+                                            <td>{item.qty}</td>
 
-                                    {/* 小計 */}
-                                    <td>NT$ {(cartItem.product.price * cartItem.qty).toLocaleString()}</td>
-                                </tr>
-                            ))}
-
-
-                                {/* {cartOrderList.carts?.map((cartItem)=>(
-                                    <tr key={cartItem.id} className="d-flex align-items-start gap-3 mb-4">
-                                    <th scope="row" className='text-neutral60'></th>
-                                        <td>
-                                            <img className="cart-img" src={cartItem.product.imageUrl} alt={cartItem.product.title} />
-                                            <span className="fs-7 text-neutral60">{cartItem.product.category}</span>
-                                            <div className="flex-fill">
-                                                <div className="d-flex justify-content-between align-items-center">
-                                                    <p className="h6 text-neutral80">{cartItem.product.title}</p>
-                                        </td>
-                                    
-
-                                        <td className="d-flex justify-content-between align-items-center">
-                                            <p className="h6 text-neutral80">{cartItem.price.toLocaleString()}</p>
-                                            <p> {cartItem.origin_price.toLocaleString()}</p>
-                                        </td>
-                                        <td>{product.qty}</td>
-                                        <td className="fs-7">NT$ {cartItem.product.price * cartItem.qty}</td>
-                                        <td>
-                                            (cartItem.product.price !== cartItem.product.origin_price) && (
-                                                <del className="text-neutral40 fs-7">
-                                                NT$ {cartItem.product.origin_price * cartItem.qty}
-                                                </del>
-                                                )
-                                        </td>   
+                                            {/* 小計 */}
+                                            <td>NT$ {(item.product?.price * item.qty).toLocaleString()}</td>
+                                        </tr>
+                                    ))
+                                ) : (
+                                    <tr>
+                                        <td colSpan="4" className="text-center">無訂單明細</td>
                                     </tr>
-                                ))} */}
-                            </tbody>               
+                                )}
+                            </tbody>           
+                            <tfoot className="row-6">
+                              <div className="col-12">
+                                <div className="border-bottom py-5 d-flex flex-column">
+                                    <div className="d-flex justify-content-between align-items-center mb-4">
+                                        <p>總金額</p>
+                                        <p className="fw-bold">NT$ <span>{modalData?.total?.toLocaleString()}</span></p>
+                                    </div>
+                                    <div className="d-flex justify-content-between align-items-center">
+                                        <p>運費</p>
+                                        <p className="fw-bold">NT$ <span>0</span></p>
+                                    </div>
+                                    </div>
+                                    <div className="d-flex justify-content-between align-items-center my-4">
+                                    <h6>應付金額：</h6>
+                                    <p className="text-primary-dark fs-4 fw-bold">NT$<span className="ms-1">{modalData?.total?.toLocaleString()}</span></p>
+                                  </div>
+                                </div>
+                            </tfoot>
                         </table>
-
-
-
-
-                        </div>
+                    </div>
                     </div>
 
                 {/* Modal 底部按鈕 */}
@@ -401,7 +420,7 @@ const fetchCart = async() => {
                     取消
                 </button>
                 <button 
-                    onClick={updateOrder}
+                    onClick={handlUpdateOrders}
                     type="button" 
                     className="btn btn-primary fs-6"
                     disabled={isScreenLoading}
