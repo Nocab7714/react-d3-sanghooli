@@ -12,6 +12,7 @@ import CartPage from '../front-end/pages/CartPage.jsx';
 import CheckoutPage from '../front-end/pages/CheckoutPage.jsx';
 import PaymentPage from '../front-end/pages/PaymentPage.jsx';
 import SuccessPage from '../front-end/pages/SuccessPage.jsx';
+import WishListPage from '../front-end/pages/WishListPage.jsx';
 
 // 後台
 import LayoutBacked from '../back-end/layout/LayoutBacked.jsx';
@@ -71,6 +72,10 @@ const routes = [
       {
         path : 'success/:orderId',
         element: <SuccessPage />
+      },
+      {
+        path : 'wish-list',
+        element: <WishListPage />
       },
       // {
       //   path : '*',

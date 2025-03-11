@@ -7,19 +7,19 @@ import 'animate.css';
 import logo from '@/assets/img/illustration/logo-SANGHOOLI.svg';
 import { useSelector } from 'react-redux';
 
-const ScreenLoading = () => {
-  const { globalLoading } = useSelector((state) => state.loading)
+const SectionLoading = () => {
+  const { sectionLoading } = useSelector((state) => state.loading)
   return (
     <>
-      { globalLoading && (
+      { (sectionLoading) && (
         <div
           className="d-flex justify-content-center align-items-center"
           style={{
-            position: 'fixed',
+            position: 'absolute',
             inset: 0,
             backgroundColor: 'rgba(255,255,255,0.8)',
-            // backgroundColor: 'rgba(102, 47, 241, 0.8)',
-            zIndex: 9999,
+            // backgroundColor: 'rgba(250, 167, 167, 0.8)',
+            zIndex: 1029,
           }}
         >
           <div className="d-flex flex-column align-items-center">
@@ -46,4 +46,4 @@ const ScreenLoading = () => {
   );
 };
 
-export default ScreenLoading;
+export default SectionLoading;
