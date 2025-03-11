@@ -4,15 +4,14 @@ import axios from 'axios';
 
 const { VITE_BASE_URL: baseUrl, VITE_API_PATH: apiPath } = import.meta.env;
 
-import userImg01 from '@/assets/img/other/user01.png';
-import userImg02 from '@/assets/img/other/user02.png';
-import userImg03 from '@/assets/img/other/user03.png';
+import userImg01 from '@/assets/img/other/user01.webp';
+import userImg02 from '@/assets/img/other/user02.webp';
+import userImg03 from '@/assets/img/other/user03.webp';
 
 import Breadcrumb from '../components/Breadcrumb.jsx';
 import ReactHelmetAsync from '../../plugins/ReactHelmetAsync';
 import InputCalculate from '../components/form/InputCalculate.jsx';
 import SwiperProducts from '../components/SwiperProducts.jsx';
-import ScreenLoading from '../../plugins/ScreenLoading';
 import ButtonLoading from '../../plugins/ButtonLoading.jsx';
 import { useDispatch, useSelector } from 'react-redux';
 import { asyncGetCart } from '../../slices/cartSlice.js';
@@ -62,7 +61,6 @@ const SingleProductPage = () => {
             link: `/single-product/${res.data.product.id}`,
           },
         ]);
-        dispatch(asyncSetLoading(['globalLoading', false]))
       } catch (error) {
         alert('取得產品失敗');
         navigate('/404');
@@ -84,7 +82,6 @@ const SingleProductPage = () => {
           qty: Number(productQty),
         },
       });
-      setIsLoadingAddCart(false);
       dispatch(createToast(res.data))
       dispatch(asyncGetCart());
     } catch (error) {

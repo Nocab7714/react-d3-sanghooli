@@ -1,8 +1,10 @@
 # SANGHOOLI 上厚禮 | 精選禮品購物平台
 
-![SANGHOOLI 上厚禮](./public/img/og-image.png)
+![SANGHOOLI 上厚禮](./public/img/og-image.webp)
 
 上厚禮是專為解決送禮煩惱而生的精選禮品電商平台。我們提供多元化的禮物選擇，從節慶、生日到紀念日，從個人禮品到企業贈禮，幫您挑選最貼心的禮物。精心包裝、快速配送，讓您的心意完美傳達，成為每個特別時刻的最佳選擇。
+
+專案網站：[SANGHOOLI-上厚禮](https://nocab7714.github.io/react-d3-sanghooli/)
 
 ## 專案特點
 
@@ -15,12 +17,12 @@
 
 ## 網頁畫面
 
-![首頁](./public/img/read-me-01.png)
-![商品列表](./public/img/read-me-02.png)
-![商品資訊](./public/img/read-me-03.png)
-![購物車](./public/img/read-me-04.png)
-![填寫購物車資訊](./public/img/read-me-05.png)
-![後台系統](./public/img/read-me-06.png)
+![首頁](./public/img/read-me-01.webp)
+![商品列表](./public/img/read-me-02.webp)
+![商品資訊](./public/img/read-me-03.webp)
+![購物車](./public/img/read-me-04.webp)
+![填寫購物車資訊](./public/img/read-me-05.webp)
+![後台系統](./public/img/read-me-06.webp)
 
 ## 技術堆疊
 
@@ -146,11 +148,6 @@ react-d3-sanghooli/
 - [LaryZenZen](https://github.com/LaryZenZen)
 - [yujouwu](https://github.com/yujouwu)
 - [Nocab Wang](https://github.com/Nocab7714)
-
-## 相關連結
-
-- 專案網站：[SANGHOOLI-上厚禮](https://nocab7714.github.io/react-d3-sanghooli/)
-- 聯絡我們：[sanghooliD3@gmail.com](sanghooliD3@gmail.com)
 
 ---
 

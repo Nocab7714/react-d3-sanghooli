@@ -1,6 +1,6 @@
 import { Link, useNavigate, useParams } from "react-router-dom";
-import orderSuccess from "../../assets/img/illustration/orderSuccess.png"
-import orderFail from "../../assets/img/illustration/orderFail.png"
+import orderSuccess from "../../assets/img/illustration/orderSuccess.webp"
+import orderFail from "../../assets/img/illustration/orderFail.webp"
 import CartStep from "../components/CartStep";
 import { useCallback, useEffect, useState } from "react";
 import axios from "axios";
