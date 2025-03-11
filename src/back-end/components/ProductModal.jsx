@@ -62,7 +62,11 @@ const ProductModal = ({
 
 
 //不希望Modal改到tempProduct：再建立新的狀態，預設值帶入tempProduct
-const [ modalData , setModalData ] = useState(tempProduct);
+//const [ modalData , setModalData ] = useState(tempProduct);
+const [modalData, setModalData] = useState({
+    ...tempProduct, 
+    tages: tempProduct?.tages || [] //確保 tages 不為 undefined
+});
 
 const [toast, setToast] = useState({ show: false, title: '', icon: '' });
 
@@ -88,14 +92,16 @@ useEffect(() => {
             imageUrl: "",
             imagesUrl: [], // 初始值設為空陣列
             is_hot: false,
-            is_enabled: false
+            is_enabled: false,
+            tages: [] // 避免 undefined
         });
     } else {
         // 編輯模式帶入商品資料
         setModalData({
             ...tempProduct,
             // 修改useEffect初始化(modalData):在 useEffect 裡加上 is_hot 預設值false，避免 undefined
-            is_hot: tempProduct.is_hot ?? false 
+            is_hot: tempProduct.is_hot ?? false,
+            tages: tempProduct?.tages || [] 
         });
     }
 }, [tempProduct]); //當tempPeoduct更新後，重新讓setModalData也更新一份
@@ -135,12 +141,23 @@ const handleModalInputChange =(e)=>{
     const { value , name , checked , type } = e.target;
 
     // 如果修改的是 content 內的屬性
+    if (["material_contents", "expiry_date", "origin", "notes"].includes(name)) {
+        setModalData({
+            ...modalData,
+            content: {
+                ...modalData.content,  // ✅ 保留 content 內的其他屬性
+                [name]: value
+            }
+        });
+    } else {
+        // 如果修改的是 content 內的屬性
         setModalData({
             //展開TempProduct->改為：modalData
             ...modalData,
             //當值(type)為 checkbox 時，就會傳入`checked`值 ; 若type不為 checkbox 時，就會將`value`傳入`name`的屬性裡
             [name]: type === "checkbox" ? checked : value,
         });
+    }
 };
     
 
@@ -225,6 +242,20 @@ const updateProduct = async () => {
           });
     }
 };
+
+// 更新 tages 的 onChange 處理
+const handleTagChange = (event) => {
+    const { value, checked } = event.target;
+    
+    setModalData((prevData) => ({
+        ...prevData,
+        tages: checked
+            ? [...(prevData?.tages || []), value]  // 如果被勾選，新增進去，並確保 prevData?.tages 不為 undefined
+            : prevData?.tages?.filter(tag => tag !== value) || [] // 否則移除，且避免 `filter` 出錯
+    }));
+};
+
+
 
 {/* 點擊Modal 的「確認」按鈕條件：會呼叫 「新增產品」的API指令 */}
 const handlUpdateProduct = async () => {
@@ -509,8 +540,8 @@ return(
                                             className="form-check-input"
                                             id={`festival-${option}`}
                                             value={option}
-                                            checked={modalData.tages} // 確認 `tages` 中是否包含此選項
-                                            onChange={handleModalInputChange}
+                                            checked={modalData.tages?.includes(option)} // 確認 `tages` 中是否包含此選項
+                                            onChange={handleTagChange}
                                         />
                                         <label className="form-check-label" htmlFor={`festival-${option}`}>
                                             {option}
@@ -538,8 +569,8 @@ return(
                                             className="form-check-input "
                                             id={`relation-${option}`}
                                             value={option}
-                                            checked={modalData.relation} 
-                                            onChange={handleModalInputChange}
+                                            checked={modalData.tages?.includes(option)} 
+                                            onChange={handleTagChange}
                                         />
                                         <label className="form-check-label" htmlFor={`relation-${option}`}>
                                             {option}

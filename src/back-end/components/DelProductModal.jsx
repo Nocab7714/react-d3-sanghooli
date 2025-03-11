@@ -9,7 +9,6 @@ import Toast from '../../plugins/Toast.jsx';
 const { VITE_BASE_URL: baseUrl, VITE_API_PATH: apiPath } = import.meta.env;
 
 const DelProductModal= ({
-    modalMode, 
     tempProduct,
     isOpen,
     setIsOpen,
@@ -69,7 +68,6 @@ useEffect (()=>{
       handleCloseDelProductModal(); //getProducts();更新成功後 > 把刪除的Ｍodal 關閉
 
     } catch (error) {
-      alert('刪除產品失敗'); 
       setToast({
         show: true,
         title: `刪除產品失敗！${error.response.data.message} `, //如果刪除失敗：顯示「刪除產品失敗」的告警訊息
@@ -109,8 +107,9 @@ return(
             ></button>
         </div>
         <div className="modal-body">
-            你是否要刪除 
-            <span className="text-danger fw-bold">{tempProduct.title}</span>
+            確定要刪除
+            <span className="text-secondary fw-bold">{tempProduct.title}</span> 
+            商品嗎？刪除後將無法復原！
         </div>
         <div className="modal-footer">
             <button
