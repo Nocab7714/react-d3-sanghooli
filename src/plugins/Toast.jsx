@@ -1,5 +1,7 @@
 import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import Swal from "sweetalert2";
+import { resetToast } from "../slices/toastSlice";
 
 /**
  * Toast 元件 - 顯示右上角的即時通知 (基於 SweetAlert2)
@@ -20,7 +22,10 @@ import Swal from "sweetalert2";
  * @returns {null} 此元件不渲染 DOM，只負責觸發 SweetAlert2
  */
 
-const Toast = ({ show = false, title = "請設定 Toast 的標題", icon = "success", onClose }) => {
+function Toast(){
+  const dispatch = useDispatch();
+  const { id, show, title, icon} = useSelector((state) => state.toast)
+
   useEffect(() => {
     if (show) { // 只有當 `show` 為 `true` 時才觸發
       Swal.fire({
@@ -36,12 +41,10 @@ const Toast = ({ show = false, title = "請設定 Toast 的標題", icon = "succ
           timerProgressBar: "custom-progress-bar", // 設定計時進度條的樣式
         },
       }).then(() => {
-        if (onClose) {
-          onClose(); // 這裡在 `Toast` 關閉後執行 `onClose`，重置 `show`
-        }
+        dispatch(resetToast());
       });
     }
-  }, [show, icon, title, onClose]);
+  }, [id, show, icon, title, dispatch]);
 
   return null;
 };

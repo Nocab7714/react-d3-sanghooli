@@ -6,7 +6,7 @@ import axios from "axios";
 import orderFail from "../../assets/img/illustration/orderFail.png"
 import NotFoundPage from "./NotFoundPage";
 import { useDispatch } from "react-redux";
-import { setGlobalLoading } from "../../slices/loadingSlice";
+import { asyncSetLoading } from "../../slices/loadingSlice";
 
 // 環境變數
 const BASE_URL = import.meta.env.VITE_BASE_URL;
@@ -15,30 +15,27 @@ const API_PATH = import.meta.env.VITE_API_PATH;
 export default function PaymentPage(){
   const { orderId } = useParams();
   const [orderData, setOrderData] = useState({});
-  // const [isPaid, setIsPaid] = useState();
   const [isPaySuccess, setIsPaySuccess] = useState(null);
   const navigate = useNavigate();
   const dispatch = useDispatch();;
   
   const getOrder = async(orderId) => {
-    dispatch(setGlobalLoading(true))
+    dispatch(asyncSetLoading(['sectionLoading', true]));
     try {
       const url = `${BASE_URL}/api/${API_PATH}/order/${orderId}`;
       const response = await axios.get(url);
-      console.log(response.data);
       setOrderData(response.data.order);
     } catch (error) {
       console.dir(error.response)
     } finally {
-      dispatch(setGlobalLoading(false))
+      dispatch(asyncSetLoading(['sectionLoading', false]));
     }
   }
 
   const payOrder = async(orderId) => {
     try {
       const url = `${BASE_URL}/api/${API_PATH}/pay/${orderId}`;
-      const response = await axios.post(url);
-      console.log(response.data);
+      await axios.post(url);
       navigate(`/success/${orderId}`)
     } catch (error) {
       console.dir(error.response);

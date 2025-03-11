@@ -14,16 +14,17 @@ import InputCalculate from '../components/form/InputCalculate.jsx';
 import SwiperProducts from '../components/SwiperProducts.jsx';
 import ScreenLoading from '../../plugins/ScreenLoading';
 import ButtonLoading from '../../plugins/ButtonLoading.jsx';
-import Toast from '../../plugins/Toast.jsx';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { asyncGetCart } from '../../slices/cartSlice.js';
+import { asyncToggleWishList } from '../../slices/wishListSlice.js';
+import { createToast } from '../../slices/toastSlice.js';
+import { asyncSetLoading } from '../../slices/loadingSlice.js';
 
 const SingleProductPage = () => {
   const dispatch = useDispatch();
 
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingAddCart, setIsLoadingAddCart] = useState(false);
-  const [toast, setToast] = useState({ show: false, title: '', icon: '' });
 
   const [product, setProduct] = useState({});
   const [productTitle, setProductTitle] = useState('');
@@ -45,7 +46,7 @@ const SingleProductPage = () => {
   // 取得單一商品資料
   useEffect(() => {
     const getProduct = async () => {
-      setIsLoading(true);
+      dispatch(asyncSetLoading(['globalLoading', true]))
       try {
         const res = await axios.get(
           `${baseUrl}/api/${apiPath}/product/${product_id}`
@@ -61,12 +62,12 @@ const SingleProductPage = () => {
             link: `/single-product/${res.data.product.id}`,
           },
         ]);
-        setIsLoading(false);
+        dispatch(asyncSetLoading(['globalLoading', false]))
       } catch (error) {
         alert('取得產品失敗');
         navigate('/404');
       } finally {
-        setIsLoading(false);
+        dispatch(asyncSetLoading(['globalLoading', false]))
       }
     };
     getProduct();
@@ -83,15 +84,12 @@ const SingleProductPage = () => {
           qty: Number(productQty),
         },
       });
-      setToast({ show: true, title: res.data.message, icon: 'success' });
       setIsLoadingAddCart(false);
-      dispatch(asyncGetCart({skipGlobalLoading: true}));
+      dispatch(createToast(res.data))
+      dispatch(asyncGetCart());
     } catch (error) {
-      setToast({
-        show: true,
-        title: `加入購物車失敗！${error.response.data.message} `,
-        icon: 'error',
-      });
+      const { success, message} = error.response.data;
+      dispatch(createToast({ success, message: `加入購物車失敗！${message}`}))
     } finally {
       setIsLoadingAddCart(false);
     }
@@ -124,16 +122,11 @@ const SingleProductPage = () => {
     return shuffled.slice(0, 10);
   };
 
+  const wishList = useSelector((state) => state.wishList);
+  
   return (
     <>
       <ReactHelmetAsync title={productTitle} />
-      <ScreenLoading isLoading={isLoading} />
-      <Toast
-        show={toast.show}
-        title={toast.title}
-        icon={toast.icon}
-        onClose={() => setToast({ show: false, title: '', icon: '' })}
-      />
       <div>
         {/* breadcrumb */}
         <div className="container pt-10 pt-md-19 mb-6 mb-md-10">
@@ -247,26 +240,19 @@ const SingleProductPage = () => {
                   {/* add-to-cart & add-to-favorite */}
                   <div className="row">
                     <div className="col-6">
-                      {/* 未收藏狀態按鈕 */}
+                      {/* 願望清單按鈕 */}
                       <button
                         type="button"
                         className="btn btn-outline-neutral60 w-100 d-flex align-items-center justify-content-center"
+                        onClick={() => dispatch(asyncToggleWishList(product.id))}
                       >
-                        <span className="material-symbols-outlined align-middle me-1">
+                        <span className={`material-symbols-outlined align-middle me-1 ${wishList[product.id] ? "material-filled" : ""}`}>
                           favorite
                         </span>
-                        加入願望清單
+                        {
+                          wishList[product.id] ? '已收藏' : '加入願望清單'
+                        }
                       </button>
-                      {/* 已收藏狀態按鈕 */}
-                      {/* <button
-                      type="button"
-                      className="btn btn-outline-neutral60 w-100 d-flex align-items-center justify-content-center"
-                    >
-                      <span className="material-symbols-outlined material-filled align-middle me-1 ">
-                        favorite
-                      </span>
-                      已收藏
-                    </button> */}
                     </div>
 
                     <div className="col-6">
@@ -502,11 +488,14 @@ const SingleProductPage = () => {
                 <button
                   type="button"
                   className="btn btn-outline-neutral60 fs-6 w-100 px-2 d-flex align-items-center justify-content-center"
+                  onClick={() => dispatch(asyncToggleWishList(product.id))}
                 >
-                  <span className="material-symbols-outlined fs-5 align-middle  me-1">
+                  <span className={`material-symbols-outlined fs-5 align-middle me-1 ${wishList[product.id] ? "material-filled" : ""}`}>
                     favorite
                   </span>
-                  加入願望清單
+                  {
+                    wishList[product.id] ? '已收藏' : '加入願望清單'
+                  }
                 </button>
                 {/* 已收藏狀態按鈕 */}
                 {/* <button
