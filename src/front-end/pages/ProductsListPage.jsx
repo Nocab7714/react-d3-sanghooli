@@ -67,17 +67,17 @@ const priceRangeOptions = [
 const ProductsListPage = () => {
   // 控制 select 與 inputSearch 的斷點
   const [isLarge, setIsLarge] = useState(window.innerWidth >= 992);
-
   useEffect(() => {
     const handleResize = () => setIsLarge(window.innerWidth >= 992);
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // 判斷是否為行動裝置
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  // 用於判斷篩選功能是否在商品搜尋區塊上方
+  // 當篩選列表在左側，
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 1200);
   useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    const handleResize = () => setIsMobile(window.innerWidth <= 1200);
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);

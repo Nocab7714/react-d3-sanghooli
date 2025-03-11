@@ -262,7 +262,7 @@ const SingleProductPage = () => {
                         className="btn btn-primary w-100 d-flex align-items-center justify-content-center"
                         disabled={product.qty === 0 || isLoadingAddCart}
                       >
-                        <span className={isLoading ? 'me-3' : ''}>
+                        <span className={!isLoading ? 'me-3' : ''}>
                           <ButtonLoading isLoading={isLoadingAddCart} />
                         </span>
                         <span className="material-symbols-outlined  me-1">
@@ -516,7 +516,7 @@ const SingleProductPage = () => {
                   className="btn btn-primary fs-6 w-100 px-2 d-flex align-items-center justify-content-center"
                   disabled={product.qty === 0 || isLoadingAddCart}
                 >
-                  <span className={isLoading ? 'me-2' : ''}>
+                  <span className={!isLoading ? 'me-2' : ''}>
                     <ButtonLoading isLoading={isLoadingAddCart} />
                   </span>
                   <span className="material-symbols-outlined fs-5 align-middle me-1">
