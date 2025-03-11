@@ -20,13 +20,13 @@ import Breadcrumb from '../components/Breadcrumb.jsx';
 import aboutUs01Img from '@/assets/img/other/about-us-01.webp';
 import aboutUs02Img from '@/assets/img/other/about-us-02.webp';
 import aboutUs03Img from '@/assets/img/other/about-us-03.webp';
-import searchIcon from '@/assets/img/illustration/search.png';
-import giftCardIcon from '@/assets/img/illustration/gift-card.png';
-import checkoutIcon from '@/assets/img/illustration/checkout.png';
+import searchIcon from '@/assets/img/illustration/search.webp';
+import giftCardIcon from '@/assets/img/illustration/gift-card.webp';
+import checkoutIcon from '@/assets/img/illustration/checkout.webp';
 
-import userImg01 from '@/assets/img/other/user01.png';
-import userImg02 from '@/assets/img/other/user02.png';
-import userImg03 from '@/assets/img/other/user03.png';
+import userImg01 from '@/assets/img/other/user01.webp';
+import userImg02 from '@/assets/img/other/user02.webp';
+import userImg03 from '@/assets/img/other/user03.webp';
 
 import ProductCard from '../components/ProductCard.jsx';
 

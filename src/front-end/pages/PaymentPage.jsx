@@ -3,7 +3,7 @@ import CartStep from "../components/CartStep";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 
-import orderFail from "../../assets/img/illustration/orderFail.png"
+import orderFail from "../../assets/img/illustration/orderFail.webp"
 import NotFoundPage from "./NotFoundPage";
 import { useDispatch } from "react-redux";
 import { asyncSetLoading } from "../../slices/loadingSlice";
