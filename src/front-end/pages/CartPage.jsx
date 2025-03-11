@@ -2,15 +2,15 @@
 import { useCallback, useEffect, useState } from "react";
 import axios from "axios";
 import SwiperProducts from "../components/SwiperProducts";
+import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+import { useForm, useWatch } from "react-hook-form";
 
 // 內部資源
-import { Link } from "react-router-dom";
 import EmptyBasket from "../components/EmptyBasket";
 import CartStep from "../components/CartStep";
-import { useDispatch, useSelector } from "react-redux";
 import { asyncGetCart } from "../../slices/cartSlice";
-import { setGlobalLoading } from "../../slices/loadingSlice";
-import { useForm, useWatch } from "react-hook-form";
+import { asyncSetLoading } from "../../slices/loadingSlice";
 
 // 環境變數
 const BASE_URL = import.meta.env.VITE_BASE_URL;
@@ -18,13 +18,11 @@ const API_PATH = import.meta.env.VITE_API_PATH;
 
 function CartPage() {
   const {carts, total, final_total, cartCategories} = useSelector((state) => state.cart);
-  console.log(cartCategories);
-  
   const products = useSelector((state) => state.products.products);
   const dispatch = useDispatch();
 
   const updateCart = async (cartId, productId, qty) => {
-    dispatch(setGlobalLoading(true))
+    dispatch(asyncSetLoading(['sectionLoading', true]))
     try {
       qty = Number(qty);
       if (isNaN(qty) || qty < 1) qty = 1;
@@ -40,12 +38,12 @@ function CartPage() {
     } catch (error) {
       console.dir(error);
     } finally {
-      dispatch(setGlobalLoading(false))
+      dispatch(asyncSetLoading(['sectionLoading', false]))
     }
   };
 
   const deleteCartOne = async(cartId) => {
-    dispatch(setGlobalLoading(true))
+    dispatch(asyncSetLoading(['sectionLoading', true]))
     try {
       const url = `${BASE_URL}/api/${API_PATH}/cart/${cartId}`;
       await axios.delete(url);
@@ -53,7 +51,7 @@ function CartPage() {
     } catch (error) {
       console.dir(error)
     } finally {
-      dispatch(setGlobalLoading(false))
+      dispatch(asyncSetLoading(['sectionLoading', false]))
     }
   }
 
@@ -137,9 +135,9 @@ function CartPage() {
     }
   }, [watchForm.coupon])
 
-  // useEffect(() => {
-  //   dispatch(asyncGetCart());
-  // }, [dispatch]);
+  useEffect(() => {
+    dispatch(asyncGetCart({skipSectionLoading: false}));;
+  }, [dispatch]);
 
   return (
     <>

@@ -10,6 +10,7 @@ import CheckboxRadio from "../components/form/CheckboxRadio";
 import CartStep from "../components/CartStep";
 import { asyncGetCart } from "../../slices/cartSlice";
 import EmptyBasket from "../components/EmptyBasket";
+import { createAlert } from "../../slices/alertSlice";
 
 // 環境變數
 const BASE_URL = import.meta.env.VITE_BASE_URL;
@@ -33,8 +34,6 @@ export default function CheckoutPage(){
   })
 
   const onSubmit = handleSubmit((data) => {
-    console.log(data);
-    console.log(errors);
     const { message, ...user } = data;
     const userInfo = {
       data: {
@@ -50,17 +49,17 @@ export default function CheckoutPage(){
     try {
       const url = `${BASE_URL}/api/${API_PATH}/order`;
       const response = await axios.post(url, data);
-      console.log(response.data);
-      alert(response.data.message);
       dispatch(asyncGetCart());
+      dispatch(createAlert(response.data))
       navigate(`/payment/${response.data.orderId}`)
     } catch (error) {
-      console.dir(error)
+      console.dir(error.response.data);
+      dispatch(createAlert(error.response.data))
     }
   }
 
   useEffect(() => {
-    dispatch(asyncGetCart());
+    dispatch(asyncGetCart({skipSectionLoading: false}));
   }, [dispatch])
 
   return (
@@ -199,7 +198,7 @@ export default function CheckoutPage(){
                           <h6 className="mb-6">訂單明細資訊</h6>
                           <div className="d-flex justify-content-between align-items-center mb-4">
                             <p>總金額</p>
-                            <p className="fw-bold">NT$ <span>{cart?.total}</span></p>
+                            <p className="fw-bold">NT$ <span>{cart?.total.toLocaleString()}</span></p>
                           </div>
                           <div className="d-flex justify-content-between align-items-center">
                             <p>運費</p>
@@ -208,7 +207,7 @@ export default function CheckoutPage(){
                         </div>
                         <div className="d-flex justify-content-between align-items-center my-4">
                           <h6>應付金額：</h6>
-                          <p className="text-primary-dark fs-4 fw-bold">NT$<span className="ms-1">{cart?.final_total}</span></p>
+                          <p className="text-primary-dark fs-4 fw-bold">NT$<span className="ms-1">{cart?.final_total.toLocaleString()}</span></p>
                         </div>
                       </div>
                     </div>
