@@ -1,5 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
+import SectionLoading from '../plugins/SectionLoading';
+import { asyncSetLoading } from './loadingSlice';
 
 const { VITE_BASE_URL: baseUrl, VITE_API_PATH: apiPath } = import.meta.env;
 
@@ -52,7 +54,10 @@ export const productsSlice = createSlice({
 
 export const getProducts = createAsyncThunk(
   'products/getProducts',
-  async (payload, { rejectWithValue }) => {
+  async (payload, { dispatch, rejectWithValue }) => {
+    console.log('取產品');
+    
+    dispatch(asyncSetLoading(['globalLoading', true]));
     try {
       const res = await axios.get(`${baseUrl}/api/${apiPath}/products/all`);
       // console.log('API 回傳的商品資料:', res.data.products);
@@ -60,6 +65,8 @@ export const getProducts = createAsyncThunk(
     } catch (error) {
       alert('取得產品失敗');
       return rejectWithValue(error.response?.data || error.message);
+    } finally {
+      dispatch(asyncSetLoading(['globalLoading', false]));
     }
   }
 );

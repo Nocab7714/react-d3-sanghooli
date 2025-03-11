@@ -6,7 +6,7 @@ import { useCallback, useEffect, useState } from "react";
 import axios from "axios";
 import NotFoundPage from "./NotFoundPage";
 import { useDispatch } from "react-redux";
-import { setGlobalLoading } from "../../slices/loadingSlice";
+import { asyncSetLoading } from "../../slices/loadingSlice";
 
 // 環境變數
 const BASE_URL = import.meta.env.VITE_BASE_URL;
@@ -17,11 +17,9 @@ export default function SuccessPage(){
   const navigate = useNavigate();
   const {orderId} = useParams();
   const [orderData, setOrderData] = useState({});
-  // const [isValidOrderId, setIsValidOrderId] = useState(null);
-  // const [orderData, setOrderData] = useState({});
 
   const getOrder = useCallback(async(orderId) => {
-    dispatch(setGlobalLoading(true))
+    dispatch(asyncSetLoading(['sectionLoading', true]))
     try {
       const url = `${BASE_URL}/api/${API_PATH}/order/${orderId}`;
       const response = await axios.get(url);
@@ -33,7 +31,7 @@ export default function SuccessPage(){
     } catch (error) {
       console.log('catch', error.response);
     } finally {
-      dispatch(setGlobalLoading(false))
+      dispatch(asyncSetLoading(['sectionLoading', false]))
     }
   }, [navigate, dispatch]) 
 

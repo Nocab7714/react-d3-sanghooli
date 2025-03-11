@@ -1,7 +1,8 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
-import { setGlobalLoading } from "./loadingSlice";
+import { asyncSetLoading } from "./loadingSlice";
+import { createToast } from "./toastSlice";
 
 // 環境變數
 const BASE_URL = import.meta.env.VITE_BASE_URL;
@@ -10,17 +11,17 @@ const API_PATH = import.meta.env.VITE_API_PATH;
 
 const asyncGetCart = createAsyncThunk(
   'cart/asyncGetCart',
-  async function({ skipGlobalLoading = false } = {}, { dispatch }){
-    if(!skipGlobalLoading) dispatch(setGlobalLoading(true))
+  async function({ skipSectionLoading = true } = {}, { dispatch }){
+    if(!skipSectionLoading) dispatch(asyncSetLoading(['sectionLoading', true]));
+    
     try {
       const url = `${BASE_URL}/api/${API_PATH}/cart`;
       const response = await axios.get(url);      
       return response.data.data
     } catch (error) {
-      // dispatch(createAsyncMessage(error.response.data)) // {success: false, message: '您所查看的API不存在 >_<'}
       console.dir(error)
     } finally{
-      if(!skipGlobalLoading) dispatch(setGlobalLoading(false))
+      if(!skipSectionLoading) dispatch(asyncSetLoading(['sectionLoading', false]));
     }
   }
 )
@@ -29,22 +30,23 @@ const asyncAddCart = createAsyncThunk(
   'cart/asyncAddCart',
   async function(payload, { dispatch }){
     const { productId, qty } = payload;
-    // setIsLoadingScreen(true);
+    dispatch(asyncSetLoading(['sectionLoading', true]))
     try {
       const url = `${BASE_URL}/api/${API_PATH}/cart`;
       const data = {
         "data": {
           "product_id": productId,
-          "qty": qty
+          "qty": Number(qty)
         }
       }
-      await axios.post(url, data);
+      const response = await axios.post(url, data)
+      dispatch(createToast(response.data))
       dispatch(asyncGetCart());
     } catch (error) {
-      // dispatch(createAsyncMessage(error.response.data))
-      console.dir(error)
+      const { success, message} = error.response.data;
+      dispatch(createToast({ success, message: `加入購物車失敗！${message}`}))
     } finally {
-      // setIsLoadingScreen(false)
+      dispatch(asyncSetLoading(['sectionLoading', false]))
     }
   }
 )
@@ -54,6 +56,7 @@ const initialState = {
   total: 0,
   final_total: 0,
   basketQty: 0,
+  cartCategories: []
 }
 
 const cartSlice = createSlice({
@@ -67,7 +70,8 @@ const cartSlice = createSlice({
         state.carts = carts;
         state.total = total;
         state.final_total = final_total;
-        state.basketQty = carts.reduce((sum, item) => sum + item.qty, 0)
+        state.basketQty = carts.reduce((sum, item) => sum + item.qty, 0);
+        state.cartCategories = [...new Set(carts.map((cart) => cart.product.category))];
       })
   }
 })
