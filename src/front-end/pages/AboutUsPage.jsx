@@ -1,6 +1,17 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+
 import axios from 'axios';
+import AOS from 'aos';
+import 'aos/dist/aos.css';
+AOS.init(
+  {
+    delay: 500, // 動畫延遲
+    duration: 1000, // 動畫持續時間
+    once: true, // 動畫只執行一次
+    mirror: false, // 滾動回來時是否播放動畫
+  }
+);
 
 const { VITE_BASE_URL: baseUrl, VITE_API_PATH: apiPath } = import.meta.env;
 
@@ -69,7 +80,7 @@ const AboutUsPage = () => {
         {/* banner */}
         <section className="about-us-banner py-10 py-md-19">
           <div className="container">
-            <div className="d-flex flex-column align-items-center justify-content-center">
+            <div className="d-flex flex-column align-items-center justify-content-center" data-aos="fade-up">
               <div className="mb-10 mb-md-19">
                 <h2 className="fs-3 fs-md-1 text-white mb-3 mb-md-4">
                   送對的禮物， <br className="d-block d-md-none" />
@@ -88,7 +99,7 @@ const AboutUsPage = () => {
           </div>
         </section>
         {/* 各式禮品供你挑選 */}
-        <section className="py-10 py-md-19">
+        <section className="py-10 py-md-19" data-aos="fade-up">
           <div className="container">
             <div className="text-center mb-5 mb-md-10">
               <p className="fs-7 fs-md-6">超多種類的禮物供你挑選</p>
@@ -113,8 +124,8 @@ const AboutUsPage = () => {
         {/* 總是不知道該送什麼禮物嗎?  */}
         <section className=" bg-primary-light py-10 py-md-19">
           <div className="container">
-            <div className="text-center mb-10 mb-md-19">
-              <h2 className="fs-4 fs-md-2 ">總是不知道該送什麼禮物嗎? </h2>
+            <div className="text-center mb-10 mb-md-19" data-aos="fade-up">
+              <h2 className="fs-4 fs-md-2" >總是不知道該送什麼禮物嗎? </h2>
             </div>
             <div className="row justify-content-center ">
               <div className="col-xl-8">
@@ -127,11 +138,12 @@ const AboutUsPage = () => {
                         className="img-fluid rounded-4 mb-5"
                         width="400"
                         height="400"
+                        data-aos="fade-up"
                       />
                     </div>
                   </div>
-                  <div className="col-sm-6 d-flex flex-column align-items-center justify-content-center ">
-                    <div className="bg-white rounded-4 p-8">
+                  <div className="col-sm-6 d-flex flex-column align-items-center justify-content-center" >
+                    <div className="bg-white rounded-4 p-8" data-aos="fade-up">
                       <h3 className="fs-5 fs-md-3 text-center mb-2 mb-md-3">
                         缺乏靈感與建議
                       </h3>
@@ -145,7 +157,7 @@ const AboutUsPage = () => {
                 <div className="d-none d-sm-block">
                   <div className="row mb-10">
                     <div className="col-sm-6 d-flex flex-column align-items-center justify-content-center ">
-                      <div className="bg-white rounded-4 p-8">
+                      <div className="bg-white rounded-4 p-8" data-aos="fade-up">
                         <h3 className="fs-5 fs-md-3 text-center mb-2 mb-md-3">
                           缺乏個人化體驗
                         </h3>
@@ -162,6 +174,7 @@ const AboutUsPage = () => {
                           className="img-fluid rounded-4 mb-5"
                           width="400"
                           height="400"
+                          data-aos="fade-up"
                         />
                       </div>
                     </div>
@@ -177,11 +190,12 @@ const AboutUsPage = () => {
                           className="img-fluid rounded-4 mb-5"
                           width="400"
                           height="400"
+                          data-aos="fade-up"
                         />
                       </div>
                     </div>
                     <div className="col-sm-6 d-flex flex-column align-items-center justify-content-center ">
-                      <div className="bg-white rounded-4 p-8">
+                      <div className="bg-white rounded-4 p-8" data-aos="fade-up">
                         <h3 className="fs-5 fs-md-3 text-center mb-2 mb-md-3">
                           缺乏個人化體驗
                         </h3>
@@ -201,11 +215,12 @@ const AboutUsPage = () => {
                         className="img-fluid rounded-4 mb-5"
                         width="400"
                         height="400"
+                        data-aos="fade-up"
                       />
                     </div>
                   </div>
                   <div className="col-sm-6 d-flex flex-column align-items-center justify-content-center ">
-                    <div className="bg-white rounded-4 p-8">
+                    <div className="bg-white rounded-4 p-8" data-aos="fade-up">
                       <h3 className="fs-5 fs-md-3 text-center mb-2 mb-md-3">
                         購物流程繁瑣
                       </h3>
@@ -224,11 +239,11 @@ const AboutUsPage = () => {
         <section className="py-10 py-md-19">
           <div className="container">
             <div className="text-center mb-10 mb-md-19">
-              <h2 className="fs-4 fs-md-2">簡單三步驟</h2>
+              <h2 className="fs-4 fs-md-2" data-aos="fade-up">簡單三步驟</h2>
             </div>
             <ul className="list-unstyled row  gx-xl-10 justify-content-center">
               <li className="col-md-4 col-xl-3 mb-19 mb-md-0">
-                <div className="d-flex flex-column align-items-center">
+                <div className="d-flex flex-column align-items-center" data-aos="fade-up">
                   <img
                     src={searchIcon}
                     alt="一隻放大鏡與一個紅色禮物盒 icon"
@@ -245,7 +260,7 @@ const AboutUsPage = () => {
                 </div>
               </li>
               <li className="col-md-4 col-xl-3 mb-19 mb-md-0">
-                <div className="d-flex flex-column align-items-center">
+                <div className="d-flex flex-column align-items-center" data-aos="fade-up">
                   <img
                     src={giftCardIcon}
                     alt="一隻手拿著信件的 icon"
@@ -262,7 +277,7 @@ const AboutUsPage = () => {
                 </div>
               </li>
               <li className="col-md-4 col-xl-3">
-                <div className="d-flex flex-column align-items-center">
+                <div className="d-flex flex-column align-items-center" data-aos="fade-up">
                   <img
                     src={checkoutIcon}
                     alt="一台購物車朝著箭頭的方向移動的 icon"
@@ -284,7 +299,7 @@ const AboutUsPage = () => {
         {/* SANGHOOLI 用戶評價 */}
         <section className="bg-primary-light py-10 py-md-19">
           <div className="container">
-            <div className="d-flex flex-column justify-content-center align-items-center mb-6 mb-md-10">
+            <div className="d-flex flex-column justify-content-center align-items-center mb-6 mb-md-10" data-aos="fade-up">
               <h2 className="fs-4 fs-md-2 fw-semibold fw-md-bold mb-2 mb-md-3">
                 消費者評價
               </h2>
@@ -309,7 +324,7 @@ const AboutUsPage = () => {
             </div>
             <ul className="list-unstyled row gy-4 mb-6 mb-md-10  ">
               <li className="col-lg-4 ">
-                <div className="card border-0 rounded-4 p-4 p-md-8 h-100">
+                <div className="card border-0 rounded-4 p-4 p-md-8 h-100" data-aos="fade-up">
                   <div className="card-body p-0">
                     <div className="d-flex align-items-center mb-4 mb-md-6">
                       <span className="material-symbols-outlined material-filled text-primary fs-6 fs-md-5 me-1 me-md-2 ">
@@ -354,7 +369,7 @@ const AboutUsPage = () => {
                 </div>
               </li>
               <li className="col-lg-4 ">
-                <div className="card border-0 rounded-4 p-4 p-md-8 h-100">
+                <div className="card border-0 rounded-4 p-4 p-md-8 h-100" data-aos="fade-up">
                   <div className="card-body p-0">
                     <div className="d-flex align-items-center mb-4 mb-md-6">
                       <span className="material-symbols-outlined material-filled text-primary fs-6 fs-md-5 me-1 me-md-2 ">
@@ -399,7 +414,7 @@ const AboutUsPage = () => {
                 </div>
               </li>
               <li className="col-lg-4 ">
-                <div className="card border-0 rounded-4 p-4 p-md-8 h-100">
+                <div className="card border-0 rounded-4 p-4 p-md-8 h-100" data-aos="fade-up">
                   <div className="card-body p-0">
                     <div className="d-flex align-items-center mb-4 mb-md-6">
                       <span className="material-symbols-outlined material-filled text-primary fs-6 fs-md-5 me-1 me-md-2 ">
@@ -444,7 +459,7 @@ const AboutUsPage = () => {
                 </div>
               </li>
             </ul>
-            <div className="text-center">
+            <div className="text-center" data-aos="fade-up">
               <Link to="/products-list" className="btn btn-lg btn-primary">
                 來去挑禮物
               </Link>

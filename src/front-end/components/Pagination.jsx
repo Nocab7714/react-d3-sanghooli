@@ -4,6 +4,11 @@
 // 3. 後台系統也可以使用
 
 const Pagination = ({ paginationData, onPageChange }) => {
+
+  if (!paginationData) {
+    return null;
+  }
+
   const { total_pages, current_page, has_pre, has_next } = paginationData;
 
   const goToPage = (page) => {

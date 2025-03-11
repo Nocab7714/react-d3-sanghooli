@@ -22,7 +22,7 @@ const footerPageLinks = [
   },
   {
     name: '後台登入',
-    link: '/',
+    link: '/admin/login',
   },
 ];
 
