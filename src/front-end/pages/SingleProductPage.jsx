@@ -4,9 +4,9 @@ import axios from 'axios';
 
 const { VITE_BASE_URL: baseUrl, VITE_API_PATH: apiPath } = import.meta.env;
 
-import userImg01 from '@/assets/img/other/user01.png';
-import userImg02 from '@/assets/img/other/user02.png';
-import userImg03 from '@/assets/img/other/user03.png';
+import userImg01 from '@/assets/img/other/user01.webp';
+import userImg02 from '@/assets/img/other/user02.webp';
+import userImg03 from '@/assets/img/other/user03.webp';
 
 import Breadcrumb from '../components/Breadcrumb.jsx';
 import ReactHelmetAsync from '../../plugins/ReactHelmetAsync';

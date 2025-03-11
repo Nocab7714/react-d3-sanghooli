@@ -8,7 +8,7 @@ import NewProductsList from '../components/NewProductsList';
 import HomepageProductFilter from '../components/HomepageProductFilter';
 import RandomProduct from '../components/RandomProduct';
 
-import adImg from '@/assets/img/other/ad01.png';
+import adImg from '@/assets/img/other/ad01.webp';
 
 const HomePage = () => {
   // 透過 useSelector 取得 Redux state 存放的所有產品資料
