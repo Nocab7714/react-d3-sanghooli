@@ -17,9 +17,10 @@ const OrdersModal = ({
     const [modalData, setModalData] = useState(tempOrder || {}); 
     const [toast, setToast] = useState({ show: false, title: '', icon: '' });
     const [isScreenLoading, setIsScreenLoading] = useState(false);
+    // const [cartOrderList, setCartOrderList] = useState(null);
 
     // 訂單狀態選項
-    const isPaidOptions = [1, 0]; // 1 = 已付款, 0 = 未付款
+    const isPaidOptions = [true, false]; // 使用 true or false
 
     //透過 useRef 取得 DOM：以下為將OrdersModal 邏輯對應的函式動作
     const ordersModalRef = useRef(null); 
@@ -33,7 +34,7 @@ useEffect(()=>{
     } else {
         setModalData({
             ...tempOrder, //複製一份tempPeoduct
-            is_paid: tempOrder.is_paid ?? 0, // 預設未付款
+            is_paid: Boolean(tempOrder.is_paid), // 預設未付款
             messages: tempOrder.messages ?? "",  // 確保 messages 有值
         });
     }
@@ -69,34 +70,39 @@ const handleCloseOrdersModal =() =>{
   // 處理輸入變更
   const handleModalInputChange =(e)=>{
     const { value , name } = e.target;
-    const newValue = name === "is_paid" ? Number(value) : value;// ✅ value是文字類型，但 name、email 等欄位 不應該轉換為數字，只有 is_paid 轉成數字
 
-        setModalData((prevData)=>({
-              //modalData.is_paid 能正確反映當前訂單的付款狀態設定
-              ...prevData,
-              [name]: name === "is_paid" ? Number(value) : value,  
-            }));
+    let newValue;
+    if (name === "is_paid") {
+        newValue = value === "true"; // 轉換成布林值
+    } else {
+        newValue = value;
+    }
 
-        setCartOrderList(prevCart => ({
-            ...prevCart,
-            [name]: newValue
-        }));
-        };
+    // 更新modalData
+    setModalData((prevData)=>({
+        //modalData.is_paid 能正確反映當前訂單的付款狀態設定
+        ...prevData,
+        ...(name === "message"
+            ? { [name]: newValue } // 如果是 message，直接更新 modalData
+            : { user: { ...prevData.user, [name]: newValue } }) // 其他欄位更新 user 內的資料
+    }));
+};
 
-const [cartOrderList, setCartOrderList] = useState(null);
 
 // 取得訂單詳細資料
 const fetchOrderDetails = async (orderId) => {
+    if (!orderId) return;  // 確保不會發送錯誤請求
     try {
-      const res = await axios.get(`${baseUrl}/api/${apiPath}/admin/order/${orderId}`);
-      setCartOrderList(res.data.order);
+      const res = await axios.get(`${baseUrl}/api/${apiPath}/order/${orderId}`);
+      setModalData(res.data.order);
     } catch (error) {
       console.error('取得訂單資料失敗:', error);
-      setToast({
-        show: true,
-        title: '取得訂單資料失敗！',
-        icon: 'error',
-      });
+      alert('取得訂單資料失敗！')
+    //   setToast({
+    //     show: true,
+    //     title: '取得訂單資料失敗！',
+    //     icon: 'error',
+    //   });
     }
   };
 
@@ -109,33 +115,27 @@ useEffect(() => {
  
   // 更新訂單
 const updateOrder = async () => {
-    if (!cartOrderList) return;
-    
     setIsScreenLoading(true);
     try {
-      const res = await axios.put(`${baseUrl}/api/${apiPath}/admin/order/${cartOrderList.id}`, {
+      const res = await axios.put(`${baseUrl}/api/${apiPath}/admin/order/${modalData.id}`, {
         data: {
-          ...cartOrderList,
-          origin_price: Number(cartOrderList.origin_price),
-          qty: Number(cartOrderList.products?.qty || 1),
-          is_paid: cartOrderList.is_paid ? 1 : 0,
+          ...modalData,
+          is_paid:Boolean(modalData?.is_paid),// 轉換為 true/false
         },
       });
   
-      // 更新成功後，直接重新獲取訂單資料
-      //await fetchOrderDetails(cartOrderList.id);
       // 確保 getOrders() 在 modal 關閉前完成
-      await getOrders();
-  
+      await getOrders(); // 更新訂單列表
+      
       setToast({ show: true, title: res.data.message, icon: 'success'});
-      handleCloseOrdersModal();
+        handleCloseOrdersModal();
     } catch (error) {
-      console.error('更新訂單失敗:', error);
-      setToast({
-        show: true,
-        title: `更新訂單資料失敗！${error.response?.data?.message || '請稍後再試'}`,
-        icon: 'error',
-      });
+      alert('更新訂單資料失敗！')
+    //   setToast({
+    //     show: true,
+    //     title: `更新訂單資料失敗！${error.response?.data?.message || '請稍後再試'}`,
+    //     icon: 'error',
+    //   });
     } finally {
       setIsScreenLoading(false);
     }
@@ -144,20 +144,24 @@ const updateOrder = async () => {
 
    {/* 點擊Modal 的「確認修改」按鈕條件：會呼叫 「」的API指令 */}
     const handlUpdateOrders = async () => {
-        const apiCall = modalMode === 'update' ? createOrders : updateOrder; // 如果不是更新模式，直接跳出函式
     try{
-        await apiCall();
-        await updateOrder();
-        //getOrders();// 重新取得訂單資料
+        await updateOrder() ; // ✅ 這樣 `updateOrder` 會正確執行
+        setModalData(prev => ({ 
+            ...prev, 
+            is_paid: Boolean(prev.is_paid) 
+        }));
+
+        // setToast({ show: true, title: '訂單已成功更新', icon: 'success' });
         handleCloseOrdersModal(); //點擊[確認]按鈕後，要關閉 Modal 視窗(只在成功時關閉 Modal)
-        setToast({ show: true, title: '訂單已成功更新', icon: 'success' });
+
     } catch (error){
+        alert('更新訂單失敗，請檢查輸入內容！');
         // 失敗時僅顯示錯誤訊息，不關閉 Modal
-        setToast({
-            show: true,
-            title: `訂單產品失敗，請檢查輸入內容！ ${error.response.data.message} `, // API 失敗時僅顯示錯誤訊息，不關閉 Modal
-            icon: 'error',
-          });
+        // setToast({
+        //     show: true,
+        //     title: `訂單產品失敗，請檢查輸入內容！ ${error.response.data.message} `, // API 失敗時僅顯示錯誤訊息，不關閉 Modal
+        //     icon: 'error',
+        //   });
     }
 };
 
@@ -170,10 +174,16 @@ const updateOrder = async () => {
             onClose={() => setToast({ show: false, title: '', icon: '' })}
           />
 
-        <div ref={ordersModalRef} id='ordersModal' className="modal" style={{ backgroundColor: "rgba(0,0,0,0.5)" }}>
+        <div 
+            ref={ordersModalRef} 
+            id='ordersModal' 
+            className="modal" 
+            style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
+        >
           <div className="modal-dialog modal-dialog-centered modal-xl">
             <div className="modal-content border-0 shadow">
                 <div className="modal-header border-bottom">
+
                     {/* 調整訂單 Modal 的標題、傳入的值 */}
                     <h5 className="modal-title fs-4"> 編輯訂單</h5>
                     <button 
@@ -187,6 +197,7 @@ const updateOrder = async () => {
                 {/* 訂單內容 */}
                 <div className="modal-body p-8">
                     <div className="row gx-4 gx-md-6 mb-4 mb-lg-6">
+
                     {/* 訂單狀態 */}
                     <div className="mt-3 mb-3">
                         <h3 className="card-title fs-5 text-primary-dark border-bottom border-neutral40 fw-semibold pb-4 mb-4">
@@ -195,33 +206,29 @@ const updateOrder = async () => {
                     </div>
                         <div className="col-6 col-md-4">
                             <label htmlFor="order_id" className="form-label">
-                            訂單編號
+                                訂單編號
                             </label>
                             <input
-                                value={modalData?.id}
-                                onChange={handleModalInputChange}
+                                value={modalData?.id|| ''}
                                 name="order_id"
                                 id="order_id"
                                 type="text"
                                 className="form-control text-neutral40"
                                 placeholder="訂單編號"
-                                readOnly
                             />
                         </div>
 
                         <div className="col-6 col-md-4">
                             <label htmlFor="create_at" className="form-label">
-                            訂單成立時間
+                                訂單成立時間
                             </label>
                             <input
-                                value={new Date(modalData?.create_at* 1000).toLocaleString()}
-                                onChange={handleModalInputChange}
+                                value={new Date(modalData?.create_at * 1000).toLocaleString()}
                                 name="create_at"
                                 id="create_at"
                                 type="text"
                                 className="form-control text-neutral40"
                                 placeholder="訂單成立時間"
-                                readOnly
                             />
                         </div>
 
@@ -232,13 +239,12 @@ const updateOrder = async () => {
                                 <select
                                     className="form-select"
                                     name="is_paid"
-                                    value={Number(modalData?.is_paid)} // 確保是數字
-                                    onChange={handleModalInputChange}
+                                    value={String(modalData?.is_paid?? false)} 
+                                    onChange={handleModalInputChange} // 確保 boolean 型別
                                     >
-                                    <option value="">付款狀態</option>
                                     {isPaidOptions.map((option) => (
-                                        <option key={option} value={String(option)}>
-                                            {option === 1 ? '已付款' : '未付款'}
+                                        <option key={option.toString()} value={option.toString()}>
+                                            {option ? '已付款' : '未付款'}
                                         </option>
                                     ))}
                                 </select>
@@ -252,12 +258,12 @@ const updateOrder = async () => {
                     </div>
                         <div className="col-6 col-md-4">
                             <label htmlFor="user_name" className="form-label">
-                            姓名
+                                姓名
                             </label>
                             <input
-                                value={modalData?.user?.name}
+                                value={modalData?.user?.name|| ''}
                                 onChange={handleModalInputChange}
-                                name="user_name"
+                                name="name"
                                 id="user_name"
                                 type="text"
                                 className="form-control"
@@ -267,12 +273,12 @@ const updateOrder = async () => {
 
                         <div className="col-6 col-md-4">
                             <label htmlFor="user_tel" className="form-label">
-                            聯絡電話
+                                聯絡電話
                             </label>
                             <input
-                                value={modalData?.user?.tel}
+                                value={modalData?.user?.tel|| ''}
                                 onChange={handleModalInputChange}
-                                name="user_tel"
+                                name="tel"
                                 id="user_tel"
                                 type="text"
                                 className="form-control"
@@ -282,12 +288,12 @@ const updateOrder = async () => {
 
                         <div className="col-6 col-md-4">
                             <label htmlFor="user_email" className="form-label">
-                            聯絡郵箱
+                                聯絡郵箱
                             </label>
                             <input
-                                value={modalData?.user?.email}
+                                value={modalData?.user?.email|| ''}
                                 onChange={handleModalInputChange}
-                                name="user_email"
+                                name="email"
                                 id="user_email"
                                 type="text"
                                 className="form-control"
@@ -297,12 +303,12 @@ const updateOrder = async () => {
                         
                         <div className="col-12 col-md-12 mt-5 ">
                             <label htmlFor="user_address" className="form-label">
-                            收件地址
+                                收件地址
                             </label>
                             <input
-                                value={modalData?.user?.address}
+                                value={modalData?.user?.address|| ''}
                                 onChange={handleModalInputChange}
-                                name="user_address"
+                                name="address"
                                 id="user_address"
                                 type="text"
                                 className="form-control"
@@ -312,13 +318,13 @@ const updateOrder = async () => {
 
                         <div className="col-12 col-md-12 mt-5 ">
                             <label htmlFor="user_message" className="form-label">
-                            訂單備註
+                                訂單備註
                             </label>
                             <textarea
-                                value={modalData?.messages}
+                                value={modalData?.message|| ''}
                                 onChange={handleModalInputChange}
                                 name="message"
-                                id="user_message"
+                                id="user_messages"
                                 type="text"
                                 className="form-control"
                                 rows={4}
@@ -337,7 +343,7 @@ const updateOrder = async () => {
                                 <tr className='rounded-3'>
                                 <th scope="col">商品資料</th>
                                 <th scope="col" >單件價格</th>
-                                <th scope="col" >使用優惠券</th>
+                                <th scope="col" >優惠代碼</th>
                                 <th scope="col" >數量</th>
                                 <th scope="col" >小計</th>
                                 </tr>
@@ -384,30 +390,29 @@ const updateOrder = async () => {
                                     ))
                                 ) : (
                                     <tr>
-                                        <td colSpan="4" className="text-center">無訂單明細</td>
+                                        <td colSpan="5" className="text-center">無訂單明細</td>
                                     </tr>
                                 )}
-                            </tbody>           
-                            <tfoot className="row-6">
-                              <div className="col-12">
-                                <div className="border-bottom py-5 d-flex flex-column">
-                                    <div className="d-flex justify-content-between align-items-center mb-4">
-                                        <p>總金額</p>
-                                        <p className="fw-bold">NT$ <span>{modalData?.total?.toLocaleString()}</span></p>
-                                    </div>
-                                    <div className="d-flex justify-content-between align-items-center">
-                                        <p>運費</p>
-                                        <p className="fw-bold">NT$ <span>0</span></p>
-                                    </div>
-                                    </div>
-                                    <div className="d-flex justify-content-between align-items-center my-4">
-                                    <h6>應付金額：</h6>
-                                    <p className="text-primary-dark fs-4 fw-bold">NT$<span className="ms-1">{modalData?.total?.toLocaleString()}</span></p>
-                                  </div>
-                                </div>
-                            </tfoot>
+                            </tbody> 
                         </table>
-                    </div>
+
+                        <div className="col-12">
+                            <div className="border-bottom pt-2">
+                                <div className="d-flex justify-content-end align-items-center mb-4 me-19">
+                                    <p className="me-17">總金額</p>
+                                    <p className="fw-bold">NT$ <span>{modalData?.total?.toLocaleString()}</span></p>
+                                </div>
+                                <div className="d-flex justify-content-end align-items-center mb-4 py-3 me-19">
+                                    <p className="me-21">運費</p>
+                                    <p className="fw-bold">NT$ <span>0</span></p>
+                                </div>
+                            </div>
+                                <div className="d-flex justify-content-end align-items-center mb-4 py-3 me-19">
+                                    <h6 className="me-5">應付金額：</h6>
+                                    <p className="text-primary-dark fs-4 fw-bold">NT$<span className="ms-1">{modalData?.total?.toLocaleString()}</span></p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                 {/* Modal 底部按鈕 */}
