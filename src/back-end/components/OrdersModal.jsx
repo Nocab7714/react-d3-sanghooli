@@ -41,7 +41,7 @@ useEffect(()=>{
 },[tempOrder]) //當tempOrder更新後，重新讓setModalData也更新一份
 
 
-//透過 useEffect ​的 hook，在頁面渲染後取得 productModalRef的 DOM元素
+//透過 useEffect ​的 hook，在頁面渲染後取得 ordersModalRef的 DOM元素
 useEffect(()=>{
     modalInstance.current = new Modal(ordersModalRef.current, {
     backdrop:false // 點擊Modal灰色背景區塊不進行關閉
