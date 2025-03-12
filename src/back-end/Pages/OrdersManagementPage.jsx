@@ -5,17 +5,16 @@ import C3Chart from '../components/C3Chart';
 import ReactHelmetAsync from '../../plugins/ReactHelmetAsync';
 import { useNavigate } from 'react-router-dom';
 import PaginationBackend from '../components/PaginationBackend';
-import ReactLoading from 'react-loading';
+import ReactLoading from'react-loading';
+import OrdersModal from '../components/OrdersModal';
 
 
 // 環境變數
 const { VITE_BASE_URL: baseUrl, VITE_API_PATH: apiPath } = import.meta.env;
 
-
 const OrdersManagementPage = () =>{
-
-  const navigate = useNavigate();
   
+  const navigate = useNavigate();
   //驗證登入
   const checkUserLogin = async () => {
     try {
@@ -39,19 +38,16 @@ const OrdersManagementPage = () =>{
   }, []);
 
   const [ isScreenLoading , setIsScreenLoading ] = useState(false);
+  const [ ordersList, setOrdersList ] = useState([]);//先給 ordersList 一個狀態：後續會從API撈回資料塞回ordersList 中 
 
-  const [orderList, setOrderList] = useState([]);//先給 orderList 一個狀態：後續會從API撈回資料塞回orderList 中 
-  const [tempOrder, setTempOrder] = useState({});
-
- // 在登入成功時，呼叫：管理控制台- 訂單（Orders）> Get API
+ // 在登入成功後，呼叫：管理控制台- 訂單（Orders）> Get API，取得訂單列表
  const getOrders = async ( page = 1 ) => {
   setIsScreenLoading(true); //顯示 Loading 畫面
    try {
      const res = await axios.get(
        `${baseUrl}/api/${apiPath}/admin/orders?page=${page}`
      );
-     console.log(res.data)
-     setOrderList(res.data.orders);
+     setOrdersList(res.data.orders);
      
      //從訂單 API 取得頁面資訊getOrders，並存進狀態中（把res.data.Pagination 塞進去 setPageInfo 裡面）
      setPageInfo(res.data.pagination);
@@ -61,29 +57,88 @@ const OrdersManagementPage = () =>{
     setIsScreenLoading(false); // 無論成功或失敗，都關閉 Loading 畫面
   }
  };
- 
 
-  //串接更新訂單 API
-  const updateOrder = async () => {
-  setIsScreenLoading(true); //顯示 Loading 畫面
-   try {
-     await axios.put(`${baseUrl}/api/${apiPath}/admin/order/${tempOrder.id}`,{
-       data:{
-         ...tempOrder,
-         origin_price:Number(tempOrder.origin_price),
-        //  id:Number(tempOrder.products.id),
-        //  price:Number(tempOrder.price),
-         qty:Number(tempOrder.products?.qty || 1),
-         is_paid:tempOrder.is_paid ? 1 : 0,
-       }
-     }) ;
-     getOrders(); // 更新後重新載入訂單
-   } catch (error) {
-     alert('更新訂單資料失敗');
-   } finally {
-    setIsScreenLoading(false); // 無論成功或失敗，都關閉 Loading 畫面
+ useEffect(() => {
+  getOrders();
+}, []);
+ 
+ //綁定訂單 Modal 狀態
+ const[tempOrder,setTempOrder] = useState(null); 
+
+ //新增狀態做「編輯Modal」開關功能控制，預設狀態：關閉（ 帶入false值 ）
+ const [isOrdersModalOpen , setIsOrdersModalOpen ] = useState(false);
+
+  //新增狀態做「刪除Modal」開關功能控制，預設狀態：關閉（ 帶入false值 ）
+  const [isDelOrdersModalOpen , setIsDelOrdersModalOpen ] = useState(false);
+
+  //開啟 modal 方法 | 新增一個狀態來判斷:判斷當前動作是新增還是編輯
+  const[modalMode, setModalMode]= useState(null);
+
+  //點擊[刪除]按鈕時，開啟刪除確認 Modal：delOrderstModalRef的開啟
+  const handleOpenDelOrdersModal =(Orders) =>{
+    setTempOrder(Orders);
+    
+    //改成用 isOpen 做開關判斷:不直接取得getInstance邏輯改成setIsDelProductModalOpen(true)：告訴Modal現在要開
+    setIsDelOrdersModalOpen(true);
   }
- }
+
+  {/* 點擊「編輯」按鈕，會開啟訂單Ｍodal */}
+    //宣告handleOpenOrdersModal(變數)：進行開關產品的Modal：
+    const handleOpenOrdersModal =(mode , order=null) =>{
+      setModalMode(mode);
+      setTempOrder(order);
+      setIsOrdersModalOpen(true);// 改成用 isOpen 做開關判斷 :不能直接取得getInstance邏輯 → 要改成：setIsProductModalOpen(true);：告訴Modal現在要開
+    };
+
+//   //串接更新訂單 API
+//   const updateOrder = async () => {
+//   setIsScreenLoading(true); //顯示 Loading 畫面
+//    try {
+//      await axios.put(`${baseUrl}/api/${apiPath}/admin/order/${tempOrder.id}`,{
+//        data:{
+//          ...tempOrder,
+//          origin_price:Number(tempOrder.origin_price),
+//         //  id:Number(tempOrder.products.id),
+//         //  price:Number(tempOrder.price),
+//          qty:Number(tempOrder.products?.qty || 1),
+//          is_paid:tempOrder.is_paid ? 1 : 0,
+//        }
+//      }) ;
+//      getOrders(); // 更新後重新載入訂單
+//    } catch (error) {
+//      alert('更新訂單資料失敗');
+//    } finally {
+//     setIsScreenLoading(false); // 無論成功或失敗，都關閉 Loading 畫面
+//   }
+//  }
+
+//|刪除「全部」訂單列表資料函式
+const removeOrders = async( ) => {
+  if (!window.confirm("確定要刪除所有訂單嗎？")) return;
+  setIsScreenLoading(true)
+  try {
+    const res = await axios.delete(`${baseUrl}/api/${apiPath}/admin/orders/all`)
+    getOrders();
+  } catch (error) {
+    alert ('刪除訂單失敗');
+  } finally {
+    setIsScreenLoading(false)
+  }
+};
+
+// 刪除「單一」訂單列表資料函式
+const removeOrderItem = async( orderItem_id ) => {
+  if (!window.confirm("確定要刪除此訂單嗎？")) return; // 先確認
+  setIsScreenLoading(true)
+  try {
+      const res = await axios.delete(`${baseUrl}/api/${apiPath}/admin/order/${orderItem_id}`)
+      getOrders();
+  } catch (error) {
+      alert ('該筆訂單刪除失敗');
+  }finally{
+      setIsScreenLoading(false)
+  }
+  }
 
   
   // 控制分頁元件：新增一個「頁面資訊 pageInfo」的狀態 → 用來儲存頁面資訊
@@ -103,7 +158,9 @@ const OrdersManagementPage = () =>{
             <div className="col pt-19 pb-19">
               <div className=" titleDeco d-flex justify-content-between pt-19 pb-19 mb-8 rounded-3 ">
                 <h1 className='ms-10'>訂單管理</h1>
-                <button type="button" className="btn btn-primary me-10">刪除全部訂單</button>
+                <button 
+                  onClick={removeOrders}
+                  type="button" className="btn btn-primary me-10">刪除全部訂單</button>
               </div>
               
 
@@ -121,7 +178,7 @@ const OrdersManagementPage = () =>{
                 <div className= "managementList pt-19 pb-19 ps-5 pe-5 rounded-3">
 
                   {/* 沒商品時顯示商品管理頁面顯示： 目前尚未有任何商品資料 */}
-                  {orderList.length === 0 ? (
+                  {ordersList.length === 0 ? (
                     <div className="text-center p-5">
                       <h2 className="text-neutral60">目前尚未有任何商品資料</h2>
                     </div>
@@ -141,7 +198,7 @@ const OrdersManagementPage = () =>{
                         </tr>
                       </thead>
                       <tbody>
-                        {orderList.map((order)=>(
+                        {ordersList.map((order)=>(
                           <tr key={order.id} className="align-middle">
                             <td>{order.id}</td>
                             <th scope="row">{order.is_paid?(
@@ -161,8 +218,20 @@ const OrdersManagementPage = () =>{
                             {/* 編輯資料按鈕欄位 */}
                             <td className="text-center">
                               <div className="btn-group">
-                                <button type="button" className="btn btn-primary">編輯</button>
-                                <button type="button" className="btn btn-outline-danger">刪除</button>
+                                <button 
+                                  type="button" 
+                                  onClick={() => handleOpenOrdersModal('edit', order)}
+                                  className="btn btn-primary btn-outline-primary-dark"
+                                >
+                                  編輯
+                                </button>
+                                <button 
+                                  type="button" 
+                                  onClick={() => removeOrderItem(order.id)}
+                                  className="btn btn-outline-danger"
+                                  >
+                                    刪除
+                                  </button>
                               </div>
                             </td>
                           </tr>
@@ -172,11 +241,20 @@ const OrdersManagementPage = () =>{
                     )}
 
                   {/* 分頁元件，條件設定只有當 productList 有數據時，才顯示分頁 */}
-                  {orderList?.length > 0 && (
+                  {ordersList?.length > 0 && (
                     <PaginationBackend 
                       pageInfo={pageInfo} 
                       handlePageChenge={handlePageChenge} />
                   )}
+
+                  {/* 新增與編輯 modal */}
+                  <OrdersModal
+                    modalMode={modalMode}
+                    tempOrder={tempOrder}
+                    isOpen={isOrdersModalOpen}
+                    setIsOpen={setIsOrdersModalOpen} 
+                    getOrders={getOrders}
+                />
 
                   {/* 全螢幕Loading */}
                   { isScreenLoading && (

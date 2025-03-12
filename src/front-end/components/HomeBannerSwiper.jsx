@@ -8,9 +8,9 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import 'swiper/css/autoplay';
 
-import bannerImg01 from '@/assets/img/banner/banner01.png';
-import bannerImg02 from '@/assets/img/banner/banner02.png';
-import bannerImg03 from '@/assets/img/banner/banner03.png';
+import bannerImg01 from '@/assets/img/banner/banner01.webp';
+import bannerImg02 from '@/assets/img/banner/banner02.webp';
+import bannerImg03 from '@/assets/img/banner/banner03.webp';
 
 const HomeBannerSwiper = () => {
   // 由於需使用 loop 功能，故輪播資料大小需要大於 slidesPerView.length + 1 ( 3 + 1 = 4 筆，loop 功能才會正常運作)
