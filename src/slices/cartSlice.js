@@ -51,12 +51,17 @@ const asyncAddCart = createAsyncThunk(
   }
 )
 
+const loadCoupon = () => {
+  const savedCoupon = JSON.parse(localStorage.getItem("coupon"));
+  return savedCoupon || "";
+}
 const initialState = {
   carts: null,
   total: 0,
   final_total: 0,
   basketQty: 0,
-  cartCategories: []
+  cartCategories: [],
+  coupon: loadCoupon()
 }
 
 const cartSlice = createSlice({
@@ -72,6 +77,9 @@ const cartSlice = createSlice({
         state.final_total = final_total;
         state.basketQty = carts.reduce((sum, item) => sum + item.qty, 0);
         state.cartCategories = [...new Set(carts.map((cart) => cart.product.category))];
+        state.coupon = carts.find(cart => cart.coupon)?.coupon.code ?? "";
+        // 寫入 localStorage
+        localStorage.setItem("coupon", JSON.stringify(state.coupon));
       })
   }
 })

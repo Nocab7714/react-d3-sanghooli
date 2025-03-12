@@ -19,6 +19,7 @@ const API_PATH = import.meta.env.VITE_API_PATH;
 export default function CheckoutPage(){
   const dispatch = useDispatch();
   const cart = useSelector((state) => state.cart);
+  const {total, final_total, coupon} = useSelector((state) => state.cart);
 
   const navigate = useNavigate();
 
@@ -196,14 +197,25 @@ export default function CheckoutPage(){
                         }
                         <div className="border-top border-bottom py-5">
                           <h6 className="mb-6">訂單明細資訊</h6>
-                          <div className="d-flex justify-content-between align-items-center mb-4">
+                          <div className="d-flex justify-content-between align-items-center fs-7 mb-5 mb-md-6">
                             <p>總金額</p>
                             <p className="fw-bold">NT$ <span>{cart?.total.toLocaleString()}</span></p>
                           </div>
-                          <div className="d-flex justify-content-between align-items-center">
+                          <div className="d-flex justify-content-between align-items-center fs-7 mb-5 mb-md-6">
                             <p>運費</p>
                             <p className="fw-bold">NT$ <span>0</span></p>
                           </div>
+                          {
+                            (coupon && coupon !== "100%") && (
+                              <div className="d-flex justify-content-between align-items-center fs-7 mb-5 mb-md-6">
+                                <p className="text-neutral60">優惠券</p>
+                                <span className="fw-semibold">
+                                  -NT${" "}
+                                  {(total - final_total).toLocaleString()}
+                                </span>
+                              </div>
+                            )
+                          }
                         </div>
                         <div className="d-flex justify-content-between align-items-center my-4">
                           <h6>應付金額：</h6>
