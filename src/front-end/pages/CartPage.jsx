@@ -22,7 +22,6 @@ function CartPage() {
   );
   const products = useSelector((state) => state.products.products);
   const dispatch = useDispatch();
-  console.log(carts);
 
   const updateCart = async (cartId, productId, qty) => {
     dispatch(asyncSetLoading(["sectionLoading", true]));
@@ -111,12 +110,10 @@ function CartPage() {
 
   // 使用優惠券
   const [isCouponValid, setIsCouponValid] = useState(null);
-  const [isCouponRemoved, setIsCouponRemoved] = useState(null);
   const [couponResult, setCouponResult] = useState({
     text: "",
     className: ""
   });
-  console.log(isCouponValid, isCouponRemoved);
   console.log('coupon', coupon);
   
   
@@ -139,9 +136,7 @@ function CartPage() {
         },
       };
       const response = await axios.post(url, data);
-      // console.log(response.data.success);
       setIsCouponValid(response.data.success);
-      setIsCouponRemoved(null);
       setCouponResult({
         text: "您的優惠券已成功套用！",
         className: "text-success"
@@ -150,7 +145,6 @@ function CartPage() {
     } catch (error) {
       console.dir(error);
       setIsCouponValid(error.response.data.success);
-      setIsCouponRemoved(null);
       setCouponResult({
         text: "輸入的優惠代碼無效，請重新檢查是否輸入有誤或是已過期！",
         className: "text-secondary"
@@ -166,11 +160,9 @@ function CartPage() {
           code: "100%",  // 此原價優惠碼設定有效日期至 2100-01-01 00:00:00 UTC
         },
       };
-      const response = await axios.post(url, data);
-      // console.log('removeCoupon', response.data.success);
+      await axios.post(url, data);
       reset({coupon: ""})
       setIsCouponValid(null);
-      setIsCouponRemoved(response.data.success);
       setCouponResult({
         text: "已移除優惠券！",
         className: "text-success"
@@ -178,7 +170,6 @@ function CartPage() {
       dispatch(asyncGetCart());
     } catch (error) {
       console.dir(error);
-      setIsCouponRemoved(error.response.data.success);
       setCouponResult({
         text: "優惠券移除失敗，請與客服人員聯絡！",
         className: "text-secondary"
@@ -188,10 +179,15 @@ function CartPage() {
 
   useEffect(() => {
     if (coupon === "100%") return
-    if(coupon){
+    if (coupon){
       applyCoupon()
     }
   }, [coupon, applyCoupon])
+
+  useEffect(() => {
+    if (coupon === "100%") return
+    reset({ coupon })
+  }, [coupon, reset])
 
   useEffect(() => {
     dispatch(asyncGetCart({ skipSectionLoading: false }));
