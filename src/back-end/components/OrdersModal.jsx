@@ -113,6 +113,7 @@ useEffect(() => {
     }
   }, [isOpen, modalData?.id]);
  
+
   // 更新訂單
 const updateOrder = async () => {
     setIsScreenLoading(true);
@@ -164,6 +165,7 @@ const updateOrder = async () => {
         //   });
     }
 };
+
 
     return(
         <>
@@ -251,85 +253,91 @@ const updateOrder = async () => {
                         </div>
 
                     {/* 訂購人資訊 */}
-                    <div className="mt-10 mb-3">
-                        <h3 className="card-title fs-5 text-primary-dark border-bottom border-neutral40 fw-semibold pb-4 mb-4">
+                        <h3 className="card-title fs-5 text-primary-dark border-bottom border-neutral40 fw-semibold pb-4 mb-4 mt-10">
                             購買收件資訊
                         </h3> 
-                    </div>
-                        <div className="col-6 col-md-4">
-                            <label htmlFor="user_name" className="form-label">
-                                姓名
-                            </label>
-                            <input
-                                value={modalData?.user?.name|| ''}
-                                onChange={handleModalInputChange}
-                                name="name"
-                                id="user_name"
-                                type="text"
-                                className="form-control"
-                                placeholder="請輸入您的真實姓名"
-                            />
-                        </div>
 
-                        <div className="col-6 col-md-4">
-                            <label htmlFor="user_tel" className="form-label">
-                                聯絡電話
-                            </label>
-                            <input
-                                value={modalData?.user?.tel|| ''}
-                                onChange={handleModalInputChange}
-                                name="tel"
-                                id="user_tel"
-                                type="text"
-                                className="form-control"
-                                placeholder="請輸入您的手機號碼"
-                            />
-                        </div>
+                        <div className="pb-3">        
+                            <form className="border-bottom border-neutral40 border-lg-0">
+                                <div className="row g-3">
+                                <div className="col-12 col-md-4">
+                                    <label htmlFor="user_name" className="form-label">
+                                        姓名
+                                    </label>
+                                    <input
+                                        value={modalData?.user?.name|| ''}
+                                        onChange={handleModalInputChange}
+                                        name="name"
+                                        id="user_name"
+                                        type="text"
+                                        className="form-control"
+                                        placeholder="請輸入您的真實姓名"
+                                    />
+                                </div>
 
-                        <div className="col-6 col-md-4">
-                            <label htmlFor="user_email" className="form-label">
-                                聯絡郵箱
-                            </label>
-                            <input
-                                value={modalData?.user?.email|| ''}
-                                onChange={handleModalInputChange}
-                                name="email"
-                                id="user_email"
-                                type="text"
-                                className="form-control"
-                                placeholder="EX:example@sanghooli.com"
-                            />
-                        </div>
-                        
-                        <div className="col-12 col-md-12 mt-5 ">
-                            <label htmlFor="user_address" className="form-label">
-                                收件地址
-                            </label>
-                            <input
-                                value={modalData?.user?.address|| ''}
-                                onChange={handleModalInputChange}
-                                name="address"
-                                id="user_address"
-                                type="text"
-                                className="form-control"
-                                placeholder="請輸入方便接收商品配送的指定地址"
-                            />
-                        </div>
+                                <div className="col-12 col-md-4">
+                                    <label htmlFor="user_tel" className="form-label">
+                                        聯絡電話
+                                    </label>
+                                    <input
+                                        value={modalData?.user?.tel|| ''}
+                                        onChange={handleModalInputChange}
+                                        name="tel"
+                                        id="user_tel"
+                                        type="text"
+                                        className="form-control"
+                                        placeholder="請輸入您的手機號碼"
+                                    />
+                                </div>
 
-                        <div className="col-12 col-md-12 mt-5 ">
-                            <label htmlFor="user_message" className="form-label">
-                                訂單備註
-                            </label>
-                            <textarea
-                                value={modalData?.message|| ''}
-                                onChange={handleModalInputChange}
-                                name="message"
-                                id="user_messages"
-                                type="text"
-                                className="form-control"
-                                rows={4}
-                                placeholder="提供給SANGHOOI管理者的訂購商品客製化細節訊息"
-                            ></textarea>
+                                <div className="col-12 col-md-4">
+                                    <label htmlFor="user_email" className="form-label">
+                                        聯絡郵箱
+                                    </label>
+                                    <input
+                                        value={modalData?.user?.email|| ''}
+                                        onChange={handleModalInputChange}
+                                        name="email"
+                                        id="user_email"
+                                        type="text"
+                                        className="form-control"
+                                        placeholder="EX:example@sanghooli.com"
+                                    />
+                                </div>
+                                
+                                <div className="col-12 col-md-12 mt-5 ">
+                                    <label htmlFor="user_address" className="form-label">
+                                        收件地址
+                                    </label>
+                                    <input
+                                        value={modalData?.user?.address|| ''}
+                                        onChange={handleModalInputChange}
+                                        name="address"
+                                        id="user_address"
+                                        type="text"
+                                        className="form-control"
+                                        placeholder="請輸入方便接收商品配送的指定地址"
+                                    />
+                                </div>
+
+                                <div className="col-12 col-md-12 mt-5 ">
+                                    <label htmlFor="user_message" className="form-label">
+                                        訂單備註
+                                    </label>
+                                    <textarea
+                                        value={modalData?.message|| ''}
+                                        onChange={handleModalInputChange}
+                                        name="message"
+                                        id="user_messages"
+                                        type="text"
+                                        className="form-control"
+                                        rows={4}
+                                        placeholder="提供給SANGHOOI管理者的訂購商品客製化細節訊息"
+                                    ></textarea>
+                                </div>
+                                
+                                </div>
+                            </form>
                         </div>
 
                     {/* 訂購清單 */}
@@ -379,7 +387,7 @@ const updateOrder = async () => {
                                             </td>
 
                                             {/* 使用優惠券 */}
-                                            <td>{item.coupon ? item.coupon.code : "未使用優惠券"}</td>
+                                            <td>{item.coupon ? item.coupon?.code : "未使用優惠券"}</td>
                                             
                                             {/* 數量 */}
                                             <td>{item.qty}</td>
@@ -398,16 +406,16 @@ const updateOrder = async () => {
 
                         <div className="col-12">
                             <div className="border-bottom pt-2">
-                                <div className="d-flex justify-content-end align-items-center mb-4 me-19">
+                                <div className="d-flex justify-content-end align-items-center mb-4 pe-8">
                                     <p className="me-17">總金額</p>
                                     <p className="fw-bold">NT$ <span>{modalData?.total?.toLocaleString()}</span></p>
                                 </div>
-                                <div className="d-flex justify-content-end align-items-center mb-4 py-3 me-19">
+                                <div className="d-flex justify-content-end align-items-center mb-4 py-3 pe-8">
                                     <p className="me-21">運費</p>
                                     <p className="fw-bold">NT$ <span>0</span></p>
                                 </div>
                             </div>
-                                <div className="d-flex justify-content-end align-items-center mb-4 py-3 me-19">
+                                <div className="d-flex justify-content-end align-items-center mb-4 py-3 pe-8">
                                     <h6 className="me-5">應付金額：</h6>
                                     <p className="text-primary-dark fs-4 fw-bold">NT$<span className="ms-1">{modalData?.total?.toLocaleString()}</span></p>
                                 </div>
@@ -427,7 +435,7 @@ const updateOrder = async () => {
                 <button 
                     onClick={handlUpdateOrders}
                     type="button" 
-                    className="btn btn-primary fs-6"
+                    className="btn btn-primary btn-outline-primary fs-6"
                     disabled={isScreenLoading}
                     >
                     {isScreenLoading ? '更新中...' : '確認修改'}
