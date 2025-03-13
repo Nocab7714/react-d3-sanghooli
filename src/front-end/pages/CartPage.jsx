@@ -440,7 +440,7 @@ function CartPage() {
                                   <p className="text-neutral60">優惠券</p>
                                   <span className="fw-semibold">
                                     -NT${" "}
-                                    {(total - final_total).toLocaleString()}
+                                    {Math.floor((total - final_total)).toLocaleString()}
                                   </span>
                                 </div>
                               )}
@@ -482,7 +482,7 @@ function CartPage() {
                           <div className="d-flex justify-content-between align-items-center mb-5 mb-md-6">
                             <p className="text-neutral60 fs-7">應付金額</p>
                             <span className="text-primary-dark h5 fw-semibold text-primary-dark">
-                              NT$ {final_total.toLocaleString()}
+                              NT$ {Math.floor(final_total).toLocaleString()}
                             </span>
                           </div>
                           <Link
