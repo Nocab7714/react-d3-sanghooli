@@ -249,7 +249,7 @@ function CartPage() {
                           </div>
                           <div
                             className="d-flex position-relative"
-                            style={{ maxWidth: "116px" }}
+                            // style={{ maxWidth: "116px" }}
                           >
                             <button
                               type="button"

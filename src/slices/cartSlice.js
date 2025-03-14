@@ -40,7 +40,9 @@ const asyncAddCart = createAsyncThunk(
         }
       }
       const response = await axios.post(url, data)
-      dispatch(createToast(response.data))
+      console.log(response.data);
+      
+      dispatch(createToast(response.data));
       dispatch(asyncGetCart());
     } catch (error) {
       const { success, message} = error.response.data;
