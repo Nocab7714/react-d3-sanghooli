@@ -149,13 +149,8 @@ const handleCloseOrdersModal =() =>{
   // 處理輸入變更
   const handleModalInputChange =(e)=>{
     const { value , name } = e.target;
-
-    let newValue;
-    if (name === "is_paid") {
-        newValue = value === "true"; // 轉換成布林值
-    } else {
-        newValue = value;
-    }
+    
+    const newValue = name === "is_paid" ? value === "true" : value
 
     // 更新modalData
     setModalData((prevData)=>({
