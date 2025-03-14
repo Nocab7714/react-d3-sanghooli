@@ -58,37 +58,6 @@ useEffect(()=>{
     }
 }, [isOpen]); //當isOpen有更新時， 判斷是否需要開modal
 
-{/* 點擊Ｍodal的取消＆Ｘ按鈕會進行關閉 */}
-//宣告handleCloseOrdersModal(變數)：進行開關產品的Modal：
-const handleCloseOrdersModal =() =>{
-    const modalInstance = Modal.getInstance(ordersModalRef.current);
-      //拿到Modal實例後，即可透過modalInstance.hide(); 關閉Modal
-      modalInstance.hide();
-      setIsOpen(false); //判斷Modal開關狀態:如果是「關」的調整方式
-  }
-
-  // 處理輸入變更
-  const handleModalInputChange =(e)=>{
-    const { value , name } = e.target;
-
-    let newValue;
-    if (name === "is_paid") {
-        newValue = value === "true"; // 轉換成布林值
-    } else {
-        newValue = value;
-    }
-
-    // 更新modalData
-    setModalData((prevData)=>({
-        //modalData.is_paid 能正確反映當前訂單的付款狀態設定
-        ...prevData,
-        ...(name === "message"
-            ? { [name]: newValue } // 如果是 message，直接更新 modalData
-            : { user: { ...prevData.user, [name]: newValue } }) // 其他欄位更新 user 內的資料
-    }));
-};
-
-
 // 取得訂單詳細資料
 const fetchOrderDetails = async (orderId) => {
     if (!orderId) return;  // 確保不會發送錯誤請求
@@ -121,7 +90,7 @@ const updateOrder = async () => {
       const res = await axios.put(`${baseUrl}/api/${apiPath}/admin/order/${modalData.id}`, {
         data: {
           ...modalData,
-          is_paid:Boolean(modalData?.is_paid),// 轉換為 true/false
+          is_paid:Boolean(modalData?.is_paid),// 將 is_paid 轉換為 true/false
         },
       });
   
@@ -146,7 +115,7 @@ const updateOrder = async () => {
    {/* 點擊Modal 的「確認修改」按鈕條件：會呼叫 「」的API指令 */}
     const handlUpdateOrders = async () => {
     try{
-        await updateOrder() ; // ✅ 這樣 `updateOrder` 會正確執行
+        await updateOrder() ;
         setModalData(prev => ({ 
             ...prev, 
             is_paid: Boolean(prev.is_paid) 
@@ -164,6 +133,38 @@ const updateOrder = async () => {
         //     icon: 'error',
         //   });
     }
+};
+
+
+
+{/* 點擊Ｍodal的取消＆Ｘ按鈕會進行關閉 */}
+//宣告handleCloseOrdersModal(變數)：進行開關產品的Modal：
+const handleCloseOrdersModal =() =>{
+    const modalInstance = Modal.getInstance(ordersModalRef.current);
+      //拿到Modal實例後，即可透過modalInstance.hide(); 關閉Modal
+      modalInstance.hide();
+      setIsOpen(false); //判斷Modal開關狀態:如果是「關」的調整方式
+  }
+
+  // 處理輸入變更
+  const handleModalInputChange =(e)=>{
+    const { value , name } = e.target;
+
+    let newValue;
+    if (name === "is_paid") {
+        newValue = value === "true"; // 轉換成布林值
+    } else {
+        newValue = value;
+    }
+
+    // 更新modalData
+    setModalData((prevData)=>({
+        //modalData.is_paid 能正確反映當前訂單的付款狀態設定
+        ...prevData,
+        ...(name === "message"
+            ? { [name]: newValue } // 如果是 message，直接更新 modalData
+            : { user: { ...prevData.user, [name]: newValue } }) // 其他欄位更新 user 內的資料
+    }));
 };
 
 
@@ -212,6 +213,7 @@ const updateOrder = async () => {
                             </label>
                             <input
                                 value={modalData?.id|| ''}
+                                onChange={handleModalInputChange}
                                 name="order_id"
                                 id="order_id"
                                 type="text"
@@ -226,6 +228,7 @@ const updateOrder = async () => {
                             </label>
                             <input
                                 value={new Date(modalData?.create_at * 1000).toLocaleString()}
+                                onChange={handleModalInputChange}
                                 name="create_at"
                                 id="create_at"
                                 type="text"
@@ -241,8 +244,8 @@ const updateOrder = async () => {
                                 <select
                                     className="form-select"
                                     name="is_paid"
-                                    value={String(modalData?.is_paid?? false)} 
-                                    onChange={handleModalInputChange} // 確保 boolean 型別
+                                    value={String(modalData?.is_paid ?? false)} 
+                                    onChange={handleModalInputChange} // 確保更新布林值
                                     >
                                     {isPaidOptions.map((option) => (
                                         <option key={option.toString()} value={option.toString()}>

@@ -182,7 +182,7 @@ const ProductsManagementPage = () =>{
                     </thead>
                     <tbody>
                       {productList.map((product)=>(
-                      <tr key={product.id} className="align-middle shadow-sm">
+                      <tr key={product.id} className="align-middle">
                           <th scope="row" className='text-neutral60'>{product.category}</th>
                           <td className='h6'>{product.title}</td>
                           <td className='text-neutral40 text-decoration-line-through'>{product.origin_price.toLocaleString()}</td>

@@ -197,10 +197,10 @@ const removeOrderItem = async( orderItem_id ) => {
                         </tr>
                       </thead>
 
-                      {/* 當單個訂單的刪除按鈕 */}
+                      {/* 單個訂單的刪除按鈕 */}
                       <tbody>
                         {ordersList.map((order)=>(
-                          <tr key={order.id} className="align-middle shadow-sm">
+                          <tr key={order.id} className="align-middle">
                             <td scope="row">{order.id}</td>
                             <td>{order.is_paid?(
                               <span className="text-success">已付款</span>
