@@ -2,6 +2,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import PaginationBackend from "../components/PaginationBackend";
 import OrdersModal from "../components/OrdersModal";
 import DelOrdersModal from "../components/DelOrdersModal";
@@ -9,6 +10,8 @@ import ReactLoading from "react-loading";
 
 import C3Chart from "../components/C3Chart";
 import ReactHelmetAsync from "../../plugins/ReactHelmetAsync";
+import { createToast } from "../../slices/toastSlice";
+import { asyncSetLoading } from "../../slices/loadingSlice";
 
 // 環境變數
 const { VITE_BASE_URL: baseUrl, VITE_API_PATH: apiPath } = import.meta.env;
@@ -16,36 +19,39 @@ const { VITE_BASE_URL: baseUrl, VITE_API_PATH: apiPath } = import.meta.env;
 //訂單初始狀態
 
 const OrdersManagementPage = () => {
+  const [ordersList, setOrdersList] = useState([]); //先給 ordersList 一個狀態：後續會從API撈回資料塞回ordersList 中
+  const [isScreenLoading, setIsScreenLoading] = useState(false);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  //驗證登入
+  // 檢查用戶是否登入
   const checkUserLogin = async () => {
     try {
       await axios.post(`${baseUrl}/api/user/check`);
     } catch (error) {
-      alert("請先登入");
+      dispatch(
+        createToast({
+          success: false,
+          message: "請先登入",
+        })
+      );
       navigate("/admin/login");
     }
   };
 
-  // 判斷目前是否已是登入狀態，取出在 cookie 中的 token
-  // 若想在登入頁面渲染時呼叫checkUserLogin裡的API>需要透過React hook：useEffect 戳一次API
   useEffect(() => {
     const token = document.cookie.replace(
       /(?:(?:^|.*;\s*)D3Token\s*\=\s*([^;]*).*$)|^.*$/,
       "$1"
     );
-    axios.defaults.headers.common["Authorization"] = token; //將 token 帶到 axios 上：後續的axios就會帶上這行token
-    checkUserLogin(); //戳checkUserLogin API :
+    axios.defaults.headers.common["Authorization"] = token; //設定 axios token
+    checkUserLogin(); // 檢查用戶登入狀態
     getOrders(); // 頁面載入時獲取訂單
   }, []);
 
-  const [ordersList, setOrdersList] = useState([]); //先給 ordersList 一個狀態：後續會從API撈回資料塞回ordersList 中
-  const [isScreenLoading, setIsScreenLoading] = useState(false);
-
   // 在登入成功後，呼叫：管理控制台- 訂單（Orders）> Get API，取得訂單列表
   const getOrders = async (page = 1) => {
-    setIsScreenLoading(true); //顯示 Loading 畫面
+    dispatch(asyncSetLoading(["sectionLoading", true]));
     try {
       const res = await axios.get(
         `${baseUrl}/api/${apiPath}/admin/orders?page=${page}`
@@ -55,12 +61,17 @@ const OrdersManagementPage = () => {
       //從訂單 API 取得頁面資訊getOrders，並存進狀態中（把res.data.Pagination 塞進去 setPageInfo 裡面）
       setPageInfo(res.data.pagination);
     } catch (error) {
-      alert("取得訂單失敗，請稍作等待後，再重新嘗試操作敗");
+      dispatch(
+        createToast({
+          success: false,
+          message: "取得訂單失敗，請稍作等待後，再重新嘗試操作！",
+        })
+      );
     } finally {
+      dispatch(asyncSetLoading(["sectionLoading", false]));
       setIsScreenLoading(false); // 無論成功或失敗，都關閉 Loading 畫面
     }
   };
-
   useEffect(() => {
     getOrders();
   }, []);
@@ -82,8 +93,7 @@ const OrdersManagementPage = () => {
 
   // 打開刪除訂單的 Modal，並設置刪除模式
   const handleOpenDelOrdersModal = (order, mode) => {
-    console.log("🔍 嘗試開啟刪除 Modal，訂單：", order);
-    //setTempOrder(order);
+    setTempOrder(order);
     setDeleteMode(mode);
 
     //改成用 isOpen 做開關判斷:不直接取得getInstance邏輯改成setIsDelProductModalOpen(true)：告訴Modal現在要開
@@ -91,45 +101,66 @@ const OrdersManagementPage = () => {
   };
 
   {
-    /* 點擊「編輯」按鈕，會開啟訂單Ｍodal */
+    /* 點擊「編輯」按鈕，開啟訂單Ｍodal */
   }
   //宣告handleOpenOrdersModal(變數)：進行開關產品的Modal：
-  const handleOpenOrdersModal = (mode, order = null) => {
-    console.log("🔍 嘗試開啟刪除 Modal，訂單：", order);
+  const handleOpenOrdersModal = (order, mode) => {
     setModalMode(mode); // 根據 mode 設定刪除模式
-    setTempOrder(order);
-    setIsOrdersModalOpen(true); // 改成用 isOpen 做開關判斷 :不能直接取得getInstance邏輯 → 要改成：setIsProductModalOpen(true);：告訴Modal現在要開
-  };
-
-  //|刪除「全部」訂單列表資料函式
-  const removeOrders = async () => {
-    //if (!window.confirm("確定要刪除所有訂單嗎？")) return;
-    setIsScreenLoading(true);
-    try {
-      const res = await axios.delete(
-        `${baseUrl}/api/${apiPath}/admin/orders/all`
-      );
-      getOrders();
-    } catch (error) {
-      alert("刪除訂單列表失敗，請稍後再試");
-    } finally {
-      setIsScreenLoading(false);
-    }
+    setTempOrder(order); //// 設置 tempOrder，將當前選擇的訂單資料傳遞到 Modal 中
+    setIsOrdersModalOpen(true); // 改成用 isOpen 做開關判斷 :不能直接取得
   };
 
   // 刪除「單一」訂單列表資料函式
   const removeOrderItem = async (orderItem_id) => {
-    //if (!window.confirm("確定要刪除此訂單嗎？")) return; // 先確認
     setIsScreenLoading(true);
     try {
       const res = await axios.delete(
         `${baseUrl}/api/${apiPath}/admin/order/${orderItem_id}`
       );
       getOrders();
+      dispatch(
+        createToast({
+          success: true,
+          message: "訂單已刪除",
+        })
+      );
     } catch (error) {
-      alert("該筆訂單刪除失敗，請再試一次");
+      dispatch(
+        createToast({
+          success: false,
+          message: "該筆訂單刪除失敗，請再試一次",
+        })
+      );
     } finally {
       setIsScreenLoading(false);
+      setIsDelOrdersModalOpen(false); // 刪除後關閉 Modal
+    }
+  };
+
+  //刪除「全部」訂單列表資料函式
+  const removeAllOrders = async () => {
+    setIsScreenLoading(true);
+    try {
+      const res = await axios.delete(
+        `${baseUrl}/api/${apiPath}/admin/orders/all`
+      );
+      getOrders();
+      dispatch(
+        createToast({
+          success: true,
+          message: "所有訂單已刪除",
+        })
+      );
+    } catch (error) {
+      dispatch(
+        createToast({
+          success: false,
+          message: "刪除訂單列表失敗，請稍後再試一次！",
+        })
+      );
+    } finally {
+      setIsScreenLoading(false);
+      setIsDelOrdersModalOpen(false); // 刪除後關閉 Modal
     }
   };
 
@@ -274,13 +305,13 @@ const OrdersManagementPage = () => {
                   tempOrder={tempOrder}
                   isOpen={isDelOrdersModalOpen}
                   setIsOpen={setIsDelOrdersModalOpen}
-                  getOrders={() => {
-                    /* 獲取訂單的函數 */
-                  }}
+                  getOrders={getOrders}
                   deleteMode={deleteMode} // 傳遞 deleteMode 給 DelOrdersModal
+                  removeOrderItem={removeOrderItem}
+                  removeAllOrders={removeAllOrders}
                 />
 
-                {/* 全螢幕Loading */}
+                {/* 全螢幕Loading
                 {isScreenLoading && (
                   <div
                     className="d-flex justify-content-center align-items-center"
@@ -298,7 +329,7 @@ const OrdersManagementPage = () => {
                       height="4rem"
                     />
                   </div>
-                )}
+                )} */}
               </div>
             </div>
           </div>

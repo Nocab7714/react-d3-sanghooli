@@ -26,7 +26,6 @@ export const AdminAuthProvider = ({ children }) => {
 
   //驗證登入
   const checkUserLogin = async () => {
-    dispatch(asyncSetLoading(["globalLoading", true]));
     try {
       // 如果 token 不存在，直接跳轉到登入頁面
       const token = document.cookie.replace(
@@ -48,8 +47,6 @@ export const AdminAuthProvider = ({ children }) => {
         createToast({ success, message: `登入失敗，請稍後再試！${message}` })
       );
       setIsLoggedIn(false);
-    } finally {
-      dispatch(asyncSetLoading(["globalLoading", false])); // 全螢幕
     }
   };
 
@@ -70,6 +67,7 @@ export const AdminAuthProvider = ({ children }) => {
 
   // 處理登入，data 是表單經過驗證後的資料
   const handleLogin = async (data) => {
+    dispatch(asyncSetLoading(["sectionLoading", true]));
     try {
       const res = await axios.post(`${baseUrl}/admin/signin`, data);
       const { token, expired } = res.data;
@@ -84,10 +82,12 @@ export const AdminAuthProvider = ({ children }) => {
     } catch (error) {
       dispatch(
         createToast({
-          success: true,
+          success: false,
           message: "登入失敗，請稍後再試！",
         })
       );
+    } finally {
+      dispatch(asyncSetLoading(["sectionLoading", false]));
     }
   };
 
