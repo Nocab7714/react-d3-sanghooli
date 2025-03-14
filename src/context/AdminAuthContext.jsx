@@ -42,9 +42,7 @@ export const AdminAuthProvider = ({ children }) => {
 
       await axios.post(`${baseUrl}/api/user/check`);
       setIsLoggedIn(true);
-      dispatch(createToast(res.data));
     } catch (error) {
-      // console.error("Token 驗證失敗，請重新登入", error);
       const { success, message } = error.response.data.message;
       dispatch(
         createToast({ success, message: `登入失敗，請稍後再試！${message}` })
@@ -84,12 +82,13 @@ export const AdminAuthProvider = ({ children }) => {
       dispatch(createToast(res.data));
       navigate("/admin/orders"); // 登入後導向訂單管理
     } catch (error) {
-      console.error("登入失敗，請稍作等待後，再嘗試重新登入", error);
-      const { success, message } = error.response.data.message;
       dispatch(
-        createToast({ success, message: `登入失敗，請稍後再試！${message}` })
+        createToast({
+          success: true,
+          message: "登入失敗，請稍後再試！",
+        })
       );
-    } 
+    }
   };
 
   // 登出函式＋登出時重設狀態並回到首頁
@@ -103,14 +102,10 @@ export const AdminAuthProvider = ({ children }) => {
 
       // 清除狀態
       setIsLoggedIn(false);
-      dispatch(createToast(res.data));
       navigate("/admin/login"); // 登出後導向登入頁面
     } catch (error) {
-      const { success, message } = error.response.data.message;
-      dispatch(
-        createToast({ success, message: `登出失敗，請稍後再試！${message}` })
-      );
-    } 
+      console.error(error);
+    }
   };
 
   return (
