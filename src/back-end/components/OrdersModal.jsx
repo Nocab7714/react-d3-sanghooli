@@ -7,7 +7,6 @@ import Toast from '../../plugins/Toast.jsx';
 const { VITE_BASE_URL: baseUrl, VITE_API_PATH: apiPath } = import.meta.env;
 
 const OrdersModal = ({
-    modalMode, 
     tempOrder,
     isOpen,
     setIsOpen,
