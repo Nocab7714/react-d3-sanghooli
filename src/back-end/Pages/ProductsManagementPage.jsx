@@ -146,8 +146,8 @@ const ProductsManagementPage = () =>{
       <>
         <ReactHelmetAsync title="後台系統-產品管理頁面"/>
         <div className="container">
-          <div className="row">
-            <div className="col pt-19 pb-19">
+          <div className="row pb-19">
+            <div className="col-lg-12 pt-19">
               <div className=" titleDeco d-flex justify-content-between pt-19 pb-19 mb-8 rounded-3 ">
                 <h1 className='ms-10'>商品管理</h1>
                 <button 
@@ -169,7 +169,7 @@ const ProductsManagementPage = () =>{
                   // 商品管理有商品時呈現畫面
                   <table className="table"> 
                     <thead>
-                        <tr className='rounded-3'>
+                        <tr className='rounded-3 shadow-sm'>
                         <th scope="col">產品類型</th>
                         <th scope="col">產品名稱</th>
                         <th scope="col" >原價</th>
