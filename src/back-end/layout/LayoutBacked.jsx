@@ -1,13 +1,17 @@
 // 頁面元件引入
-import HeaderBacked from "./HeaderBacked.jsx";
 import { Outlet, useNavigate } from "react-router-dom";
-import GoToTop from "../components/GoToTop.jsx";
-import FooterBacked from "./FooterBacked.jsx";
 import { useContext, useEffect } from "react";
 import { AdminAuthContext } from "../../context/AdminAuthContext";
 
+import HeaderBacked from "./HeaderBacked.jsx";
+import FooterBacked from "./FooterBacked.jsx";
+import ScreenLoading from "../../plugins/ScreenLoading";
+import SectionLoading from "../../plugins/SectionLoading.jsx";
+import Toast from "../../plugins/Toast.jsx";
+
 //外部元件
 import AutoScrollToTop from "../../plugins/AutoScrollToTop.jsx";
+import GoToTop from "../components/GoToTop.jsx";
 
 function LayoutBacked() {
   const { isLoggedIn } = useContext(AdminAuthContext);
@@ -23,11 +27,15 @@ function LayoutBacked() {
     <>
       <AutoScrollToTop />
       <HeaderBacked />
-      <div>
+
+      <Toast />
+      <div className="position-relative">
+        <SectionLoading />
         <Outlet />
       </div>
       <FooterBacked />
       <GoToTop />
+      <ScreenLoading />
     </>
   );
 }

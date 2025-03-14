@@ -1,6 +1,11 @@
 import axios from "axios";
 import { createContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+
+//內部資源
+import { createToast } from "../slices/toastSlice";
+import { asyncSetLoading } from "../slices/loadingSlice";
 
 // 環境變數
 const { VITE_BASE_URL: baseUrl } = import.meta.env;
@@ -10,6 +15,7 @@ export const AdminAuthContext = createContext(null);
 
 export const AdminAuthProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false); // 狀態管理
+  const dispatch = useDispatch();
 
   //登入資訊
   const [account, setAccount] = useState({
@@ -20,6 +26,7 @@ export const AdminAuthProvider = ({ children }) => {
 
   //驗證登入
   const checkUserLogin = async () => {
+    dispatch(asyncSetLoading(["globalLoading", true]));
     try {
       // 如果 token 不存在，直接跳轉到登入頁面
       const token = document.cookie.replace(
@@ -35,10 +42,16 @@ export const AdminAuthProvider = ({ children }) => {
 
       await axios.post(`${baseUrl}/api/user/check`);
       setIsLoggedIn(true);
+      dispatch(createToast(res.data));
     } catch (error) {
-      console.error("Token 驗證失敗，請重新登入", error);
-      alert("請先登入");
+      // console.error("Token 驗證失敗，請重新登入", error);
+      const { success, message } = error.response.data.message;
+      dispatch(
+        createToast({ success, message: `登入失敗，請稍後再試！${message}` })
+      );
       setIsLoggedIn(false);
+    } finally {
+      dispatch(asyncSetLoading(["globalLoading", false])); // 全螢幕
     }
   };
 
@@ -68,12 +81,15 @@ export const AdminAuthProvider = ({ children }) => {
       axios.defaults.headers.common["Authorization"] = token;
 
       setIsLoggedIn(true);
-      alert("登入成功");
+      dispatch(createToast(res.data));
       navigate("/admin/orders"); // 登入後導向訂單管理
     } catch (error) {
       console.error("登入失敗，請稍作等待後，再嘗試重新登入", error);
-      alert("登入失敗，請稍後再試");
-    }
+      const { success, message } = error.response.data.message;
+      dispatch(
+        createToast({ success, message: `登入失敗，請稍後再試！${message}` })
+      );
+    } 
   };
 
   // 登出函式＋登出時重設狀態並回到首頁
@@ -81,13 +97,20 @@ export const AdminAuthProvider = ({ children }) => {
     try {
       await axios.post(`${baseUrl}/logout`);
 
+      //確保登出時清除 token
+      document.cookie =
+        "D3Token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/";
+
       // 清除狀態
       setIsLoggedIn(false);
+      dispatch(createToast(res.data));
       navigate("/admin/login"); // 登出後導向登入頁面
     } catch (error) {
-      console.error("登出失敗", error);
-      alert("登出失敗");
-    }
+      const { success, message } = error.response.data.message;
+      dispatch(
+        createToast({ success, message: `登出失敗，請稍後再試！${message}` })
+      );
+    } 
   };
 
   return (
