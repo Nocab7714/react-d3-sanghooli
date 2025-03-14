@@ -120,8 +120,8 @@ const OrdersManagementPage = () => {
       getOrders();
       dispatch(
         createToast({
-          success: true,
-          message: "訂單已刪除",
+          success: false,
+          message: "此筆訂單已完成刪除",
         })
       );
     } catch (error) {
