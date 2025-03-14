@@ -20,7 +20,10 @@ const OrdersModal = ({
     // const [cartOrderList, setCartOrderList] = useState(null);
 
     // 訂單狀態選項
-    const isPaidOptions = [true, false]; // 使用 true or false
+    const isPaidOptions = [
+        { value: true, label: "已付款" },
+        { value: false, label: "未付款" }
+      ];
 
     //透過 useRef 取得 DOM：以下為將OrdersModal 邏輯對應的函式動作
     const ordersModalRef = useRef(null); 
@@ -150,12 +153,7 @@ const handleCloseOrdersModal =() =>{
   const handleModalInputChange =(e)=>{
     const { value , name } = e.target;
 
-    let newValue;
-    if (name === "is_paid") {
-        newValue = value === "true"; // 轉換成布林值
-    } else {
-        newValue = value;
-    }
+    const newValue = name === "is_paid" ? value === "true" : value
 
     // 更新modalData
     setModalData((prevData)=>({
@@ -163,7 +161,10 @@ const handleCloseOrdersModal =() =>{
         ...prevData,
         ...(name === "message"
             ? { [name]: newValue } // 如果是 message，直接更新 modalData
-            : { user: { ...prevData.user, [name]: newValue } }) // 其他欄位更新 user 內的資料
+            : { user: { 
+                ...prevData.user, 
+                [name]: newValue // 其他欄位更新 user 內的資料
+            } }) 
     }));
 };
 
@@ -244,12 +245,12 @@ const handleCloseOrdersModal =() =>{
                                 <select
                                     className="form-select"
                                     name="is_paid"
-                                    value={String(modalData?.is_paid ?? false)} 
+                                    value={String(modalData?.is_paid)}
                                     onChange={handleModalInputChange} // 確保更新布林值
                                     >
                                     {isPaidOptions.map((option) => (
-                                        <option key={option.toString()} value={option.toString()}>
-                                            {option ? '已付款' : '未付款'}
+                                        <option key={option.value} value={String(option.value)}>
+                                            {option.label}
                                         </option>
                                     ))}
                                 </select>

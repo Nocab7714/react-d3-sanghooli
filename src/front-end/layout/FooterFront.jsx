@@ -124,7 +124,6 @@ const FooterFront = () => {
       </footer>
     </>
   );
-  s;
 };
 
 export default FooterFront;

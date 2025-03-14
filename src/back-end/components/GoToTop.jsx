@@ -30,7 +30,9 @@ const GoToTop = () => {
         window.scrollTo({ top: 0, behavior: "smooth" });
       }}
     >
-      <span className="material-symbols-outlined material-filled fs-5">shift</span>
+      <span className="material-symbols-outlined material-filled fs-5">
+        shift
+      </span>
     </div>
   );
 };
