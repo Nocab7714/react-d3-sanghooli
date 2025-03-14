@@ -433,7 +433,7 @@ const CouponManagementPage = () => {
         </div>
       </div>
     </>
-  )
-}
+  );
+};
 
-export default CouponManagementPage
+export default CouponManagementPage;

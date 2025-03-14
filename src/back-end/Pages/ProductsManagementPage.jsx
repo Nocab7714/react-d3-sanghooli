@@ -3,12 +3,14 @@ import axios from "axios";
 import ReactHelmetAsync from "../../plugins/ReactHelmetAsync";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import PaginationBackend from "../components/PaginationBackend";
 import ReactLoading from "react-loading";
 
 //內部資源
 import DelProductModal from "../components/DelProductModal";
 import ProductModal from "../components/ProductModal";
+import { asyncSetLoading } from "../../slices/loadingSlice";
 
 // 環境變數
 const { VITE_BASE_URL: baseUrl, VITE_API_PATH: apiPath } = import.meta.env;
@@ -34,6 +36,7 @@ const defaultModalState = {
 };
 
 const ProductsManagementPage = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   // 串接 API - 驗證登入:可以透過點擊按鈕的方式戳 API 來驗證使用者是否登入過
   const checkUserLogin = async () => {
@@ -42,7 +45,12 @@ const ProductsManagementPage = () => {
       //   getProducts();//取得產品資料
       //   setIsAuth(true); //當使用者登入後就會跳轉到產品頁面
     } catch (error) {
-      alert("請先登入");
+      dispatch(
+        createToast({
+          success: false,
+          message: "請先登入",
+        })
+      );
       navigate("/admin/login");
       console.error(error);
     }
@@ -65,6 +73,7 @@ const ProductsManagementPage = () => {
 
   //在登入成功時，呼叫：管理控制台- 產品（Products）> Get API
   const getProducts = async (page = 1) => {
+    dispatch(asyncSetLoading(["sectionLoading", true]));
     setIsScreenLoading(true); //顯示 Loading 畫面
     try {
       const res = await axios.get(
@@ -75,8 +84,14 @@ const ProductsManagementPage = () => {
       //從 產品 API 取得頁面資訊getProduct，並存進狀態中（把res.data.Pagination 塞進去 setPageInfo 裡面）
       setPageInfo(res.data.pagination);
     } catch (error) {
-      alert("取得產品資訊失敗，請稍作等待後，再重新嘗試操作");
+      dispatch(
+        createToast({
+          success: false,
+          message: "取得產品資訊失敗，請稍作等待後，再重新嘗試操作！",
+        })
+      );
     } finally {
+      dispatch(asyncSetLoading(["sectionLoading", false]));
       setIsScreenLoading(false); // 無論成功或失敗，都關閉 Loading 畫面
     }
   };
@@ -261,7 +276,7 @@ const ProductsManagementPage = () => {
                 getProducts={getProducts}
               />
 
-              {/* 全螢幕Loading */}
+              {/* 全螢幕Loading
               {isScreenLoading && (
                 <div
                   className="d-flex justify-content-center align-items-center"
@@ -279,7 +294,7 @@ const ProductsManagementPage = () => {
                     height="4rem"
                   />
                 </div>
-              )}
+              )} */}
             </div>
           </div>
         </div>

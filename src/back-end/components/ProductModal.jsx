@@ -1,7 +1,9 @@
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import { Modal } from "bootstrap";
-import Toast from "../../plugins/Toast.jsx";
+import { useDispatch } from "react-redux";
+
+import { createToast } from "../../slices/toastSlice";
 
 // 環境變數
 const { VITE_BASE_URL: baseUrl, VITE_API_PATH: apiPath } = import.meta.env;
@@ -57,14 +59,14 @@ const ProductModal = ({
   setIsOpen,
   getProducts,
 }) => {
+  
+  const dispatch = useDispatch();
   //不希望Modal改到tempProduct：再建立新的狀態，預設值帶入tempProduct
-
   const [modalData, setModalData] = useState({
     ...tempProduct,
     tages: tempProduct?.tages || [], //確保 tages 不為 undefined
   });
 
-  const [toast, setToast] = useState({ show: false, title: "", icon: "" });
 
   useEffect(() => {
     if (modalMode === "create") {
@@ -141,7 +143,7 @@ const ProductModal = ({
       setModalData({
         ...modalData,
         content: {
-          ...modalData.content, // ✅ 保留 content 內的其他屬性
+          ...modalData.content, // 保留 content 內的其他屬性
           [name]: value,
         },
       });
@@ -195,9 +197,7 @@ const ProductModal = ({
     });
   };
 
-  {
-    /* 串接新增商品 API */
-  }
+  {/* 串接新增商品 API */}
   const createProduct = async () => {
     try {
       const res = await axios.post(`${baseUrl}/api/${apiPath}/admin/product`, {
@@ -209,15 +209,14 @@ const ProductModal = ({
           is_hot: modalData.is_hot ? 1 : 0,
         },
       });
-      setToast({ show: true, title: res.data.message, icon: "success" });
+      dispatch(createToast(res.data));
     } catch (error) {
-      // console.error("API Error:", error);
-      // console.error("Error Response:", error.response?.data);
-      setToast({
-        show: true,
-        title: `新增產品失敗！${error.response.data.message} `,
-        icon: "error",
-      });
+      dispatch(
+        createToast({
+          success: false,
+          message: `新增產品失敗！${error.response.data.message} `,
+        })
+      );
     }
   };
 
@@ -238,13 +237,10 @@ const ProductModal = ({
           },
         }
       );
-      setToast({ show: true, title: res.data.message, icon: "success" });
+      dispatch(createToast(res.data.message))
     } catch (error) {
-      setToast({
-        show: true,
-        title: `編輯產品失敗！${error.response.data.message} `,
-        icon: "error",
-      });
+      const { success, message } = error.response.data.message;
+      dispatch(createToast({ success, message: `編輯產品失敗！${message}`}))
     }
   };
 
@@ -265,11 +261,13 @@ const ProductModal = ({
   }
   const handlUpdateProduct = async () => {
     if (!modalData.title || !modalData.category || !modalData.price) {
-      setToast({
-        show: true,
-        title: "請填寫完整的產品資訊！",
-        icon: "error",
-      });
+
+      dispatch(
+        createToast({
+          success: true,
+          message: "請填寫完整的產品資訊！",
+        })
+      );
       return; // 如果欄位不完整，直接顯示錯誤，不執行 API
     }
 
@@ -278,14 +276,16 @@ const ProductModal = ({
       await apiCall();
       getProducts();
       handleCloseProductModal(); //新增完產品，點擊[確認]按鈕後，要關閉 Modal 視窗(只在成功時關閉 Modal)
-      setToast({ show: true, title: "產品已成功更新", icon: "success" });
+      dispatch(
+        createToast({
+          success: true,
+          message: "產品已成功更新！",
+        })
+      );
     } catch (error) {
       // 失敗時僅顯示錯誤訊息，不關閉 Modal
-      setToast({
-        show: true,
-        title: `更新產品失敗，請檢查輸入內容！ ${error.response.data.message} `, // API 失敗時僅顯示錯誤訊息，不關閉 Modal
-        icon: "error",
-      });
+      const { success, message} = error.response.data.message;
+      dispatch(createToast({ success, message: `更新產品失敗，請檢查輸入內容！${message}`}));
     }
   };
 
@@ -303,6 +303,13 @@ const ProductModal = ({
         `${baseUrl}/api/${apiPath}/admin/upload`,
         formData
       );
+      dispatch(
+        createToast({
+          success: false,
+          message: "上傳圖片成功",
+        })
+      );
+
 
       const uploadedImagerl = res.data.imageUrl;
 
@@ -312,19 +319,18 @@ const ProductModal = ({
         imageUrl: uploadedImagerl, //欄位代上imageUrl：值代入上傳的圖片uploadedImagerl
       });
     } catch (error) {
-      alert("上傳圖片失敗，請確認圖片格式及大小的相關限制");
+      dispatch(
+        createToast({
+          success: false,
+          message: "上傳圖片失敗，請確認圖片格式及大小的相關限制",
+        })
+      );
     }
   };
 
   return (
     <>
       {/* //加入產品 Modal */}
-      <Toast
-        show={toast.show}
-        title={toast.title}
-        icon={toast.icon}
-        onClose={() => setToast({ show: false, title: "", icon: "" })}
-      />
 
       <div
         ref={productModalRef}

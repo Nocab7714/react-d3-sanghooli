@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import axios from "axios";
 import { Modal } from 'bootstrap';
 import Toast from '../../plugins/Toast.jsx';
+import { useDispatch } from "react-redux";
 
 // 環境變數
 const { VITE_BASE_URL: baseUrl, VITE_API_PATH: apiPath } = import.meta.env;
