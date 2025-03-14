@@ -1,7 +1,7 @@
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 
 import Input from "../components/form/Input";
@@ -19,13 +19,15 @@ const API_PATH = import.meta.env.VITE_API_PATH;
 export default function CheckoutPage(){
   const dispatch = useDispatch();
   const cart = useSelector((state) => state.cart);
+  const {total, final_total, coupon} = useSelector((state) => state.cart);
 
   const navigate = useNavigate();
-
+  
   const {
     register,
     handleSubmit,
-    formState: { errors }
+    formState: { errors },
+    control
   } = useForm({
     // defaultValues: {
 
@@ -33,6 +35,9 @@ export default function CheckoutPage(){
     mode: 'onTouched'
   })
 
+  const watchForm = useWatch({
+    control
+  })
   const onSubmit = handleSubmit((data) => {
     const { message, ...user } = data;
     const userInfo = {
@@ -61,6 +66,16 @@ export default function CheckoutPage(){
   useEffect(() => {
     dispatch(asyncGetCart({skipSectionLoading: false}));
   }, [dispatch])
+
+  // // 填寫電子賀卡
+  // const [writeCard, setWriteCard] = useState(false);
+
+  // useEffect(() => {
+  //   console.log(watchForm.isWriteCard);
+  //   if (watchForm.isWriteCard){
+  //     setWriteCard
+  //   }
+  // }, [watchForm.isWriteCard])
 
   return (
     <>
@@ -140,18 +155,89 @@ export default function CheckoutPage(){
                         textareaClassName="border-primary rounded-top-0 rounded-bottom-4 p-8"
                         rows="5"
                       />
-                      <CheckboxRadio
+                      {/* <CheckboxRadio
                         register={register}
                         errors={errors}
                         id="isWriteCard"
+                        name="isWriteCard"
                         labelText={<>是否填寫電子賀卡<span className="text-neutral40 fs-7 ms-2">勾選後請在下方處填寫挑選＆挑選</span></>}
                         type="checkbox"
                         rules={{}}
                       />
+                      {
+                        watchForm.isWriteCard && (
+                          <div>
+                            <h4>自製賀卡傳遞心意</h4>
+                            <div className="d-flex overflow-auto">
+                              <CheckboxRadio
+                                register={register}
+                                errors={errors}
+                                id="thankYouCard"
+                                name="cardType"
+                                labelText="感謝有你"
+                                type="radio"
+                                img="https://plus.unsplash.com/premium_photo-1687362969326-c53c113b7f14?q=80&w=1114&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                                rules={{
+                                  required: "（ 必填 ）"
+                                }}
+                              />
+                              <CheckboxRadio
+                                register={register}
+                                errors={errors}
+                                id="babyCard"
+                                name="cardType"
+                                labelText="寶寶祝福"
+                                type="radio"
+                                img="https://plus.unsplash.com/premium_photo-1677655144023-2e694294ae26?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                                rules={{
+                                  required: "（ 必填 ）"
+                                }}
+                              />
+                              <CheckboxRadio
+                                register={register}
+                                errors={errors}
+                                id="birthdayCard"
+                                name="cardType"
+                                labelText="生日祝賀"
+                                type="radio"
+                                img="https://plus.unsplash.com/premium_vector-1727221171580-8970874006af?q=80&w=1054&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                                rules={{
+                                  required: "（ 必填 ）"
+                                }}
+                              />
+                              <CheckboxRadio
+                                register={register}
+                                errors={errors}
+                                id="loveCard"
+                                name="cardType"
+                                labelText="甜蜜說愛"
+                                type="radio"
+                                img="https://plus.unsplash.com/premium_vector-1734199565387-b771e2c42853?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                                rules={{
+                                  required: "（ 必填 ）"
+                                }}
+                              />
+                              <CheckboxRadio
+                                register={register}
+                                errors={errors}
+                                id="allPurposeCard"
+                                name="cardType"
+                                labelText="萬用祝福"
+                                type="radio"
+                                img="https://plus.unsplash.com/premium_vector-1726587876647-d303ca6e5a09?q=80&w=1074&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                                rules={{
+                                  required: "（ 必填 ）"
+                                }}
+                              />
+                            </div>
+                          </div>
+                        )
+                      } */}
                       <CheckboxRadio
                         register={register}
                         errors={errors}
                         id="isCheckPrivacy"
+                        name="isCheckPrivacy"
                         labelText={<>我已閱讀並同意本網站的<Link to='/privacy-policy'>隱私權服務條款</Link></>}
                         type="checkbox"
                         rules={{
@@ -196,18 +282,29 @@ export default function CheckoutPage(){
                         }
                         <div className="border-top border-bottom py-5">
                           <h6 className="mb-6">訂單明細資訊</h6>
-                          <div className="d-flex justify-content-between align-items-center mb-4">
+                          <div className="d-flex justify-content-between align-items-center fs-7 mb-5 mb-md-6">
                             <p>總金額</p>
                             <p className="fw-bold">NT$ <span>{cart?.total.toLocaleString()}</span></p>
                           </div>
-                          <div className="d-flex justify-content-between align-items-center">
+                          <div className="d-flex justify-content-between align-items-center fs-7 mb-5 mb-md-6">
                             <p>運費</p>
                             <p className="fw-bold">NT$ <span>0</span></p>
                           </div>
+                          {
+                            (coupon && coupon !== "100%") && (
+                              <div className="d-flex justify-content-between align-items-center fs-7 mb-5 mb-md-6">
+                                <p className="text-neutral60">優惠券</p>
+                                <span className="fw-semibold">
+                                  -NT${" "}
+                                  { Math.floor(total - final_total).toLocaleString() }
+                                </span>
+                              </div>
+                            )
+                          }
                         </div>
                         <div className="d-flex justify-content-between align-items-center my-4">
                           <h6>應付金額：</h6>
-                          <p className="text-primary-dark fs-4 fw-bold">NT$<span className="ms-1">{cart?.final_total.toLocaleString()}</span></p>
+                          <p className="text-primary-dark fs-4 fw-bold">NT$<span className="ms-1">{ Math.floor(cart?.final_total).toLocaleString()}</span></p>
                         </div>
                       </div>
                     </div>
