@@ -2,7 +2,7 @@ import { NavLink, Link } from "react-router-dom";
 import { useRef, useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 
-import logo from '@/assets/img/illustration/backendlogo-SANGHOOLI.png';
+import logo from '@/assets/img/illustration/backendlogo-SANGHOOLI.webp';
 import MarqueeTextBacked from "./MarqueeTextBacked";
 
 //定義未登入與登入的選單（路由）

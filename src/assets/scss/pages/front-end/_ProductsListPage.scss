@@ -1,12 +1,12 @@
 .products-list-banner {
   @include media-breakpoint-up(md) {
-    background-image: url('@/assets/img/banner/banner04.png');
+    background-image: url('@/assets/img/banner/banner04.webp');
     height: 326px;
   }
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
-  background-image: url('@/assets/img/banner/banner04-sm.png');
+  background-image: url('@/assets/img/banner/banner04-sm.webp');
   height: 351px;
 }
 

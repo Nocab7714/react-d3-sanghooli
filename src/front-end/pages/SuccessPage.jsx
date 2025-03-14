@@ -1,6 +1,6 @@
 import { Link, useNavigate, useParams } from "react-router-dom";
-import orderSuccess from "../../assets/img/illustration/orderSuccess.png"
-import orderFail from "../../assets/img/illustration/orderFail.png"
+import orderSuccess from "../../assets/img/illustration/orderSuccess.webp"
+import orderFail from "../../assets/img/illustration/orderFail.webp"
 import CartStep from "../components/CartStep";
 import { useCallback, useEffect, useState } from "react";
 import axios from "axios";
@@ -51,9 +51,9 @@ export default function SuccessPage(){
               <CartStep step={3}/>
               <div className="d-flex flex-column align-items-center gap-5 py-19">
                 <img src={orderSuccess} className="img-fluid" alt="" />
-                <h1>訂單付款成功！感謝您的購買！</h1>
+                <h1 className="fs-4 fs-xl-1">訂單付款成功！感謝您的購買！</h1>
                 <p>訂單編號：{orderData.id}</p>
-                <Link to='/' className="btn btn-lg btn-primary w-30">繼續挑選</Link>
+                <Link to='/products-list' className="btn btn-lg btn-primary w-70 w-md-50 w-xl-30">繼續挑選</Link>
               </div>
             </>
           )
