@@ -13,29 +13,7 @@ import CheckoutPage from '../front-end/pages/CheckoutPage.jsx'
 import PaymentPage from '../front-end/pages/PaymentPage.jsx'
 import SuccessPage from '../front-end/pages/SuccessPage.jsx'
 import WishListPage from '../front-end/pages/WishListPage.jsx'
-
-// 後台
-import LayoutBacked from '../back-end/layout/LayoutBacked.jsx'
-import AdminLoginPage from '../back-end/Pages/AdminLoginPage.jsx'
-import OrdersManagementPage from '../back-end/Pages/OrdersManagementPage.jsx'
-import ProductsManagementPage from '../back-end/Pages/ProductsManagementPage.jsx'
-import CouponManagementPage from '../back-end/Pages/CouponManagementPage.jsx'
-
-import { createHashRouter } from 'react-router-dom'
 import MemberLogin from '../front-end/pages/MemberLogin.jsx'
-import LayoutFront from '../front-end/layout/LayoutFront.jsx'
-import NotFoundPage from '../front-end/pages/NotFoundPage.jsx'
-import HomePage from '../front-end/pages/HomePage.jsx'
-import AboutUsPage from '../front-end/pages/AboutUsPage.jsx'
-import ProductsListPage from '../front-end/pages/ProductsListPage.jsx'
-import SingleProductPage from '../front-end/pages/SingleProductPage.jsx'
-import PrivacyPolicyPage from '../front-end/pages/PrivacyPolicyPage.jsx'
-import HowToBuyPage from '../front-end/pages/HowToBuyPage.jsx'
-import CartPage from '../front-end/pages/CartPage.jsx'
-import CheckoutPage from '../front-end/pages/CheckoutPage.jsx'
-import PaymentPage from '../front-end/pages/PaymentPage.jsx'
-import SuccessPage from '../front-end/pages/SuccessPage.jsx'
-import WishListPage from '../front-end/pages/WishListPage.jsx'
 
 // 後台
 import LayoutBacked from '../back-end/layout/LayoutBacked.jsx'
@@ -98,9 +76,8 @@ const routes = [
         path: 'wish-list',
         element: <WishListPage />,
       },
+      { path: 'member-login', element: <MemberLogin /> },
       {
-        path: 'member-login',
-        element: <MemberLogin />,
         path: 'cart',
         element: <CartPage />,
       },
