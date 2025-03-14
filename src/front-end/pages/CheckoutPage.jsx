@@ -430,7 +430,7 @@ export default function CheckoutPage(){
                                       </div>
                                       
                                     </h2>
-                                    <div id={wrapping.id} className={`accordion-collapse collapse ${watchForm.wrapping === wrapping.title ? 'show' : ''}`} data-bs-parent="#accordionWrappingOptions">
+                                    <div id={wrapping.id} className={`accordion-collapse collapse ${wrapping.title === "免費包裝" ? 'show' : ''}`} data-bs-parent="#accordionWrappingOptions">
                                       <div className="accordion-body">
                                         <img className="img-fluid mb-3" src={wrapping.imgUrl} alt={wrapping.title} />
                                         <p className="mb-3">服務細項說明</p>
