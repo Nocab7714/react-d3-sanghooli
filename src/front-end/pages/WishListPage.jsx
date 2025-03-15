@@ -3,12 +3,10 @@ import { Link } from "react-router-dom";
 
 import ProductCard from "../components/ProductCard";
 import { asyncAddCart } from "../../slices/cartSlice";
-import ButtonLoading from "../../plugins/ButtonLoading";
 
 export default function WishListPage() {
   const dispatch = useDispatch();
 
-  const actionLoading = useSelector((state) => state.loading.actionLoading);
   const products = useSelector((state) => state.products.products);
   const wishList = useSelector((state) => state.wishList);
 

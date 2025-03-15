@@ -1,6 +1,5 @@
 import { Link, useNavigate, useParams } from "react-router-dom";
 import orderSuccess from "../../assets/img/illustration/orderSuccess.webp"
-import orderFail from "../../assets/img/illustration/orderFail.webp"
 import CartStep from "../components/CartStep";
 import { useCallback, useEffect, useState } from "react";
 import axios from "axios";
@@ -23,13 +22,12 @@ export default function SuccessPage(){
     try {
       const url = `${BASE_URL}/api/${API_PATH}/order/${orderId}`;
       const response = await axios.get(url);
-      console.log('try', response.data.order);
       setOrderData(response.data.order)
       if (response.data.order.is_paid === false) {
         return navigate(`/payment/${orderId}`)
       }
     } catch (error) {
-      console.log('catch', error.response);
+      console.error(error.response);
     } finally {
       dispatch(asyncSetLoading(['sectionLoading', false]))
     }

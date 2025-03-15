@@ -26,7 +26,7 @@ export default function PaymentPage(){
       const response = await axios.get(url);
       setOrderData(response.data.order);
     } catch (error) {
-      console.dir(error.response)
+      console.error(error.response)
     } finally {
       dispatch(asyncSetLoading(['sectionLoading', false]));
     }
@@ -38,7 +38,7 @@ export default function PaymentPage(){
       await axios.post(url);
       navigate(`/success/${orderId}`)
     } catch (error) {
-      console.dir(error.response);
+      console.error(error.response);
       setIsPaySuccess(false);
     }
   }
@@ -88,7 +88,7 @@ export default function PaymentPage(){
                       <p className="mb-20">訂單已成功建立，請確認您的訂單資訊是否正確，並於下方完成最後的付款成。</p>
                       <div className="d-flex justify-content-between align-items-center fw-bold border-bottom mb-10">
                         <h6>應付金額：</h6>
-                        <span className="text-primary-dark fs-4">{orderData?.total?.toLocaleString()}</span>
+                        <span className="text-primary-dark fs-4">NT$ {Math.floor(orderData?.total).toLocaleString()}</span>
                       </div>
                       <button type="button" className={`btn btn-lg btn-primary w-100 ${orderData.is_paid ? 'disabled' : ''}`} onClick={() => payOrder(orderId)}>前往付款</button>
                     </div>
