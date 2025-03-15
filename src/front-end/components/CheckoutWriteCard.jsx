@@ -99,7 +99,7 @@ export default function CheckoutWriteCard({
 
   return (
     <>
-      <div className="row">
+      <div className="row mb-3">
         <div className="col-lg-8">
           <h4>自製賀卡傳遞心意</h4>
           <div className="d-flex overflow-auto">

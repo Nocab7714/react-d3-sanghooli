@@ -1,7 +1,7 @@
 import { useForm, useWatch } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect } from "react";
 import axios from "axios";
 
 import Input from "../components/form/Input";
@@ -11,7 +11,6 @@ import CartStep from "../components/CartStep";
 import { asyncGetCart } from "../../slices/cartSlice";
 import EmptyBasket from "../components/EmptyBasket";
 import { createAlert } from "../../slices/alertSlice";
-import Select from "../components/form/Select";
 import CheckoutWriteCard from "../components/CheckoutWriteCard";
 
 // 環境變數
@@ -44,8 +43,6 @@ export default function CheckoutPage(){
     control,
   })
 
-  console.log(watchForm);
-  
   const onSubmit = handleSubmit((data) => {
     const { message, ...user } = data;
     const userInfo = {
@@ -66,7 +63,7 @@ export default function CheckoutPage(){
       dispatch(createAlert(response.data))
       navigate(`/payment/${response.data.orderId}`)
     } catch (error) {
-      console.dir(error.response.data);
+      console.error(error.response.data);
       dispatch(createAlert(error.response.data))
     }
   }
@@ -76,19 +73,19 @@ export default function CheckoutPage(){
   }, [dispatch])
 
 
-  // 填寫電子賀卡
-  // 若不填寫賀卡，就將下方關於賀卡的資料都設為 null
-  useEffect(() => {
-    if (watchForm.isWriteCard === false){
-      setValue('cardContent', null)
-      setValue('cardFont', null)
-      setValue('cardFrom', null)
-      setValue('cardRecipient', null)
-      setValue('cardType', null)
-      setValue('wrapping', null)
-      clearErrors(['cardContent', 'cardFont', 'cardFrom', 'cardRecipient', 'cardType']);
-    } 
-  }, [watchForm.isWriteCard, setValue, clearErrors])
+  // // 填寫電子賀卡
+  // // 若不填寫賀卡，就將下方關於賀卡的資料都設為 null
+  // useEffect(() => {
+  //   if (watchForm.isWriteCard === false){
+  //     setValue('cardContent', null)
+  //     setValue('cardFont', null)
+  //     setValue('cardFrom', null)
+  //     setValue('cardRecipient', null)
+  //     setValue('cardType', null)
+  //     setValue('wrapping', null)
+  //     clearErrors(['cardContent', 'cardFont', 'cardFrom', 'cardRecipient', 'cardType']);
+  //   } 
+  // }, [watchForm.isWriteCard, setValue, clearErrors])
 
   return (
     <>
@@ -230,7 +227,7 @@ export default function CheckoutPage(){
                         </div>
                       </div>
                     </div>
-                    <CheckboxRadio
+                    {/* <CheckboxRadio
                       register={register}
                       errors={errors}
                       id="isWriteCard"
@@ -249,7 +246,7 @@ export default function CheckoutPage(){
                           watchForm={watchForm}
                         />
                       )
-                    }
+                    } */}
                     <div className="row">
                       <div className="col-lg-8">
                         <CheckboxRadio
