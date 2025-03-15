@@ -1,5 +1,4 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { dispatch } from "d3";
 
 const  loadingSlice = createSlice({
   name: 'loading',

@@ -13,9 +13,6 @@ const ProductCard = ({ product, showIsHot = false }) => {
   const dispatch = useDispatch();
   const wishList = useSelector((state) => state.wishList);
 
-  const location = useLocation();
-  const pathName = location.pathname;  
-
   return (
     <>
       <div className="position-relative">
@@ -77,11 +74,6 @@ const ProductCard = ({ product, showIsHot = false }) => {
                     </span>
                   )}
                 </p>
-                {
-                  (pathName === "/wish-list") && (
-                    <p>{product.qty > 0 ? '有庫存' : '售完'}</p>
-                  )
-                }
               </div>
             </div>
           </div>

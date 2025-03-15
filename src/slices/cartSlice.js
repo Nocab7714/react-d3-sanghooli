@@ -17,6 +17,18 @@ const asyncGetCart = createAsyncThunk(
     try {
       const url = `${BASE_URL}/api/${API_PATH}/cart`;
       const response = await axios.get(url);
+      // 寫入 localStorage
+      const savedCarts = response.data.data.carts.map((cart) => ({
+        // data: {
+        //   product_id: cart.product_id,
+        //   qty: cart.qty,
+        //   }
+        // }
+        product_id: cart.product_id,
+        qty: cart.qty,
+      }));
+      localStorage.setItem('carts', JSON.stringify(savedCarts));
+
       return response.data.data;
     } catch (error) {
       console.dir(error);
@@ -58,6 +70,7 @@ const initialState = {
   final_total: 0,
   basketQty: 0,
   cartCategories: [],
+  coupon: '',
 };
 
 const cartSlice = createSlice({
@@ -74,6 +87,7 @@ const cartSlice = createSlice({
       state.cartCategories = [
         ...new Set(carts.map((cart) => cart.product.category)),
       ];
+      state.coupon = carts.find((cart) => cart.coupon)?.coupon.code ?? '';
     });
   },
 });
