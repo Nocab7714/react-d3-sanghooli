@@ -11,6 +11,7 @@ import EmptyBasket from "../components/EmptyBasket";
 import CartStep from "../components/CartStep";
 import { asyncGetCart } from "../../slices/cartSlice";
 import { asyncSetLoading } from "../../slices/loadingSlice";
+import { createAlert } from "../../slices/alertSlice";
 
 // 環境變數
 const BASE_URL = import.meta.env.VITE_BASE_URL;
@@ -38,7 +39,7 @@ function CartPage() {
       await axios.put(url, data);
       dispatch(asyncGetCart());
     } catch (error) {
-      console.dir(error);
+      console.error(error);
     } finally {
       dispatch(asyncSetLoading(["sectionLoading", false]));
     }
@@ -51,9 +52,21 @@ function CartPage() {
       await axios.delete(url);
       dispatch(asyncGetCart());
     } catch (error) {
-      console.dir(error);
+      console.error(error);
     } finally {
       dispatch(asyncSetLoading(["sectionLoading", false]));
+    }
+  };
+
+  const deleteCartAll = async () => {
+    try {
+      const url = `${BASE_URL}/api/${API_PATH}/carts`;
+      const response = await axios.delete(url);
+      return response.data.success
+      
+    } catch (error) {
+      console.error(error);
+      return error.response.data.success
     }
   };
 
@@ -114,12 +127,10 @@ function CartPage() {
     text: "",
     className: ""
   });
-  console.log('coupon', coupon);
-  
   
   const { register, control, reset } = useForm({
     defaultValues: {
-      coupon: coupon === "100%" ? "" : coupon
+      coupon: coupon
     }
   });
   const watchForm = useWatch({
@@ -143,7 +154,7 @@ function CartPage() {
       })
       dispatch(asyncGetCart());
     } catch (error) {
-      console.dir(error);
+      console.error(error);
       setIsCouponValid(error.response.data.success);
       setCouponResult({
         text: "輸入的優惠代碼無效，請重新檢查是否輸入有誤或是已過期！",
@@ -154,38 +165,70 @@ function CartPage() {
 
   const removeCoupon = useCallback(async () => {    
     try {
-      const url = `${BASE_URL}/api/${API_PATH}/coupon`;
-      const data = {
-        data: {
-          code: "100%",  // 此原價優惠碼設定有效日期至 2100-01-01 00:00:00 UTC
-        },
-      };
-      await axios.post(url, data);
-      reset({coupon: ""})
-      setIsCouponValid(null);
       setCouponResult({
-        text: "已移除優惠券！",
-        className: "text-success"
+        text: "移除中...",
+        className: "text-dark"
       })
-      dispatch(asyncGetCart());
+
+      if(await deleteCartAll()){
+        const savedCarts = JSON.parse(localStorage.getItem("carts"));
+      
+        let successfullyReset = true;
+        for(const cart of savedCarts) {
+          try {
+            const url = `${BASE_URL}/api/${API_PATH}/cart`;
+            const data = {
+            data: {
+              product_id: cart.product_id,
+              qty: Number(cart.qty),
+            },
+          };
+          const response = await axios.post(url, data);
+          
+          if(!response.data.success){
+            throw new Error("Add item failed");
+          }
+          } catch (error) {
+            console.error(error);
+            
+            const { success } = error.response.data;
+            dispatch(createAlert({success, message: '優惠券移除失敗，進入結帳流程前，請再次確認購物車品項是否正確'}))
+            successfullyReset = false;
+            break
+          }
+        }
+        if(successfullyReset){
+          reset({coupon: ""})
+          setIsCouponValid(null);
+          setCouponResult({
+            text: "已移除優惠券！",
+            className: "text-success"
+          })
+          
+        }
+        dispatch(asyncGetCart({skipSectionLoading: true}));
+      }
+      else {
+        throw new Error("Delete cart failed")
+      }
+      
     } catch (error) {
-      console.dir(error);
+      console.error(error);
       setCouponResult({
-        text: "優惠券移除失敗，請與客服人員聯絡！",
+        text: "優惠券移除失敗，請與客服人員聯繫！",
         className: "text-secondary"
       })
+      dispatch(createAlert({success: false, message: '優惠券移除失敗，請與客服人員聯繫'}))
     }
   }, [dispatch, reset]) 
 
   useEffect(() => {
-    if (coupon === "100%") return
     if (coupon){
       applyCoupon()
     }
   }, [coupon, applyCoupon])
 
   useEffect(() => {
-    if (coupon === "100%") return
     reset({ coupon })
   }, [coupon, reset])
 
@@ -249,7 +292,7 @@ function CartPage() {
                           </div>
                           <div
                             className="d-flex position-relative"
-                            style={{ maxWidth: "116px" }}
+                            // style={{ maxWidth: "116px" }}
                           >
                             <button
                               type="button"
@@ -452,10 +495,11 @@ function CartPage() {
                               placeholder="輸入折扣代碼或禮品卡"
                               aria-label="輸入折扣代碼或禮品卡"
                               aria-describedby="button-addon2"
-                              disabled={coupon !== "100%" && coupon !== ""}
+                              disabled={isCouponValid}
                             />
                             {
-                              (coupon === "100%" || coupon === "") ? (
+                              
+                              (!isCouponValid) ? (
                                 <button
                                 className="btn btn-primary"
                                 type="button"
@@ -465,6 +509,7 @@ function CartPage() {
                                 套用
                                 </button>
                               ) : (
+                              // watchForm.coupon ? (
                                 <button
                                   className="btn position-absolute top-0 end-0 border-0"
                                   type="button"

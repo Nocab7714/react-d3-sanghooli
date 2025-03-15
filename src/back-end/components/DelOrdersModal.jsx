@@ -2,6 +2,9 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import { Modal } from "bootstrap";
+import { useDispatch } from "react-redux";
+import { createToast } from "../../slices/toastSlice";
+import { asyncSetLoading } from "../../slices/loadingSlice";
 
 //環境變數
 const { VITE_BASE_URL: baseUrl, VITE_API_PATH: apiPath } = import.meta.env;
@@ -14,13 +17,20 @@ const DelOrdersModal = ({
   deleteMode,
 }) => {
   const navigate = useNavigate(); // 檢查使用者登入狀態
+  const dispatch = useDispatch();
+  const [isScreenLoading, setIsScreenLoading] = useState(false);
 
   // 檢查用戶是否登入
   const checkUserLogin = async () => {
     try {
       await axios.post(`${baseUrl}/api/user/check`);
     } catch (error) {
-      alert("請先登入");
+      dispatch(
+        createToast({
+          success: false,
+          message: "請先登入",
+        })
+      );
       navigate("/admin/login");
     }
   };
@@ -32,7 +42,6 @@ const DelOrdersModal = ({
     );
     axios.defaults.headers.common["Authorization"] = token; //設定 axios token
     checkUserLogin(); // 檢查用戶登入狀態
-    getOrders(); // 頁面載入時獲取訂單
   }, []);
 
   const delOrdersModalRef = useRef(null); // 透過 useRef 取得刪除確認 Modal 的 DOM
@@ -40,14 +49,9 @@ const DelOrdersModal = ({
   // 初始化 Bootstrap Modal
   useEffect(() => {
     const modalInstance = new Modal(delOrdersModalRef.current, {
-      backdrop: false,
+      backdrop: "static",
     });
-
-    if (isOpen) {
-      modalInstance.show();
-    } else {
-      modalInstance.hide();
-    }
+    isOpen ? modalInstance.show() : modalInstance.hide();
   }, [isOpen]);
 
   // 點擊 Modal 關閉按鈕
@@ -59,18 +63,34 @@ const DelOrdersModal = ({
 
   // 刪除訂單通用函數
   const removeOrder = async (url) => {
+    setIsScreenLoading(true);
     try {
-      await axios.delete(url);
+      const res = await axios.delete(url);
+      dispatch(createToast({
+        success: true,
+        message: deleteMode === "single" ? "此筆訂單已刪除" : "所有訂單已清空"
+      }));
       getOrders(); // 更新訂單列表
+      setIsOpen(false);
     } catch (error) {
-      alert("刪除訂單失敗，請再試一次");
+      dispatch(
+        createToast({
+          success: false,
+          message: `刪除訂單失敗，請再試一次！${error.response?.data?.message}`,
+        })
+      );
+    } finally {
+      setIsScreenLoading(false);
     }
   };
 
   // 單筆訂單刪除
   const handleDeleteOrderItem = () => {
-    const url = `${baseUrl}/api/${apiPath}/admin/order/${tempOrder.id}`;
-    removeOrder(url);
+    if (!tempOrder?.id) {
+      dispatch(createToast({ success: false, message: "無法取得訂單資料" }));
+      return;
+    }
+    removeOrder(`${baseUrl}/api/${apiPath}/admin/order/${tempOrder.id}`);
     handleCloseDelOrdersModal();
   };
 

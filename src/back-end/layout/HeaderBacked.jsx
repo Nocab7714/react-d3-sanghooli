@@ -1,9 +1,13 @@
 import { NavLink, Link } from "react-router-dom";
 import { useRef, useState, useEffect, useContext } from "react";
+import { useDispatch } from "react-redux";
 
 import logo from "@/assets/img/illustration/backendlogo-SANGHOOLI.webp";
 import MarqueeTextBacked from "./MarqueeTextBacked";
 import { AdminAuthContext } from "../../context/AdminAuthContext";
+
+//內部資源
+import { createToast } from "../../slices/toastSlice";
 
 //定義未登入與登入的選單（路由）
 const guestRoutes = [{ path: "/", name: "網站前台" }];
@@ -18,8 +22,9 @@ const HeaderBacked = () => {
   const headerRef = useRef(null); // 定義 ref
   const [headerHeight, setHeaderHeight] = useState(0);
 
-  // ✅ 透過 Context 獲取登入狀態 & 登出函數
+  // 透過 Context 獲取登入狀態 & 登出函數
   const { isLoggedIn, handleLogout } = useContext(AdminAuthContext);
+  const dispatch = useDispatch();
 
   // 計算 navbar 高度，確保下方區塊有足夠的間距
   useEffect(() => {
@@ -27,6 +32,17 @@ const HeaderBacked = () => {
       setHeaderHeight(headerRef.current.offsetHeight);
     }
   }, []);
+
+  const handleLogoutAndShowToast = () => {
+    handleLogout(); // 執行登出操作
+    // 顯示登出成功的 Toast 訊息
+    dispatch(
+      createToast({
+        success: true,
+        message: "成功登出，正在跳轉至登入頁面",
+      })
+    );
+  };
 
   return (
     <>
@@ -107,7 +123,7 @@ const HeaderBacked = () => {
                 <li className="nav-item align-items-center">
                   {isLoggedIn && (
                     <button
-                      onClick={handleLogout}
+                      onClick={handleLogoutAndShowToast}
                       className="btn btn-primary pe-8 ps-8"
                     >
                       登出
