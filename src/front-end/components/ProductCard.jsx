@@ -1,6 +1,8 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import crownIcon from '@/assets/img/illustration/crown.svg';
 import { formatNumber } from '../../utils/formatNumber';
+import { useDispatch, useSelector } from 'react-redux';
+import { asyncToggleWishList } from '../../slices/wishListSlice';
 
 // props 備註說明
 // product 為傳入單項商品資料
@@ -8,22 +10,20 @@ import { formatNumber } from '../../utils/formatNumber';
 // 若 showIsHot 為 true，會再經由 product.is_hot 屬性來判斷是否顯示該項商品的熱銷圖標
 
 const ProductCard = ({ product, showIsHot = false }) => {
-  // 缺少加入願望清單的方法
-  const addToFavorite = (id) => {
-    console.log(`傳入加入願望清單的商品 id：「${id}」`);
-  };
+  const dispatch = useDispatch();
+  const wishList = useSelector((state) => state.wishList);
 
   return (
     <>
       <div className="position-relative">
         <button
           onClick={() => {
-            addToFavorite(product.id);
+            dispatch(asyncToggleWishList(product.id));
           }}
           type="button"
           className="position-absolute btn btn-favorite p-2 "
         >
-          <span className="material-symbols-outlined align-middle text-white">
+          <span className={`material-symbols-outlined align-middle text-white ${wishList[product.id] ? "material-filled" : ""}`}>
             favorite
           </span>
         </button>
@@ -62,17 +62,19 @@ const ProductCard = ({ product, showIsHot = false }) => {
               <p className="card-title fw-semibold fs-6 mb-3">
                 {product.title}
               </p>
-              <p className=" fs-7 text-primary-dark">
-                NT$
-                <span className="fs-6 fw-semibold me-4">
-                  {formatNumber(product.price)}
-                </span>
-                {product.price !== product.origin_price && (
-                  <span className="text-decoration-line-through text-neutral60">
-                    NT$ {formatNumber(product.origin_price)}
+              <div className="d-flex justify-content-between">
+                <p className=" fs-7 text-primary-dark">
+                  NT$
+                  <span className="fs-6 fw-semibold me-4">
+                    {product.price.toLocaleString()}
                   </span>
-                )}
-              </p>
+                  {product.price !== product.origin_price && (
+                    <span className="text-decoration-line-through text-neutral60">
+                      NT$ {formatNumber(product.origin_price)}
+                    </span>
+                  )}
+                </p>
+              </div>
             </div>
           </div>
         </Link>

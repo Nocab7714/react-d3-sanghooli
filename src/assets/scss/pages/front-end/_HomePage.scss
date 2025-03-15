@@ -132,10 +132,10 @@
 // 隨機選禮區塊背景設定
 .random-product-bg {
   @include media-breakpoint-up(md) {
-    background-image: url('@/assets/img/banner/banner05.png');
+    background-image: url('@/assets/img/banner/banner05.webp');
     height: auto;
   }
-  background-image: url('@/assets/img/banner/banner05-sm.png');
+  background-image: url('@/assets/img/banner/banner05-sm.webp');
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;

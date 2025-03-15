@@ -1,5 +1,7 @@
 import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import Swal from "sweetalert2";
+import { removeAlert } from "../slices/alertSlice";
 
 /**
  * Alert 元件 - 顯示彈出式提示框 (基於 SweetAlert2)
@@ -22,14 +24,10 @@ import Swal from "sweetalert2";
  * @returns {null} 此元件不渲染 DOM，只負責觸發 SweetAlert2
  */
 
-const Alert = ({
-  show = false,
-  title = "請設定標題",
-  text = "",
-  icon = "success",
-  confirmText = "確定",
-  confirmColor = "#3085d6", // 預設為 SweetAlert2 的藍色
-}) => {
+function Alert(){
+  const dispatch = useDispatch();
+  const {show, title, text, icon, confirmText, confirmColor} = useSelector((state) => state.alert);
+
   useEffect(() => {
     if (!show) return;
 
@@ -42,8 +40,13 @@ const Alert = ({
         popup: "custom-alert",
         confirmButton: "custom-confirm-btn", // 這邊套用 CSS 來控制顏色
       },
-    });
-  }, [show, title, text, icon, confirmText, confirmColor]);
+    }).then((result) => {
+      // 確認按鈕被點擊後，更新 show 狀態為 false
+      if (result.isConfirmed){
+        dispatch(removeAlert())
+      }
+    })
+  }, [show, title, text, icon, confirmText, confirmColor, dispatch]);
 
   return null; // 不渲染任何內容
 };

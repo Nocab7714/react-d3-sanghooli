@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import cartEmptyImg from '../../assets/img/illustration/cart-empty.png';
+import cartEmptyImg from '../../assets/img/illustration/cart-empty.webp';
 export default function EmptyBasket(){
   return (
     <>

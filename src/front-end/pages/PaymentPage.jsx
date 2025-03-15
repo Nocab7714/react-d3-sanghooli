@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import CartStep from "../components/CartStep";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 
-import orderFail from "../../assets/img/illustration/orderFail.png"
+import orderFail from "../../assets/img/illustration/orderFail.webp"
 import NotFoundPage from "./NotFoundPage";
+import { useDispatch } from "react-redux";
+import { asyncSetLoading } from "../../slices/loadingSlice";
 
 // 環境變數
 const BASE_URL = import.meta.env.VITE_BASE_URL;
@@ -13,29 +15,30 @@ const API_PATH = import.meta.env.VITE_API_PATH;
 export default function PaymentPage(){
   const { orderId } = useParams();
   const [orderData, setOrderData] = useState({});
-  // const [isPaid, setIsPaid] = useState();
   const [isPaySuccess, setIsPaySuccess] = useState(null);
   const navigate = useNavigate();
+  const dispatch = useDispatch();;
   
   const getOrder = async(orderId) => {
+    dispatch(asyncSetLoading(['sectionLoading', true]));
     try {
       const url = `${BASE_URL}/api/${API_PATH}/order/${orderId}`;
       const response = await axios.get(url);
-      console.log(response.data);
       setOrderData(response.data.order);
     } catch (error) {
-      console.dir(error.response)
+      console.error(error.response)
+    } finally {
+      dispatch(asyncSetLoading(['sectionLoading', false]));
     }
   }
 
   const payOrder = async(orderId) => {
     try {
       const url = `${BASE_URL}/api/${API_PATH}/pay/${orderId}`;
-      const response = await axios.post(url);
-      console.log(response.data);
+      await axios.post(url);
       navigate(`/success/${orderId}`)
     } catch (error) {
-      console.dir(error.response);
+      console.error(error.response);
       setIsPaySuccess(false);
     }
   }
@@ -85,7 +88,7 @@ export default function PaymentPage(){
                       <p className="mb-20">訂單已成功建立，請確認您的訂單資訊是否正確，並於下方完成最後的付款成。</p>
                       <div className="d-flex justify-content-between align-items-center fw-bold border-bottom mb-10">
                         <h6>應付金額：</h6>
-                        <span className="text-primary-dark fs-4">{orderData?.total?.toLocaleString()}</span>
+                        <span className="text-primary-dark fs-4">NT$ {Math.floor(orderData?.total).toLocaleString()}</span>
                       </div>
                       <button type="button" className={`btn btn-lg btn-primary w-100 ${orderData.is_paid ? 'disabled' : ''}`} onClick={() => payOrder(orderId)}>前往付款</button>
                     </div>
