@@ -62,7 +62,7 @@ const SingleProductPage = () => {
           },
         ]);
       } catch (error) {
-        alert('取得產品失敗');
+        console.error(error);
         navigate('/404');
       } finally {
         dispatch(asyncSetLoading(['globalLoading', false]))

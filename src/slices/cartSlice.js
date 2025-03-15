@@ -1,51 +1,49 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import axios from 'axios';
 
-import { asyncSetLoading } from "./loadingSlice";
-import { createToast } from "./toastSlice";
+import { asyncSetLoading } from './loadingSlice';
+import { createToast } from './toastSlice';
 
 // 環境變數
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 const API_PATH = import.meta.env.VITE_API_PATH;
 
 const asyncGetCart = createAsyncThunk(
-  "cart/asyncGetCart",
+  'cart/asyncGetCart',
   async function ({ skipSectionLoading = true } = {}, { dispatch }) {
     if (!skipSectionLoading)
-      dispatch(asyncSetLoading(["sectionLoading", true]));
+      dispatch(asyncSetLoading(['sectionLoading', true]));
 
     try {
       const url = `${BASE_URL}/api/${API_PATH}/cart`;
       const response = await axios.get(url);
       // 寫入 localStorage
-      const savedCarts = response.data.data.carts.map((cart) => (
-        {
-          // data: {
-          //   product_id: cart.product_id,
-          //   qty: cart.qty,
-          //   }
-          // }
-            product_id: cart.product_id,
-            qty: cart.qty,
-        }
-      ));
-      localStorage.setItem("carts", JSON.stringify(savedCarts));
+      const savedCarts = response.data.data.carts.map((cart) => ({
+        // data: {
+        //   product_id: cart.product_id,
+        //   qty: cart.qty,
+        //   }
+        // }
+        product_id: cart.product_id,
+        qty: cart.qty,
+      }));
+      localStorage.setItem('carts', JSON.stringify(savedCarts));
 
       return response.data.data;
     } catch (error) {
       console.dir(error);
     } finally {
       if (!skipSectionLoading)
-        dispatch(asyncSetLoading(["sectionLoading", false]));
+        dispatch(asyncSetLoading(['sectionLoading', false]));
     }
   }
 );
 
 const asyncAddCart = createAsyncThunk(
-  "cart/asyncAddCart",
+  'cart/asyncAddCart',
   async function (payload, { dispatch }) {
     const { productId, qty } = payload;
-    dispatch(asyncSetLoading(["sectionLoading", true]));
+    dispatch(asyncSetLoading(['sectionLoading', true]));
     try {
       const url = `${BASE_URL}/api/${API_PATH}/cart`;
       const data = {
@@ -61,7 +59,7 @@ const asyncAddCart = createAsyncThunk(
       const { success, message } = error.response.data;
       dispatch(createToast({ success, message: `加入購物車失敗！${message}` }));
     } finally {
-      dispatch(asyncSetLoading(["sectionLoading", false]));
+      dispatch(asyncSetLoading(['sectionLoading', false]));
     }
   }
 );
@@ -72,11 +70,11 @@ const initialState = {
   final_total: 0,
   basketQty: 0,
   cartCategories: [],
-  coupon: "",
+  coupon: '',
 };
 
 const cartSlice = createSlice({
-  name: "cart",
+  name: 'cart',
   initialState,
   reducers: {},
   extraReducers: (builder) => {
@@ -89,7 +87,7 @@ const cartSlice = createSlice({
       state.cartCategories = [
         ...new Set(carts.map((cart) => cart.product.category)),
       ];
-      state.coupon = carts.find((cart) => cart.coupon)?.coupon.code ?? "";
+      state.coupon = carts.find((cart) => cart.coupon)?.coupon.code ?? '';
     });
   },
 });
