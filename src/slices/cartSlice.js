@@ -8,48 +8,63 @@ import { createToast } from "./toastSlice";
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 const API_PATH = import.meta.env.VITE_API_PATH;
 
-
 const asyncGetCart = createAsyncThunk(
-  'cart/asyncGetCart',
-  async function({ skipSectionLoading = true } = {}, { dispatch }){
-    if(!skipSectionLoading) dispatch(asyncSetLoading(['sectionLoading', true]));
-    
+  "cart/asyncGetCart",
+  async function ({ skipSectionLoading = true } = {}, { dispatch }) {
+    if (!skipSectionLoading)
+      dispatch(asyncSetLoading(["sectionLoading", true]));
+
     try {
       const url = `${BASE_URL}/api/${API_PATH}/cart`;
-      const response = await axios.get(url);      
-      return response.data.data
+      const response = await axios.get(url);
+      // 寫入 localStorage
+      const savedCarts = response.data.data.carts.map((cart) => (
+        {
+          // data: {
+          //   product_id: cart.product_id,
+          //   qty: cart.qty,
+          //   }
+          // }
+            product_id: cart.product_id,
+            qty: cart.qty,
+        }
+      ));
+      localStorage.setItem("carts", JSON.stringify(savedCarts));
+
+      return response.data.data;
     } catch (error) {
-      console.dir(error)
-    } finally{
-      if(!skipSectionLoading) dispatch(asyncSetLoading(['sectionLoading', false]));
+      console.dir(error);
+    } finally {
+      if (!skipSectionLoading)
+        dispatch(asyncSetLoading(["sectionLoading", false]));
     }
   }
-)
+);
 
 const asyncAddCart = createAsyncThunk(
-  'cart/asyncAddCart',
-  async function(payload, { dispatch }){
+  "cart/asyncAddCart",
+  async function (payload, { dispatch }) {
     const { productId, qty } = payload;
-    dispatch(asyncSetLoading(['sectionLoading', true]))
+    dispatch(asyncSetLoading(["sectionLoading", true]));
     try {
       const url = `${BASE_URL}/api/${API_PATH}/cart`;
       const data = {
-        "data": {
-          "product_id": productId,
-          "qty": Number(qty)
-        }
-      }
-      const response = await axios.post(url, data)
-      dispatch(createToast(response.data))
+        data: {
+          product_id: productId,
+          qty: Number(qty),
+        },
+      };
+      const response = await axios.post(url, data);
+      dispatch(createToast(response.data));
       dispatch(asyncGetCart());
     } catch (error) {
-      const { success, message} = error.response.data;
-      dispatch(createToast({ success, message: `加入購物車失敗！${message}`}))
+      const { success, message } = error.response.data;
+      dispatch(createToast({ success, message: `加入購物車失敗！${message}` }));
     } finally {
-      dispatch(asyncSetLoading(['sectionLoading', false]))
+      dispatch(asyncSetLoading(["sectionLoading", false]));
     }
   }
-)
+);
 
 const initialState = {
   carts: null,
@@ -57,26 +72,27 @@ const initialState = {
   final_total: 0,
   basketQty: 0,
   cartCategories: [],
-  coupon: ""
-}
+  coupon: "",
+};
 
 const cartSlice = createSlice({
-  name: 'cart',
+  name: "cart",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder
-      .addCase(asyncGetCart.fulfilled, (state, action) => {
-        const { carts, total, final_total } = action.payload;
-        state.carts = carts;
-        state.total = total;
-        state.final_total = final_total;
-        state.basketQty = carts.reduce((sum, item) => sum + item.qty, 0);
-        state.cartCategories = [...new Set(carts.map((cart) => cart.product.category))];
-        state.coupon = carts.find(cart => cart.coupon)?.coupon.code ?? "";
-      })
-  }
-})
+    builder.addCase(asyncGetCart.fulfilled, (state, action) => {
+      const { carts, total, final_total } = action.payload;
+      state.carts = carts;
+      state.total = total;
+      state.final_total = final_total;
+      state.basketQty = carts.reduce((sum, item) => sum + item.qty, 0);
+      state.cartCategories = [
+        ...new Set(carts.map((cart) => cart.product.category)),
+      ];
+      state.coupon = carts.find((cart) => cart.coupon)?.coupon.code ?? "";
+    });
+  },
+});
 export { asyncGetCart, asyncAddCart };
 export const { updateCartData } = cartSlice.actions;
 export default cartSlice.reducer;

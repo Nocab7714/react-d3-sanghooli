@@ -7,7 +7,7 @@ export default function Textarea({register, errors, id, labelText, placeholder, 
       <label htmlFor={id} className={`form-label ${labelClassName}`}>{labelText}</label>
       <textarea
         {...register(id, rules)}
-        className={`form-control ${textareaClassName}`} 
+        className={`form-control ${errors[id] ? 'is-invalid' : ''} ${textareaClassName}`} 
         id={id} 
         placeholder={placeholder}
         aria-describedby={id}
