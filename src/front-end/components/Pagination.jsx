@@ -2,9 +2,9 @@
 // 1. 請從外層傳入 paginationData 資料
 // 2. 資料請使用 API Get 到的回傳的資料做驅動
 // 3. 後台系統也可以使用
+import Swal from 'sweetalert2';
 
 const Pagination = ({ paginationData, onPageChange }) => {
-
   if (!paginationData) {
     return null;
   }
@@ -18,14 +18,36 @@ const Pagination = ({ paginationData, onPageChange }) => {
   };
 
   const handleEllipsisClick = () => {
-    const userInput = window.prompt(`請輸入要跳轉的頁碼 (1 - ${total_pages})`);
-    const pageNumber = Number(userInput);
-
-    if (!isNaN(pageNumber) && pageNumber >= 1 && pageNumber <= total_pages) {
-      goToPage(pageNumber);
-    } else {
-      alert('請輸入有效的頁碼！');
-    }
+    Swal.fire({
+      title: '請輸入要跳轉的頁碼',
+      input: 'number',
+      inputAttributes: {
+        min: 1,
+        max: total_pages,
+        step: 1,
+      },
+      showCancelButton: true,
+      confirmButtonText: '跳轉',
+      cancelButtonText: '取消',
+      customClass: {
+        popup: 'custom-alert',
+        confirmButton: 'custom-confirm-btn',
+        cancelButton: 'custom-cancel-btn',
+        input: 'custom-input',
+      },
+      preConfirm: (value) => {
+        const pageNumber = Number(value);
+        if (isNaN(pageNumber) || pageNumber < 1 || pageNumber > total_pages) {
+          Swal.showValidationMessage('請輸入有效的頁碼！');
+          return false;
+        }
+        return pageNumber;
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        goToPage(result.value);
+      }
+    });
   };
 
   const generatePagination = () => {
