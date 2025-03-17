@@ -50,7 +50,7 @@ const AboutUsPage = () => {
         const res = await axios.get(`${baseUrl}/api/${apiPath}/products/all`);
         setProducts(getRandomProducts(res.data.products));
       } catch (error) {
-        console.log(error);
+        console.error(error);
       }
     })();
   }, []);
