@@ -19,7 +19,7 @@ import { asyncToggleWishList } from '../../slices/wishListSlice.js';
 import { createToast } from '../../slices/toastSlice.js';
 import { asyncSetLoading } from '../../slices/loadingSlice.js';
 
-const SingleProductPage = () => {
+const ProductDetailsPage = () => {
   const dispatch = useDispatch();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -518,4 +518,4 @@ const SingleProductPage = () => {
   );
 };
 
-export default SingleProductPage;
+export default ProductDetailsPage;
