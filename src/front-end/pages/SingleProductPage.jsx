@@ -136,7 +136,7 @@ const SingleProductPage = () => {
               <div className="col-xl-6">
                 <img
                   src={product.imageUrl}
-                  alt={product.id}
+                  alt={product.title}
                   className="img-fluid rounded-4 mb-10 mb-xl-0"
                   height="636"
                   width="636"
@@ -481,7 +481,6 @@ const SingleProductPage = () => {
             {/* add-to-cart & add-to-favorite */}
             <div className="row g-4">
               <div className="col-6">
-                {/* 未收藏狀態按鈕 */}
                 <button
                   type="button"
                   className="btn btn-outline-neutral60 fs-6 w-100 px-2 d-flex align-items-center justify-content-center"
@@ -494,18 +493,7 @@ const SingleProductPage = () => {
                     wishList[product.id] ? '已收藏' : '加入願望清單'
                   }
                 </button>
-                {/* 已收藏狀態按鈕 */}
-                {/* <button
-                      type="button"
-                      className="btn btn-outline-neutral60 fs-6 w-100 px-2 d-flex align-items-center justify-content-center"
-                    >
-                      <span className="material-symbols-outlined material-filled align-middle fs-5 me-1 ">
-                        favorite
-                      </span>
-                      已收藏
-                    </button> */}
               </div>
-
               <div className="col-6">
                 <button
                   onClick={() => addCartItem(product.id)}
