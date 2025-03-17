@@ -97,10 +97,6 @@ const routes = [
         path: 'wish-list',
         element: <WishListPage />,
       },
-      // {
-      //   path : '*',
-      //   element: <NotFoundPage />
-      // },
     ],
   },
   {
