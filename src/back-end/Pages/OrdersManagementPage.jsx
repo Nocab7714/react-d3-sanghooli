@@ -13,6 +13,7 @@ import ReactHelmetAsync from "../../plugins/ReactHelmetAsync";
 import { createToast } from "../../slices/toastSlice";
 import { asyncSetLoading } from "../../slices/loadingSlice";
 
+
 // 環境變數
 const { VITE_BASE_URL: baseUrl, VITE_API_PATH: apiPath } = import.meta.env;
 
@@ -58,8 +59,7 @@ const OrdersManagementPage = () => {
       "$1"
     );
     axios.defaults.headers.common["Authorization"] = token; //設定 axios token
-    checkUserLogin(); // 檢查用戶登入狀態
-    getOrders(); // 頁面載入時獲取訂單
+    checkUserLogin().then(() => getOrders()); // 確保登入後才載入訂單
   }, []);
 
   // 在登入成功後，呼叫：管理控制台- 訂單（Orders）> Get API，取得訂單列表
@@ -85,16 +85,9 @@ const OrdersManagementPage = () => {
       setIsScreenLoading(false); // 無論成功或失敗，都關閉 Loading 畫面
     }
   };
-  useEffect(() => {
-    getOrders();
-  }, []);
-
-
 
   //開啟 modal 方法
   const [modalMode, setModalMode] = useState(null);
-
-  
 
   // 打開刪除訂單的 Modal，並設置刪除模式
   const handleOpenDelOrdersModal = (order, mode) => {
@@ -105,14 +98,11 @@ const OrdersManagementPage = () => {
     setIsDelOrdersModalOpen(true);
   };
 
-  {
-    /* 點擊「編輯」按鈕，開啟訂單Ｍodal */
-  }
-  //宣告handleOpenOrdersModal(變數)：進行開關產品的Modal：
-  const handleOpenOrdersModal = (order, mode) => {
-    setModalMode(mode); // 根據 mode 設定刪除模式
-    setTempOrder(order); //// 設置 tempOrder，將當前選擇的訂單資料傳遞到 Modal 中
-    setIsOrdersModalOpen(true); // 改成用 isOpen 做開關判斷 :不能直接取得
+   //* 點擊「編輯」按鈕，開啟訂單Ｍodal */
+  const handleOpenOrdersModal = (order) => {
+    setModalMode("edit"); // 設定為 "edit" 模式
+    setTempOrder(order); // 設置選中的訂單
+    setIsOrdersModalOpen(true); // 開啟 Modal
   };
 
   // 刪除「單一」訂單列表資料函式
@@ -234,8 +224,8 @@ const OrdersManagementPage = () => {
 
                       {/* 單個訂單的刪除按鈕 */}
                       <tbody>
-                        {ordersList.map((order) => (
-                          <tr key={order.id} className="align-middle">
+                        {ordersList.map((order, index) => (
+                          <tr key={index} className="align-middle">
                             <td scope="row">{order.id}</td>
                             <td>
                               {order.is_paid ? (
@@ -264,7 +254,7 @@ const OrdersManagementPage = () => {
                                 <button
                                   type="button"
                                   onClick={() =>
-                                    handleOpenOrdersModal("edit", order)
+                                    handleOpenOrdersModal(order)
                                   }
                                   className="btn btn-primary btn-outline-primary-dark"
                                 >
