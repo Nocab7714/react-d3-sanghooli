@@ -6,13 +6,11 @@ import { useDispatch } from "react-redux";
 import PaginationBackend from "../components/PaginationBackend";
 import OrdersModal from "../components/OrdersModal";
 import DelOrdersModal from "../components/DelOrdersModal";
-import ReactLoading from "react-loading";
 
 import C3Chart from "../components/C3Chart";
 import ReactHelmetAsync from "../../plugins/ReactHelmetAsync";
 import { createToast } from "../../slices/toastSlice";
 import { asyncSetLoading } from "../../slices/loadingSlice";
-
 
 // 環境變數
 const { VITE_BASE_URL: baseUrl, VITE_API_PATH: apiPath } = import.meta.env;
@@ -29,7 +27,7 @@ const OrdersManagementPage = () => {
 
   const [isScreenLoading, setIsScreenLoading] = useState(false);
 
-    //新增狀態做「刪除Modal」開關功能控制，預設狀態：關閉（ 帶入false值 ）
+  //新增狀態做「刪除Modal」開關功能控制，預設狀態：關閉（ 帶入false值 ）
   const [isDelOrdersModalOpen, setIsDelOrdersModalOpen] = useState(false);
 
   // 設定刪除模式 (single or all)
@@ -98,7 +96,7 @@ const OrdersManagementPage = () => {
     setIsDelOrdersModalOpen(true);
   };
 
-   //* 點擊「編輯」按鈕，開啟訂單Ｍodal */
+  //* 點擊「編輯」按鈕，開啟訂單Ｍodal */
   const handleOpenOrdersModal = (order) => {
     setModalMode("edit"); // 設定為 "edit" 模式
     setTempOrder(order); // 設置選中的訂單
@@ -253,9 +251,7 @@ const OrdersManagementPage = () => {
                               <div className="btn-group">
                                 <button
                                   type="button"
-                                  onClick={() =>
-                                    handleOpenOrdersModal(order)
-                                  }
+                                  onClick={() => handleOpenOrdersModal(order)}
                                   className="btn btn-primary btn-outline-primary-dark"
                                 >
                                   編輯
@@ -278,7 +274,7 @@ const OrdersManagementPage = () => {
                   </div>
                 )}
 
-                {/* 分頁元件，條件設定只有當 productList 有數據時，才顯示分頁 */}
+                {/* 分頁元件，條件設定只有當 OrderList 有數據時，才顯示分頁 */}
                 {ordersList?.length > 0 && (
                   <PaginationBackend
                     pageInfo={pageInfo}
@@ -305,26 +301,6 @@ const OrdersManagementPage = () => {
                   removeOrderItem={removeOrderItem}
                   removeAllOrders={removeAllOrders}
                 />
-
-                {/* 全螢幕Loading
-                {isScreenLoading && (
-                  <div
-                    className="d-flex justify-content-center align-items-center"
-                    style={{
-                      position: "fixed", //固定在畫面上，不會隨滾動條移動
-                      inset: 0, //讓 div 充滿整個畫面
-                      backgroundColor: "rgba(255,255,255,0.3)", //半透明白色背景
-                      zIndex: 999, //確保 Loading 畫面顯示在最上層
-                    }}
-                  >
-                    <ReactLoading
-                      type="spin"
-                      color="black"
-                      width="4rem"
-                      height="4rem"
-                    />
-                  </div>
-                )} */}
               </div>
             </div>
           </div>

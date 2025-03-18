@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { Modal } from "bootstrap";
 import { useDispatch } from "react-redux";
 import { createToast } from "../../slices/toastSlice";
+import { asyncSetLoading } from "../../slices/loadingSlice";
 
 // 環境變數
 const { VITE_BASE_URL: baseUrl, VITE_API_PATH: apiPath } = import.meta.env;
@@ -109,6 +110,7 @@ const OrdersModal = ({
 
   //* 串接編輯商品 API */
   const updateOrder = async () => {
+    dispatch(asyncSetLoading(["sectionLoading", true]));
     setIsScreenLoading(true);
     try {
       const res = await axios.put(
@@ -136,6 +138,7 @@ const OrdersModal = ({
         })
       );
     } finally {
+      dispatch(asyncSetLoading(["sectionLoading", false]));
       setIsScreenLoading(false);
     }
   };
@@ -223,7 +226,6 @@ const OrdersModal = ({
                   </label>
                   <input
                     value={modalData?.id || ""}
-                    // onChange={handleModalInputChange}
                     name="id"
                     id="order_id"
                     type="text"
@@ -241,7 +243,6 @@ const OrdersModal = ({
                     value={new Date(
                       modalData?.create_at * 1000
                     ).toLocaleString()}
-                    // onChange={handleModalInputChange}
                     name="create_at"
                     id="create_at"
                     type="text"
