@@ -42,17 +42,9 @@ const ProductsManagementPage = () => {
   const checkUserLogin = async () => {
     try {
       await axios.post(`${baseUrl}/api/user/check`);
-      //   getProducts();//取得產品資料
-      //   setIsAuth(true); //當使用者登入後就會跳轉到產品頁面
     } catch (error) {
-      dispatch(
-        createToast({
-          success: false,
-          message: "請先登入",
-        })
-      );
-      navigate("/admin/login");
       console.error(error);
+      navigate("/admin/login");
     }
   };
 
@@ -275,26 +267,6 @@ const ProductsManagementPage = () => {
                 setIsOpen={setIsDelProductModalOpen}
                 getProducts={getProducts}
               />
-
-              {/* 全螢幕Loading
-              {isScreenLoading && (
-                <div
-                  className="d-flex justify-content-center align-items-center"
-                  style={{
-                    position: "fixed", //固定在畫面上，不會隨滾動條移動
-                    inset: 0, //讓 div 充滿整個畫面
-                    backgroundColor: "rgba(255,255,255,0.3)", //半透明白色背景
-                    zIndex: 999, //確保 Loading 畫面顯示在最上層
-                  }}
-                >
-                  <ReactLoading
-                    type="spin"
-                    color="black"
-                    width="4rem"
-                    height="4rem"
-                  />
-                </div>
-              )} */}
             </div>
           </div>
         </div>

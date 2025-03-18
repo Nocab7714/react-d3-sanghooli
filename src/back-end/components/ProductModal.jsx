@@ -238,9 +238,19 @@ const ProductModal = ({
         }
       );
       dispatch(createToast(res.data.message))
+      dispatch(
+        createToast({
+          success: true,
+          message: "商品資訊已編輯更新成功",
+        })
+      );
     } catch (error) {
-      const { success, message } = error.response.data.message;
-      dispatch(createToast({ success, message: `編輯產品失敗！${message}`}))
+      dispatch(
+        createToast({
+          success: false,
+          message: "商品編輯、更新失敗",
+        })
+      );
     }
   };
 
@@ -264,7 +274,7 @@ const ProductModal = ({
 
       dispatch(
         createToast({
-          success: true,
+          success: false,
           message: "請填寫完整的產品資訊！",
         })
       );
@@ -305,7 +315,7 @@ const ProductModal = ({
       );
       dispatch(
         createToast({
-          success: false,
+          success: true,
           message: "上傳圖片成功",
         })
       );

@@ -20,7 +20,20 @@ const { VITE_BASE_URL: baseUrl, VITE_API_PATH: apiPath } = import.meta.env;
 
 const OrdersManagementPage = () => {
   const [ordersList, setOrdersList] = useState([]); //先給 ordersList 一個狀態：後續會從API撈回資料塞回ordersList 中
+  //綁定訂單 Modal 狀態
+  const [tempOrder, setTempOrder] = useState(null);
+
+  //新增狀態做「編輯Modal」開關功能控制，預設狀態：關閉（ 帶入false值 ）
+  const [isOrdersModalOpen, setIsOrdersModalOpen] = useState(false);
+
   const [isScreenLoading, setIsScreenLoading] = useState(false);
+
+    //新增狀態做「刪除Modal」開關功能控制，預設狀態：關閉（ 帶入false值 ）
+  const [isDelOrdersModalOpen, setIsDelOrdersModalOpen] = useState(false);
+
+  // 設定刪除模式 (single or all)
+  const [deleteMode, setDeleteMode] = useState("single");
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -76,20 +89,12 @@ const OrdersManagementPage = () => {
     getOrders();
   }, []);
 
-  //綁定訂單 Modal 狀態
-  const [tempOrder, setTempOrder] = useState(null);
 
-  //新增狀態做「編輯Modal」開關功能控制，預設狀態：關閉（ 帶入false值 ）
-  const [isOrdersModalOpen, setIsOrdersModalOpen] = useState(false);
-
-  //新增狀態做「刪除Modal」開關功能控制，預設狀態：關閉（ 帶入false值 ）
-  const [isDelOrdersModalOpen, setIsDelOrdersModalOpen] = useState(false);
 
   //開啟 modal 方法
   const [modalMode, setModalMode] = useState(null);
 
-  // 設定刪除模式 (single or all)
-  const [deleteMode, setDeleteMode] = useState("single");
+  
 
   // 打開刪除訂單的 Modal，並設置刪除模式
   const handleOpenDelOrdersModal = (order, mode) => {
@@ -206,7 +211,7 @@ const OrdersManagementPage = () => {
                 {/* 沒商品時顯示商品管理頁面顯示： 目前尚未有任何商品資料 */}
                 {ordersList.length === 0 ? (
                   <div className="text-center p-5">
-                    <h2 className="text-neutral60">目前尚未有任何商品資料</h2>
+                    <h2 className="text-neutral60">目前尚未有任何訂單資料</h2>
                   </div>
                 ) : (
                   // 商品管理有商品時呈現畫面
