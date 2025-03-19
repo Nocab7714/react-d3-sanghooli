@@ -12,6 +12,7 @@ import CartStep from "../components/CartStep";
 import { asyncGetCart } from "../../slices/cartSlice";
 import { asyncSetLoading } from "../../slices/loadingSlice";
 import { createAlert } from "../../slices/alertSlice";
+import ReactHelmetAsync from "../../plugins/ReactHelmetAsync";
 
 // 環境變數
 const BASE_URL = import.meta.env.VITE_BASE_URL;
@@ -238,6 +239,7 @@ function CartPage() {
 
   return (
     <>
+      <ReactHelmetAsync title="購物車" />
       <main className="bg-neutral20">
         <div className="container pt-6 pb-10 py-lg-19">
           <section>

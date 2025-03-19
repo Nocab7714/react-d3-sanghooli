@@ -1,12 +1,15 @@
+// 外部資源
 import { useEffect, useState } from "react";
 import CartStep from "../components/CartStep";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
+import { useDispatch } from "react-redux";
 
+// 內部資源
 import orderFail from "../../assets/img/illustration/orderFail.webp"
 import NotFoundPage from "./NotFoundPage";
-import { useDispatch } from "react-redux";
 import { asyncSetLoading } from "../../slices/loadingSlice";
+import ReactHelmetAsync from "../../plugins/ReactHelmetAsync";
 
 // 環境變數
 const BASE_URL = import.meta.env.VITE_BASE_URL;
@@ -45,9 +48,10 @@ export default function PaymentPage(){
   useEffect(() => {
     getOrder(orderId);
   }, [orderId])
-
+  
   return (
     <>
+      <ReactHelmetAsync title="訂單付款" />
       <main className="bg-neutral20">
         {
           orderData === null ? <NotFoundPage /> : 
