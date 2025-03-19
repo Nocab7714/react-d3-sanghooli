@@ -1,10 +1,10 @@
 import InputSearchDefault from './form/InputSearchDefault';
 import { festivalOptions, relationOptions, categoryOptions, priceRangeOptions } from '../constants/filterOptions';
 
-const FilterForm = ({ 
-  filters, 
-  actions, 
-  isLarge 
+const FilterForm = ({
+  filters,
+  actions,
+  isLarge
 }) => {
   const { searchValue, festival, relation, category, priceRange } = filters;
   const { handleFilterChange, handleSearchValueChange, handleSearch } = actions;
@@ -38,7 +38,7 @@ const FilterForm = ({
               ))}
             </select>
           </div>
-          
+
           <div className="col-6 col-xl-12">
             <select
               className={`form-select ${isLarge ? 'form-select-lg' : ''}`}
@@ -54,7 +54,7 @@ const FilterForm = ({
               ))}
             </select>
           </div>
-          
+
           <div className="col-6 col-xl-12">
             <select
               className={`form-select ${isLarge ? 'form-select-lg' : ''}`}
@@ -70,7 +70,7 @@ const FilterForm = ({
               ))}
             </select>
           </div>
-          
+
           <div className="col-6 col-xl-12">
             <select
               className={`form-select ${isLarge ? 'form-select-lg' : ''}`}

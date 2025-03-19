@@ -5,53 +5,7 @@ import { useDispatch } from 'react-redux';
 import { setFilteredProductsData } from '../../slices/productsSlice';
 import InputSearchDefault from '../components/form/InputSearchDefault';
 
-// 篩選條件選單的選項
-const festivalOptions = [
-  '畢業季',
-  '生日',
-  '婚禮',
-  '喬遷',
-  '情人節',
-  '母親節',
-  '父親節',
-  '兒童滿月',
-  '春節',
-  '兒童節',
-  '中秋節',
-  '聖誕節',
-];
-const relationOptions = [
-  '父母',
-  '父親',
-  '母親',
-  '祖父母',
-  '子女',
-  '男性朋友',
-  '女性朋友',
-  '男性情人',
-  '女性情人',
-  '丈夫',
-  '妻子',
-  '師長',
-  '同事',
-  '商業夥伴',
-];
-const categoryOptions = [
-  '食品與飲品',
-  '電子與實用',
-  '花卉與植物',
-  '美妝與保養',
-  '服飾與配件',
-  '文具與書籍',
-  '居家與生活',
-  '嬰幼兒與兒童',
-];
-const priceRangeOptions = [
-  '500 元以下',
-  '500 ~ 1,000 元',
-  '1,000 ~ 3,000 元',
-  '3,000 元以上',
-];
+import { festivalOptions, relationOptions, categoryOptions, priceRangeOptions } from '../constants/filterOptions';
 
 const HomePageProductFilter = () => {
   const navigate = useNavigate();
@@ -105,9 +59,8 @@ const HomePageProductFilter = () => {
         <div className="row gx-4 gx-md-6 mb-4 mb-lg-6 ">
           <div className="col-6 col-md-3 ">
             <select
-              className={`form-select mb-4 mb-md-0 ${
-                isLarge ? 'form-select-lg' : ''
-              }`}
+              className={`form-select mb-4 mb-md-0 ${isLarge ? 'form-select-lg' : ''
+                }`}
               name="festival"
               value={searchFormData.festival}
               onChange={handleInputChange}
@@ -122,9 +75,8 @@ const HomePageProductFilter = () => {
           </div>
           <div className="col-6 col-md-3">
             <select
-              className={`form-select mb-4 mb-md-0 ${
-                isLarge ? 'form-select-lg' : ''
-              }`}
+              className={`form-select mb-4 mb-md-0 ${isLarge ? 'form-select-lg' : ''
+                }`}
               name="relation"
               value={searchFormData.relation}
               onChange={handleInputChange}
