@@ -17,11 +17,14 @@ const ProductPurchaseOptions = ({ productId, product }) => {
   const [productQty, setProductQty] = useState(1); // 加入購物車商品數量
   const [productStockQty, setProductStockQty] = useState(0); // 商品庫存數量
 
-  // 當單項商品換頁後，更新商品庫存數量，並將可加入的商品數量改為 1 (初始狀態)
+  // 當 product 或 productId 變更時更新商品庫存數量和重置選擇數量
   useEffect(() => {
-    setProductStockQty(product.qty);
-    setProductQty(1);
-  }, [productId]);
+    // 確保 product 是有效物件且 product.qty 存在才設置
+    if (product && typeof product.qty !== 'undefined') {
+      setProductStockQty(product.qty);
+      setProductQty(1);
+    }
+  }, [product, productId]);
 
   // 加入購物車
   const dispatch = useDispatch();
@@ -84,7 +87,7 @@ const ProductPurchaseOptions = ({ productId, product }) => {
                 onClick={() => addCartItem(product.id)}
                 type="button"
                 className="btn btn-primary fs-6 w-100 px-2 d-flex align-items-center justify-content-center"
-                disabled={product.qty === 0 || isLoadingAddCart}
+                disabled={product.qty <= 0 || isLoadingAddCart}
               >
                 <span className={isLoadingAddCart ? 'me-2' : ''}>
                   <ButtonLoading isLoading={isLoadingAddCart} />
@@ -92,7 +95,7 @@ const ProductPurchaseOptions = ({ productId, product }) => {
                 <span className="material-symbols-outlined fs-5 align-middle me-1">
                   local_mall
                 </span>
-                加入購物車
+                {product.qty <= 0 ? '已售完' : '加入購物車'}
               </button>
             </div>
           </div>
