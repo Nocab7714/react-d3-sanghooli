@@ -190,6 +190,8 @@ const OrdersModal = ({
     setIsOpen(false); //判斷Modal開關狀態:如果是「關」的調整方式
   };
 
+
+
   return (
     <>
       <div
@@ -373,7 +375,7 @@ const OrdersModal = ({
                       <th scope="col">小計</th>
                     </tr>
                   </thead>
-                  <tbody>
+                  <tbody className="align-items-center">
                     {modalData?.products &&
                     Object.keys(modalData.products).length > 0 ? (
                       Object.values(modalData.products).map((item) => (
@@ -417,8 +419,20 @@ const OrdersModal = ({
 
                           {/* 使用優惠券 */}
                           <td>
-                            {item.coupon ? item.coupon?.code : "未使用優惠券"}
-                          </td>
+                          <p className="text-neutral80"> {item.coupon ? item.coupon?.code : "未使用優惠券"}</p>
+                            <p className="h6 text-neutral80">{item.coupon?.percent || 0}%</p>
+                            </td>
+                          {/* 折扣資訊
+                          <td>
+                            {item.coupon ? (
+                            <span className="text-danger">
+                              - NT$ {discountAmount.toLocaleString()} ({discountPercent}%)
+                            </span>
+                          ) : (
+                            "無折扣"
+                          )}
+                          </td> */}
+                          
 
                           {/* 數量 */}
                           <td>{item.qty}</td>
