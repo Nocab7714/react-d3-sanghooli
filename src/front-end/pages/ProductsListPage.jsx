@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 
@@ -29,11 +29,13 @@ const breadcrumbItem = [
 const ProductsListPage = () => {
   // 獲取響應式狀態
   const { isLarge, isMobile } = useResponsive();
-  
+
   // 獲取 Redux 數據
   const products = useSelector((state) => state.products.products);
-  const filteredProductsData = useSelector((state) => state.products.filteredProductsData);
-  
+  const filteredProductsData = useSelector(
+    (state) => state.products.filteredProductsData
+  );
+
   // 獲取熱門產品
   const [popularProducts, setPopularProducts] = useState([]);
   useEffect(() => {
@@ -41,30 +43,31 @@ const ProductsListPage = () => {
       setPopularProducts(products.filter((p) => p.is_hot).slice(0, 6));
     }
   }, [products]);
-  
+
   // 使用滾動 hook
-  const { ref: searchTitleRef, scrollToRef: scrollToSearchTitle } = useScrollToRef();
-  
+  const { ref: searchTitleRef, scrollToRef: scrollToSearchTitle } =
+    useScrollToRef();
+
   // 使用產品篩選 hook
   const { filters, actions, filteredProducts } = useProductFilter(
     products,
     filteredProductsData
   );
-  
+
   // 使用分頁 hook
-  const { 
-    currentPage, 
-    setCurrentPage, 
-    paginatedItems, 
-    paginationData, 
-    hasPagination 
+  const {
+    currentPage,
+    setCurrentPage,
+    paginatedItems,
+    paginationData,
+    hasPagination,
   } = usePagination(filteredProducts);
-  
+
   // 處理分頁切換
   const handlePageChange = (newPage) => {
     // 先設定新的頁碼
     setCurrentPage(newPage);
-    
+
     // 確保在頁面內容更新後再滾動
     requestAnimationFrame(() => {
       setTimeout(() => {
@@ -72,31 +75,31 @@ const ProductsListPage = () => {
       }, 100);
     });
   };
-  
+
   // 整合篩選與滾動
   const handleFilterWithScroll = (e) => {
     actions.handleFilterChange(e);
-    
+
     if (!isMobile) {
       scrollToSearchTitle();
     }
   };
-  
+
   const handleSearchWithScroll = () => {
     actions.handleSearch(); // 觸發搜尋
     scrollToSearchTitle(); // 滾動到搜尋結果
   };
-  
+
   // 清空篩選條件
   const location = useLocation();
   const dispatch = useDispatch();
-  
+
   useEffect(() => {
     if (!location.state?.scrollToResults) {
       dispatch(clearFilters());
     }
   }, [location, dispatch]);
-  
+
   return (
     <>
       <ReactHelmetAsync title="禮物清單" />
@@ -109,12 +112,12 @@ const ProductsListPage = () => {
             </h2>
           </section>
         </div>
-        
+
         {/* 麵包屑導航 */}
         <section className="container mb-6 mb-md-10">
           <Breadcrumb breadcrumbItem={breadcrumbItem} />
         </section>
-        
+
         <div className="container">
           <section className="productsList-list">
             <div className="row">
@@ -125,12 +128,12 @@ const ProductsListPage = () => {
                   actions={{
                     ...actions,
                     handleFilterChange: handleFilterWithScroll,
-                    handleSearch: handleSearchWithScroll
+                    handleSearch: handleSearchWithScroll,
                   }}
                   isLarge={isLarge}
                 />
               </div>
-              
+
               {/* 產品列表區域 */}
               <div className="col-xl-8 mt-10 mt-xl-0">
                 {/* 熱門產品 */}
@@ -142,7 +145,7 @@ const ProductsListPage = () => {
                     showIsHot={true}
                   />
                 </div>
-                
+
                 {/* 搜索結果 */}
                 <div className="mb-10 mb-lg-19">
                   <SearchResultHeader
@@ -151,13 +154,10 @@ const ProductsListPage = () => {
                     sortOption={filters.sortOption}
                     onSortChange={actions.handleSortChange}
                   />
-                  
-                  <ProductsList
-                    products={paginatedItems}
-                    showIsHot={true}
-                  />
+
+                  <ProductsList products={paginatedItems} showIsHot={true} />
                 </div>
-                
+
                 {/* 分頁控制 */}
                 {hasPagination && (
                   <Pagination
