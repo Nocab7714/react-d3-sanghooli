@@ -204,7 +204,7 @@ const OrdersModal = ({
 
     const discountPercent = item.coupon?.percent || 0;
     const discountAmount = Math.round((originalPrice * discountPercent) / 100);
-    const discountedPrice= originalPrice - discountAmount;
+    const discountedPrice = originalPrice - discountAmount;
 
     return {
       discountAmount,
@@ -385,23 +385,34 @@ const OrdersModal = ({
                   <h3 className="card-title fs-5 text-primary-dark border-bottom border-neutral40 fw-semibold pb-4 mb-4">
                     訂單明細
                   </h3>
-                </div>
-                <table className="table text-center">
+                
+                <table className="table">
                   <thead>
                     <tr className="rounded-3">
                       <th scope="col">商品資料</th>
-                      <th scope="col">單件價格</th>
-                      <th scope="col">優惠代碼</th>
-                      <th scope="col">數量</th>
-                      <th scope="col">小計</th>
+                      <th scope="col" className="text-center">
+                        單件價格
+                      </th>
+                      <th scope="col" className="text-center">
+                        優惠代碼
+                      </th>
+                      <th scope="col" className="text-center">
+                        數量
+                      </th>
+                      <th scope="col" className="text-center">
+                        小計
+                      </th>
                     </tr>
                   </thead>
-                  <tbody className="align-items-center">
+                  <tbody>
                     {modalData?.products &&
                     Object.keys(modalData.products).length > 0 ? (
                       Object.values(modalData.products).map((item) => {
-                        const { discountAmount, discountPercent, discountedPrice } =
-                          calculateDiscountedAmount(item);
+                        const {
+                          discountAmount,
+                          discountPercent,
+                          discountedPrice,
+                        } = calculateDiscountedAmount(item);
                         return (
                           <tr
                             key={item.product_id}
@@ -417,7 +428,7 @@ const OrdersModal = ({
                                   width="80"
                                 />
                                 <div>
-                                  <span className="fs-7 text-neutral60">
+                                  <span className="fs-7 text-neutral60 ">
                                     {item.product?.category}
                                   </span>
                                   <p className="h6 text-neutral80">
@@ -428,7 +439,7 @@ const OrdersModal = ({
                             </td>
 
                             {/* 單件價格（優惠價＋原價） */}
-                            <td>
+                            <td className="text-center">
                               <p className="h6 text-neutral80">
                                 NT$ {item.product?.price?.toLocaleString()}
                               </p>
@@ -442,7 +453,7 @@ const OrdersModal = ({
                             </td>
 
                             {/* 優惠券代碼＋percent */}
-                            <td>
+                            <td className="text-center">
                               <p className="text-neutral80">
                                 {item.coupon
                                   ? item.coupon?.code
@@ -456,10 +467,10 @@ const OrdersModal = ({
                             </td>
 
                             {/* 數量 */}
-                            <td>{item.qty}</td>
+                            <td className="text-center">{item.qty}</td>
 
                             {/* 小計 */}
-                            <td>
+                            <td className="text-center">
                               NT${" "}
                               {(
                                 item.product?.price * item.qty
@@ -485,7 +496,7 @@ const OrdersModal = ({
                     Object.keys(modalData.products).length > 0 && (
                       <div className="border-bottom pt-2">
                         <div className="d-flex justify-content-end align-items-center mb-4 pe-8">
-                          <p className="me-12">小計</p>
+                          <p className="me-12 ">小計</p>
                           <p className="fw-bold">
                             NT${" "}
                             <span>
@@ -594,6 +605,8 @@ const OrdersModal = ({
                       </span>
                     </p>
                   </div>
+                </div>
+
                 </div>
               </div>
             </div>
