@@ -24,6 +24,7 @@ import searchIcon from '@/assets/img/illustration/search.webp';
 import giftCardIcon from '@/assets/img/illustration/gift-card.webp';
 import checkoutIcon from '@/assets/img/illustration/checkout.webp';
 
+import aboutBannerBkg from '@/assets/img/banner/banner06.webp'
 import userImg01 from '@/assets/img/other/user01.webp';
 import userImg02 from '@/assets/img/other/user02.webp';
 import userImg03 from '@/assets/img/other/user03.webp';
@@ -78,7 +79,7 @@ const AboutUsPage = () => {
           <Breadcrumb breadcrumbItem={breadcrumbItem} />
         </div>
         {/* banner */}
-        <section className="about-us-banner py-10 py-md-19">
+        <section className="about-us-banner py-10 py-md-19" style={{backgroundImage: `url(${aboutBannerBkg})`, backgroundPosition: 'center', backgroundRepeat: 'no-repeat', backgroundSize: 'cover'}}>
           <div className="container">
             <div className="d-flex flex-column align-items-center justify-content-center" data-aos="fade-up">
               <div className="mb-10 mb-md-19">
