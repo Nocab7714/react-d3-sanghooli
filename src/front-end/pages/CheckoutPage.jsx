@@ -123,7 +123,7 @@ export default function CheckoutPage(){
                           id="email"
                           labelText="聯絡郵箱"
                           type="email"
-                          placeholder="EX :  example@snnghooli.com"
+                          placeholder="EX :  example@sanghooli.com"
                           rules={{
                             required: "（ 必填！請填寫常用電子郵件 ）",
                             pattern: {
