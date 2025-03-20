@@ -15,8 +15,6 @@ import { asyncSetLoading } from "../../slices/loadingSlice";
 // 環境變數
 const { VITE_BASE_URL: baseUrl, VITE_API_PATH: apiPath } = import.meta.env;
 
-//訂單初始狀態
-
 const OrdersManagementPage = () => {
   const [ordersList, setOrdersList] = useState([]); //先給 ordersList 一個狀態：後續會從API撈回資料塞回ordersList 中
   //綁定訂單 Modal 狀態
@@ -190,6 +188,9 @@ const OrdersManagementPage = () => {
                 <h4 className="">最多銷售商品類別</h4>
                 <div className="mt-8" id="chart">
                   <C3Chart />
+                </div>
+                <div className="mt-3 text-muted ps-5">
+                  <small>* 此圖表顯示各產品類別的總銷售數量，幫助您了解哪些產品類別最受歡迎</small>
                 </div>
               </div>
             </div>

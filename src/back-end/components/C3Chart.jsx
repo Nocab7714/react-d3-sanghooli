@@ -3,7 +3,7 @@ import * as d3 from "d3"; // 確保 D3.js 也被載入
 import * as c3 from "c3";
 import "c3/c3.css"; // 匯入 C3.js 樣式
 
-const C3ChartComponent = () => {
+const C3Chart= () => {
   useEffect(() => {
     c3.generate({
       bindto: "#chart", // 綁定 ID
@@ -61,4 +61,4 @@ const C3ChartComponent = () => {
   return <div id="chart"></div>;
 };
 
-export default C3ChartComponent;
+export default C3Chart;

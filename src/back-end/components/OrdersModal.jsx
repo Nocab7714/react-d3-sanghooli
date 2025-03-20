@@ -340,7 +340,7 @@ const OrdersModal = ({
                           onChange={handleModalInputChange}
                           name="email"
                           id="user_email"
-                          type="text"
+                          type="email"
                           className="form-control"
                           placeholder="EX:example@sanghooli.com"
                         />
