@@ -10,7 +10,7 @@ const { VITE_BASE_URL: baseUrl, VITE_API_PATH: apiPath } = import.meta.env;
 
 const DelProductModal = ({ tempProduct, isOpen, setIsOpen, getProducts }) => {
   //透過 useRef 取得 DOM
-  const delProductModalRef = useRef(null); //透過 useRef 取得刪除確認 Modal 的 DOM
+  const delProductModalRef = useRef(null);
 
   const [toast, setToast] = useState({ show: false, title: "", icon: "" });
 
@@ -20,7 +20,7 @@ const DelProductModal = ({ tempProduct, isOpen, setIsOpen, getProducts }) => {
   useEffect(() => {
     //透過 useEffect 的 hook，在頁面渲染後初始化 Modal
     new Modal(delProductModalRef.current, {
-      backdrop: false, // 點擊Modal灰色區塊不進行關閉
+      backdrop: false,
     });
   }, []);
 
@@ -80,14 +80,7 @@ const DelProductModal = ({ tempProduct, isOpen, setIsOpen, getProducts }) => {
 
   return (
     <>
-      {/* <Toast
-        show={toast.show}
-        title={toast.title}
-        icon={toast.icon}
-        onClose={() => setToast({ show: false, title: "", icon: "" })}
-      /> */}
-
-      {/* //加入刪除產品 Modal */}
+      {/*加入刪除產品 Modal */}
       <div
         ref={delProductModalRef}
         className="modal fade"

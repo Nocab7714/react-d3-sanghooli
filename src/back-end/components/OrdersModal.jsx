@@ -385,228 +385,227 @@ const OrdersModal = ({
                   <h3 className="card-title fs-5 text-primary-dark border-bottom border-neutral40 fw-semibold pb-4 mb-4">
                     訂單明細
                   </h3>
-                
-                <table className="table">
-                  <thead>
-                    <tr className="rounded-3">
-                      <th scope="col">商品資料</th>
-                      <th scope="col" className="text-center">
-                        單件價格
-                      </th>
-                      <th scope="col" className="text-center">
-                        優惠代碼
-                      </th>
-                      <th scope="col" className="text-center">
-                        數量
-                      </th>
-                      <th scope="col" className="text-center">
-                        小計
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {modalData?.products &&
-                    Object.keys(modalData.products).length > 0 ? (
-                      Object.values(modalData.products).map((item) => {
-                        const {
-                          discountAmount,
-                          discountPercent,
-                          discountedPrice,
-                        } = calculateDiscountedAmount(item);
-                        return (
-                          <tr
-                            key={item.product_id}
-                            className="align-items-center align-middle gap-3 mb-4"
-                          >
-                            {/* 商品資料 */}
-                            <td>
-                              <div className="d-flex align-items-center gap-4">
-                                <img
-                                  className="cart-img rounded-3"
-                                  src={item.product?.imageUrl}
-                                  alt={item.product?.title}
-                                  width="80"
-                                />
-                                <div>
-                                  <span className="fs-7 text-neutral60 ">
-                                    {item.product?.category}
-                                  </span>
-                                  <p className="h6 text-neutral80">
-                                    {item.product?.title}
-                                  </p>
-                                </div>
-                              </div>
-                            </td>
 
-                            {/* 單件價格（優惠價＋原價） */}
-                            <td className="text-center">
-                              <p className="h6 text-neutral80">
-                                NT$ {item.product?.price?.toLocaleString()}
-                              </p>
-                              {item.product?.price !==
-                                item.product?.origin_price && (
-                                <del className="text-neutral40 fs-7">
-                                  NT${" "}
-                                  {item.product?.origin_price?.toLocaleString()}
-                                </del>
-                              )}
-                            </td>
-
-                            {/* 優惠券代碼＋percent */}
-                            <td className="text-center">
-                              <p className="text-neutral80">
-                                {item.coupon
-                                  ? item.coupon?.code
-                                  : "未使用優惠券"}
-                              </p>
-                              {item.coupon && (
-                                <p className="h6 text-neutral80">
-                                  {item.coupon?.percent}%
-                                </p>
-                              )}
-                            </td>
-
-                            {/* 數量 */}
-                            <td className="text-center">{item.qty}</td>
-
-                            {/* 小計 */}
-                            <td className="text-center">
-                              NT${" "}
-                              {(
-                                item.product?.price * item.qty
-                              ).toLocaleString()}
-                            </td>
-                          </tr>
-                        );
-                      })
-                    ) : (
-                      <tr>
-                        <td colSpan="6" className="text-center">
-                          無訂單明細
-                        </td>
+                  <table className="table">
+                    <thead>
+                      <tr className="rounded-3">
+                        <th scope="col">商品資料</th>
+                        <th scope="col" className="text-center">
+                          單件價格
+                        </th>
+                        <th scope="col" className="text-center">
+                          優惠代碼
+                        </th>
+                        <th scope="col" className="text-center">
+                          數量
+                        </th>
+                        <th scope="col" className="text-center">
+                          小計
+                        </th>
                       </tr>
-                    )}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody>
+                      {modalData?.products &&
+                      Object.keys(modalData.products).length > 0 ? (
+                        Object.values(modalData.products).map((item) => {
+                          const {
+                            discountAmount,
+                            discountPercent,
+                            discountedPrice,
+                          } = calculateDiscountedAmount(item);
+                          return (
+                            <tr
+                              key={item.product_id}
+                              className="align-items-center align-middle gap-3 mb-4"
+                            >
+                              {/* 商品資料 */}
+                              <td>
+                                <div className="d-flex align-items-center gap-4">
+                                  <img
+                                    className="cart-img rounded-3"
+                                    src={item.product?.imageUrl}
+                                    alt={item.product?.title}
+                                    width="80"
+                                  />
+                                  <div>
+                                    <span className="fs-7 text-neutral60 ">
+                                      {item.product?.category}
+                                    </span>
+                                    <p className="h6 text-neutral80">
+                                      {item.product?.title}
+                                    </p>
+                                  </div>
+                                </div>
+                              </td>
 
-                {/* 訂單總計 */}
-                <div className="col-12">
-                  {/* 計算總折扣金額 */}
-                  {modalData?.products &&
-                    Object.keys(modalData.products).length > 0 && (
-                      <div className="border-bottom pt-2">
-                        <div className="d-flex justify-content-end align-items-center mb-4 pe-8">
-                          <p className="me-12 ">小計</p>
-                          <p className="fw-bold">
-                            NT${" "}
-                            <span>
-                              {(() => {
-                                // 計算總小計：每個商品的原價 (item.product?.price * item.qty)
-                                const totalOriginalPrice = Object.values(
-                                  modalData.products
-                                ).reduce((total, item) => {
-                                  const originalPrice =
-                                    item.product?.price * item.qty;
-                                  return total + originalPrice;
-                                }, 0);
+                              {/* 單件價格（優惠價＋原價） */}
+                              <td className="text-center">
+                                <p className="h6 text-neutral80">
+                                  NT$ {item.product?.price?.toLocaleString()}
+                                </p>
+                                {item.product?.price !==
+                                  item.product?.origin_price && (
+                                  <del className="text-neutral40 fs-7">
+                                    NT${" "}
+                                    {item.product?.origin_price?.toLocaleString()}
+                                  </del>
+                                )}
+                              </td>
 
-                                return Math.round(
-                                  totalOriginalPrice
-                                ).toLocaleString(); // 四捨五入後顯示
-                              })()}
-                            </span>
-                          </p>
+                              {/* 優惠券代碼＋percent */}
+                              <td className="text-center">
+                                <p className="text-neutral80">
+                                  {item.coupon
+                                    ? item.coupon?.code
+                                    : "未使用優惠券"}
+                                </p>
+                                {item.coupon && (
+                                  <p className="h6 text-neutral80">
+                                    {item.coupon?.percent}%
+                                  </p>
+                                )}
+                              </td>
+
+                              {/* 數量 */}
+                              <td className="text-center">{item.qty}</td>
+
+                              {/* 小計 */}
+                              <td className="text-center">
+                                NT${" "}
+                                {(
+                                  item.product?.price * item.qty
+                                ).toLocaleString()}
+                              </td>
+                            </tr>
+                          );
+                        })
+                      ) : (
+                        <tr>
+                          <td colSpan="6" className="text-center">
+                            無訂單明細
+                          </td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+
+                  {/* 訂單總計 */}
+                  <div className="col-12">
+                    {/* 計算總折扣金額 */}
+                    {modalData?.products &&
+                      Object.keys(modalData.products).length > 0 && (
+                        <div className="border-bottom pt-2">
+                          <div className="d-flex justify-content-end align-items-center mb-4 pe-8">
+                            <p className="me-12 ">小計</p>
+                            <p className="fw-bold">
+                              NT${" "}
+                              <span>
+                                {(() => {
+                                  // 計算總小計：每個商品的原價 (item.product?.price * item.qty)
+                                  const totalOriginalPrice = Object.values(
+                                    modalData.products
+                                  ).reduce((total, item) => {
+                                    const originalPrice =
+                                      item.product?.price * item.qty;
+                                    return total + originalPrice;
+                                  }, 0);
+
+                                  return Math.round(
+                                    totalOriginalPrice
+                                  ).toLocaleString(); // 四捨五入後顯示
+                                })()}
+                              </span>
+                            </p>
+                          </div>
+
+                          {/* 運費 */}
+                          <div className="d-flex justify-content-end align-items-center mb-4 py-3 pe-8">
+                            <p className="me-19">運費</p>
+                            <p className="fw-bold">
+                              NT$ <span>0</span>
+                            </p>
+                          </div>
+
+                          {/* 折扣金額 - 只在有使用優惠券且有折扣金額時顯示 */}
+                          {(() => {
+                            // 計算總折扣金額 discountedPrice
+                            const totalDiscountAmount = Object.values(
+                              modalData.products
+                            ).reduce((total, item) => {
+                              const { discountedPrice } =
+                                calculateDiscountedAmount(item);
+                              return total + discountedPrice; // 累加折扣後金額
+                            }, 0);
+
+                            // 檢查是否有使用優惠券
+                            const hasCoupon = Object.values(
+                              modalData.products
+                            ).some((item) => item.coupon);
+
+                            // 只有當有使用優惠券且總折扣金額大於0時才顯示
+                            return hasCoupon && totalDiscountAmount > 0 ? (
+                              <div className="d-flex justify-content-end align-items-center mb-5 pe-8">
+                                <p className="me-13">折扣</p>
+                                <p className="fw-bold text-secondary">
+                                  - NT$ {totalDiscountAmount.toLocaleString()}
+                                </p>
+                              </div>
+                            ) : null;
+                          })()}
                         </div>
+                      )}
 
-                        {/* 運費 */}
-                        <div className="d-flex justify-content-end align-items-center mb-4 py-3 pe-8">
-                          <p className="me-19">運費</p>
-                          <p className="fw-bold">
-                            NT$ <span>0</span>
-                          </p>
-                        </div>
+                    {/* 應付金額 */}
+                    <div className="d-flex justify-content-end align-items-center mt-3 py-3 pe-8">
+                      <h6 className="me-7">應付金額：</h6>
+                      <p className="text-primary-dark fs-4 fw-bold">
+                        NT$
+                        <span className="ms-1">
+                          {(() => {
+                            // 檢查是否有使用優惠券
+                            const hasCoupon =
+                              modalData?.products &&
+                              Object.values(modalData.products).some(
+                                (item) => item.coupon
+                              );
 
-                        {/* 折扣金額 - 只在有使用優惠券且有折扣金額時顯示 */}
-                        {(() => {
-                          // 計算總折扣金額 discountedPrice
-                          const totalDiscountAmount = Object.values(
-                            modalData.products
-                          ).reduce((total, item) => {
-                            const { discountedPrice } =
-                              calculateDiscountedAmount(item);
-                            return total + discountedPrice; // 累加折扣後金額
-                          }, 0);
-
-                          // 檢查是否有使用優惠券
-                          const hasCoupon = Object.values(
-                            modalData.products
-                          ).some((item) => item.coupon);
-
-                          // 只有當有使用優惠券且總折扣金額大於0時才顯示
-                          return hasCoupon && totalDiscountAmount > 0 ? (
-                            <div className="d-flex justify-content-end align-items-center mb-5 pe-8">
-                              <p className="me-13">折扣</p>
-                              <p className="fw-bold text-secondary">
-                                - NT$ {totalDiscountAmount.toLocaleString()}
-                              </p>
-                            </div>
-                          ) : null;
-                        })()}
-                      </div>
-                    )}
-
-                  {/* 應付金額 */}
-                  <div className="d-flex justify-content-end align-items-center mt-3 py-3 pe-8">
-                    <h6 className="me-7">應付金額：</h6>
-                    <p className="text-primary-dark fs-4 fw-bold">
-                      NT$
-                      <span className="ms-1">
-                        {(() => {
-                          // 檢查是否有使用優惠券
-                          const hasCoupon =
-                            modalData?.products &&
-                            Object.values(modalData.products).some(
-                              (item) => item.coupon
-                            );
-
-                          // 計算總折扣金額
-                          const totalDiscountAmount = modalData?.products
-                            ? Object.values(modalData.products).reduce(
-                                (total, item) => {
-                                  const { discountAmount } =
-                                    calculateDiscountedAmount(item);
-                                  return total + discountAmount;
-                                },
-                                0
-                              )
-                            : 0;
-
-                          // 有使用優惠券且折扣金額大於100，使用產品計算的finalPrice總和
-                          if (hasCoupon && totalDiscountAmount <= 100) {
-                            return modalData?.products
-                              ? Math.round(
-                                  Object.values(modalData.products).reduce(
-                                    (total, item) => {
-                                      const { discountedPrice } =
-                                        calculateDiscountedAmount(item);
-                                      return total + discountedPrice;
-                                    },
-                                    0
-                                  )
-                                ).toLocaleString() // 四捨五入應付金額
+                            // 計算總折扣金額
+                            const totalDiscountAmount = modalData?.products
+                              ? Object.values(modalData.products).reduce(
+                                  (total, item) => {
+                                    const { discountAmount } =
+                                      calculateDiscountedAmount(item);
+                                    return total + discountAmount;
+                                  },
+                                  0
+                                )
                               : 0;
-                          } else {
-                            // 沒有使用優惠券，顯示modalData.total
-                            return Math.round(
-                              modalData?.total || 0
-                            ).toLocaleString(); // 四捨五入應付金額
-                          }
-                        })()}
-                      </span>
-                    </p>
-                  </div>
-                </div>
 
+                            // 有使用優惠券且折扣金額大於100，使用產品計算的finalPrice總和
+                            if (hasCoupon && totalDiscountAmount <= 100) {
+                              return modalData?.products
+                                ? Math.round(
+                                    Object.values(modalData.products).reduce(
+                                      (total, item) => {
+                                        const { discountedPrice } =
+                                          calculateDiscountedAmount(item);
+                                        return total + discountedPrice;
+                                      },
+                                      0
+                                    )
+                                  ).toLocaleString() // 四捨五入應付金額
+                                : 0;
+                            } else {
+                              // 沒有使用優惠券，顯示modalData.total
+                              return Math.round(
+                                modalData?.total || 0
+                              ).toLocaleString(); // 四捨五入應付金額
+                            }
+                          })()}
+                        </span>
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>

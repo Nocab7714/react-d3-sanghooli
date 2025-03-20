@@ -184,13 +184,16 @@ const OrdersManagementPage = () => {
 
             {/* 次要功能：最多銷售商品類別C3.js */}
             <div className="managementList mb-10 rounded-3 ">
-              <div className="pt-10 pb-12 ps-5 pe-8">
+              <div className="pt-10 pb-12 ps-8 pe-8">
                 <h4 className="">最多銷售商品類別</h4>
                 <div className="mt-8" id="chart">
                   <C3Chart />
                 </div>
                 <div className="mt-3 text-muted ps-5">
-                  <small>* 此圖表顯示各產品類別的總銷售數量，幫助您了解哪些產品類別最受歡迎</small>
+                  <small>
+                    *
+                    此圖表顯示各產品類別的總銷售數量，幫助您了解哪些產品類別最受歡迎
+                  </small>
                 </div>
               </div>
             </div>
