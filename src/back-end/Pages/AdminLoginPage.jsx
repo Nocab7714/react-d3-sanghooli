@@ -5,10 +5,6 @@ import ReactHelmetAsync from "../../plugins/ReactHelmetAsync";
 import { useForm } from "react-hook-form";
 import { AdminAuthContext } from "../../context/AdminAuthContext";
 
-
-// 環境變數
-const { VITE_BASE_URL: baseUrl } = import.meta.env;
-
 function AdminLoginPage() {
   // 透過 Context 取得 handleLogin 與 isLoggedIn
   const { handleLogin, isLoggedIn } = useContext(AdminAuthContext);
@@ -28,7 +24,6 @@ function AdminLoginPage() {
     setIsLoading(true);
     try {
       await handleLogin(data); 
-      console.log("送出的資料", data);
     } finally {
       setIsLoading(false);
     }
@@ -58,8 +53,6 @@ function AdminLoginPage() {
               id="email"
               name="username"
               placeholder="name@example.com"
-              // value={account.username}
-              // onChange={handleInputChange}
               {...register("username", {
                 required: "Email為必填欄位", // 驗證必填
                 pattern: {
@@ -83,8 +76,6 @@ function AdminLoginPage() {
               id="password"
               name="password"
               placeholder="Password"
-              // value={account.password}
-              // onChange={handleInputChange}
               {...register("password", { required: "密碼為必填欄位" })}
             />
             <label htmlFor="password">Password</label>

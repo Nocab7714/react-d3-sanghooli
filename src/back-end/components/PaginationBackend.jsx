@@ -1,7 +1,3 @@
-// 資料驅動範例
-// 1. 請從外層傳入 paginationData 資料
-// 2. 資料請使用 API Get 到的回傳的資料做驅動
-
 const PaginationBackend = ({ pageInfo, handlePageChenge }) => {
   return (
     // 分頁元件模板版型放置處

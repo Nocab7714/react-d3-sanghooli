@@ -23,7 +23,7 @@ const GoToTop = () => {
     <div
       className="go-to-top position-fixed d-flex align-items-center justify-content-center rounded-circle p-4"
       style={{
-        opacity: isVisible ? 1 : 0, // 透明度控制顯示
+        opacity: isVisible ? 1 : 0, 
         visibility: isVisible ? "visible" : "hidden", // 避免透明時仍然可以點擊
       }}
       onClick={() => {
