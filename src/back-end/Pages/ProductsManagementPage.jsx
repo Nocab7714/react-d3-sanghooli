@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import PaginationBackend from "../components/PaginationBackend";
-import ReactLoading from "react-loading";
 
 //內部資源
 import DelProductModal from "../components/DelProductModal";
@@ -42,22 +41,12 @@ const ProductsManagementPage = () => {
   const checkUserLogin = async () => {
     try {
       await axios.post(`${baseUrl}/api/user/check`);
-      //   getProducts();//取得產品資料
-      //   setIsAuth(true); //當使用者登入後就會跳轉到產品頁面
     } catch (error) {
-      dispatch(
-        createToast({
-          success: false,
-          message: "請先登入",
-        })
-      );
-      navigate("/admin/login");
       console.error(error);
+      navigate("/admin/login");
     }
   };
 
-  // 判斷目前是否已是登入狀態，取出在 cookie 中的 token
-  // 若想在登入頁面渲染時呼叫checkUserLogin裡的API>需要透過React hook：useEffect 戳一次API
   useEffect(() => {
     const token = document.cookie.replace(
       /(?:(?:^|.*;\s*)D3Token\s*\=\s*([^;]*).*$)|^.*$/,
@@ -71,7 +60,7 @@ const ProductsManagementPage = () => {
 
   const [productList, setProductList] = useState([]); //先給 productList 一個狀態：後續會從API撈回資料塞回productList 中
 
-  //在登入成功時，呼叫：管理控制台- 產品（Products）> Get API
+  //在登入成功時，呼叫：管理控制台 - 產品（Products）> Get API
   const getProducts = async (page = 1) => {
     dispatch(asyncSetLoading(["sectionLoading", true]));
     setIsScreenLoading(true); //顯示 Loading 畫面
@@ -120,10 +109,7 @@ const ProductsManagementPage = () => {
     setIsDelProductModalOpen(true);
   };
 
-  {
-    /* 點擊「建立新的產品」＋「編輯」按鈕，會打開Ｍodal */
-  }
-  //宣告handleOpenProductModal(變數)：進行開關產品的Modal：
+  //點擊「建立新的產品」＋「編輯」按鈕，會打開Ｍodal */
   const handleOpenProductModal = (mode, product) => {
     setModalMode(mode);
 
@@ -139,8 +125,7 @@ const ProductsManagementPage = () => {
       default:
         break;
     }
-
-    setIsProductModalOpen(true); // 改成用 isOpen 做開關判斷 :不能直接取得getInstance邏輯 → 要改成：setIsProductModalOpen(true);：告訴Modal現在要開
+    setIsProductModalOpen(true);
   };
 
   // 控制分頁元件：新增一個「頁面資訊 pageInfo」的狀態 → 用來儲存頁面資訊
@@ -275,26 +260,6 @@ const ProductsManagementPage = () => {
                 setIsOpen={setIsDelProductModalOpen}
                 getProducts={getProducts}
               />
-
-              {/* 全螢幕Loading
-              {isScreenLoading && (
-                <div
-                  className="d-flex justify-content-center align-items-center"
-                  style={{
-                    position: "fixed", //固定在畫面上，不會隨滾動條移動
-                    inset: 0, //讓 div 充滿整個畫面
-                    backgroundColor: "rgba(255,255,255,0.3)", //半透明白色背景
-                    zIndex: 999, //確保 Loading 畫面顯示在最上層
-                  }}
-                >
-                  <ReactLoading
-                    type="spin"
-                    color="black"
-                    width="4rem"
-                    height="4rem"
-                  />
-                </div>
-              )} */}
             </div>
           </div>
         </div>

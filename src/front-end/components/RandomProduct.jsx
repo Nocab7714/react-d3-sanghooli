@@ -15,7 +15,7 @@ const RandomProduct = () => {
     // || null：如果 products 為空陣列或 undefined，則設為 null，避免報錯。
     const randomProduct =
       products?.[Math.floor(Math.random() * products.length)] || null;
-    navigate(`single-product/${randomProduct?.id}`);
+    navigate(`product-details/${randomProduct?.id}`);
   };
   return (
     <>

@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from "react";
 import { Modal } from "bootstrap";
 import { useDispatch } from "react-redux";
 import { createToast } from "../../slices/toastSlice";
-import { asyncSetLoading } from "../../slices/loadingSlice";
 
 //環境變數
 const { VITE_BASE_URL: baseUrl, VITE_API_PATH: apiPath } = import.meta.env;
@@ -66,10 +65,13 @@ const DelOrdersModal = ({
     setIsScreenLoading(true);
     try {
       const res = await axios.delete(url);
-      dispatch(createToast({
-        success: true,
-        message: deleteMode === "single" ? "此筆訂單已刪除" : "所有訂單已清空"
-      }));
+      dispatch(
+        createToast({
+          success: true,
+          message:
+            deleteMode === "single" ? "此筆訂單已刪除" : "所有訂單已清空",
+        })
+      );
       getOrders(); // 更新訂單列表
       setIsOpen(false);
     } catch (error) {
