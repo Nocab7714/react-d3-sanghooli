@@ -1,8 +1,11 @@
+// 外部資源
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
+// 內部資源
 import ProductCard from "../components/ProductCard";
 import { asyncAddCart } from "../../slices/cartSlice";
+import ReactHelmetAsync from "../../plugins/ReactHelmetAsync";
 
 export default function WishListPage() {
   const dispatch = useDispatch();
@@ -14,9 +17,10 @@ export default function WishListPage() {
   const wishListData = products.filter((product) =>
     wishListTrueId.includes(product.id)
   );
-
+  
   return (
     <>
+      <ReactHelmetAsync title="願望清單" />
       <div className="bg-neutral20">
         <div className="container py-19">
           <div className="text-center pb-19">
