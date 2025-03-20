@@ -8,6 +8,7 @@ import PaginationBackend from '../components/PaginationBackend'
 import { useDispatch } from 'react-redux'
 import { createToast } from '../../slices/toastSlice'
 import { Modal } from 'bootstrap'
+import DelCouponModal from '../components/DelCouponModal'
 
 // 環境變數
 const { VITE_BASE_URL: baseUrl, VITE_API_PATH: apiPath } = import.meta.env
@@ -61,7 +62,7 @@ const CouponManagementPage = () => {
   }
 
   // 分頁點擊
-  const handlePageChenge = (page) => {
+  const handlePageChange = (page) => {
     getCoupons(page)
     window.scrollTo({ top: 100, behavior: 'auto' })
   }
@@ -70,6 +71,9 @@ const CouponManagementPage = () => {
   const couponModalRef = useRef(null) // 綁定 Modal 容器
   const [modalType, setModalType] = useState('') // 'create' 或 'edit'
   const [tempCoupon, setTempCoupon] = useState({})
+
+  // 管理「刪除優惠券 Modal」的顯示
+  const [isDelModalOpen, setIsDelModalOpen] = useState(false)
 
   // 初始化 Bootstrap Modal
   useEffect(() => {
@@ -188,6 +192,10 @@ const CouponManagementPage = () => {
       setIsScreenLoading(false)
     }
   }
+  const handleOpenDelCouponModal = (coupon) => {
+    setTempCoupon(coupon) // 設定要刪除的優惠券
+    setIsDelModalOpen(true) // 打開 DelCouponModal
+  }
 
   // 優惠券時間
   const [dateTime, setDateTime] = useState(new Date())
@@ -238,7 +246,9 @@ const CouponManagementPage = () => {
                           <td>{data.code}</td>
                           <td>{data.percent}%</td>
                           <td>
-                            {new Date(data.due_date).toLocaleString('zh-TW')}
+                            {new Date(data.due_date).toLocaleDateString(
+                              'zh-TW'
+                            )}
                           </td>
                           <td>
                             {data.is_enabled ? (
@@ -261,7 +271,8 @@ const CouponManagementPage = () => {
                               <button
                                 type="button"
                                 className="btn btn-outline-danger"
-                                onClick={() => deleteCoupon(data.id)}
+                                // onClick={() => deleteCoupon(data.id)}
+                                onClick={() => handleOpenDelCouponModal(data)}
                               >
                                 刪除
                               </button>
@@ -272,12 +283,19 @@ const CouponManagementPage = () => {
                     </tbody>
                   </table>
                 )}
+                {/* 刪除優惠券 Modal */}
+                <DelCouponModal
+                  tempCoupon={tempCoupon}
+                  isOpen={isDelModalOpen}
+                  setIsOpen={setIsDelModalOpen}
+                  getCoupons={getCoupons}
+                />
 
                 {/* 分頁元件，只有在有數據時顯示 */}
                 {couponList?.length > 0 && (
                   <PaginationBackend
                     pageInfo={pageInfo}
-                    handlePageChenge={handlePageChenge}
+                    handlePageChange={handlePageChange}
                   />
                 )}
 
@@ -425,7 +443,7 @@ const CouponManagementPage = () => {
                   取消
                 </button>
                 <button type="submit" className="btn btn-primary">
-                  {modalType === 'create' ? '建立' : '確認'}
+                  {modalType === 'create' ? '確認' : '確認'}
                 </button>
               </div>
             </form>

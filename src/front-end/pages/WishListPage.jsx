@@ -1,14 +1,15 @@
+// 外部資源
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
+// 內部資源
 import ProductCard from "../components/ProductCard";
 import { asyncAddCart } from "../../slices/cartSlice";
-import ButtonLoading from "../../plugins/ButtonLoading";
+import ReactHelmetAsync from "../../plugins/ReactHelmetAsync";
 
 export default function WishListPage() {
   const dispatch = useDispatch();
 
-  const actionLoading = useSelector((state) => state.loading.actionLoading);
   const products = useSelector((state) => state.products.products);
   const wishList = useSelector((state) => state.wishList);
 
@@ -16,9 +17,10 @@ export default function WishListPage() {
   const wishListData = products.filter((product) =>
     wishListTrueId.includes(product.id)
   );
-
+  
   return (
     <>
+      <ReactHelmetAsync title="願望清單" />
       <div className="bg-neutral20">
         <div className="container py-19">
           <div className="text-center pb-19">
@@ -37,10 +39,10 @@ export default function WishListPage() {
                             dispatch(asyncAddCart({ productId: product.id, qty: 1}))
                           }
                           type="button"
-                          className={`btn btn-primary fs-6 w-100 px-2 d-flex align-items-center justify-content-center ${product.qty === 0 ? "disabled" : ""}`}
+                          className={`btn btn-primary fs-6 w-100 px-2 d-flex align-items-center justify-content-center ${product.qty == 0 ? "disabled" : ""}`}
                         >
                           {
-                            product.qty === 0 ? "已售完" : (
+                            product.qty == 0 ? "已售完" : (
                               <>
                                 <span className="material-symbols-outlined fs-5 align-middle  me-1">
                                   local_mall

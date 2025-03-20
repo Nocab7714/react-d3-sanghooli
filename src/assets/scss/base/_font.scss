@@ -1,6 +1,11 @@
 // Google Fonts Noto Sans Traditional Chinese
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@100..900&display=swap');
 
+// 卡片字體，使用 Google Font
+// Noto Sans、Merienda、Silkscreen、Fontdiner Swanky
+@import url('https://fonts.googleapis.com/css2?family=Fontdiner+Swanky&family=Merienda:wght@300..900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Silkscreen:wght@400;700&display=swap');
+
+
 // Material icon 設定
 .material-symbols-outlined {
   font-variation-settings:
@@ -13,4 +18,19 @@
 .material-filled {
   font-variation-settings:
   'FILL' 1,
+}
+
+
+// 卡片字體
+.ff-noto-sans{
+  font-family: "Noto Sans", sans-serif;
+}
+.ff-merienda{
+  font-family: "Merienda", sans-serif, cursive;
+}
+.ff-silkscreen{
+  font-family: "Silkscreen", sans-serif;
+}
+.ff-fontdiner-swanky{
+  font-family: "Fontdiner Swanky", sans-serif, serif;
 }
