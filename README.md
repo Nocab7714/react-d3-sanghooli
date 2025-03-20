@@ -124,16 +124,21 @@ react-d3-sanghooli/
 │   │   ├── components/   # 後台元件
 │   │   ├── layout/       # 後台佈局
 │   │   └── Pages/        # 後台頁面
+│   ├── constants/        # 常量定義
 │   ├── example/          # 範例代碼
 │   ├── front-end/        # 前台介面
 │   │   ├── components/   # 前台元件
+│   │   ├── constants/    # 前台常量
+│   │   ├── hooks/        # 自定義 Hooks
 │   │   ├── layout/       # 前台佈局
 │   │   └── pages/        # 前台頁面
+│   ├── hooks/            # 全局自定義 Hooks
 │   ├── plugins/          # 插件
 │   ├── routes/           # 路由配置
-│   ├── slice/            # Redux slice
+│   ├── slices/           # Redux slice
 │   ├── utils/            # 工具函數
-│   ├── main.jsx          # 應用入口點
+│   ├── index.jsx         # 應用入口點
+│   ├── main.jsx          # 主要渲染文件
 │   └── store.js          # Redux store 配置
 ├── .env                  # 環境變數
 ├── .gitignore            # Git 忽略文件

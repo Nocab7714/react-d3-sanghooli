@@ -6,7 +6,6 @@ import { useDispatch } from "react-redux";
 import PaginationBackend from "../components/PaginationBackend";
 import OrdersModal from "../components/OrdersModal";
 import DelOrdersModal from "../components/DelOrdersModal";
-import ReactLoading from "react-loading";
 
 import C3Chart from "../components/C3Chart";
 import ReactHelmetAsync from "../../plugins/ReactHelmetAsync";
@@ -16,11 +15,22 @@ import { asyncSetLoading } from "../../slices/loadingSlice";
 // 環境變數
 const { VITE_BASE_URL: baseUrl, VITE_API_PATH: apiPath } = import.meta.env;
 
-//訂單初始狀態
-
 const OrdersManagementPage = () => {
   const [ordersList, setOrdersList] = useState([]); //先給 ordersList 一個狀態：後續會從API撈回資料塞回ordersList 中
+  //綁定訂單 Modal 狀態
+  const [tempOrder, setTempOrder] = useState(null);
+
+  //新增狀態做「編輯Modal」開關功能控制，預設狀態：關閉（ 帶入false值 ）
+  const [isOrdersModalOpen, setIsOrdersModalOpen] = useState(false);
+
   const [isScreenLoading, setIsScreenLoading] = useState(false);
+
+  //新增狀態做「刪除Modal」開關功能控制，預設狀態：關閉（ 帶入false值 ）
+  const [isDelOrdersModalOpen, setIsDelOrdersModalOpen] = useState(false);
+
+  // 設定刪除模式 (single or all)
+  const [deleteMode, setDeleteMode] = useState("single");
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -45,8 +55,7 @@ const OrdersManagementPage = () => {
       "$1"
     );
     axios.defaults.headers.common["Authorization"] = token; //設定 axios token
-    checkUserLogin(); // 檢查用戶登入狀態
-    getOrders(); // 頁面載入時獲取訂單
+    checkUserLogin().then(() => getOrders()); // 確保登入後才載入訂單
   }, []);
 
   // 在登入成功後，呼叫：管理控制台- 訂單（Orders）> Get API，取得訂單列表
@@ -72,24 +81,9 @@ const OrdersManagementPage = () => {
       setIsScreenLoading(false); // 無論成功或失敗，都關閉 Loading 畫面
     }
   };
-  useEffect(() => {
-    getOrders();
-  }, []);
-
-  //綁定訂單 Modal 狀態
-  const [tempOrder, setTempOrder] = useState(null);
-
-  //新增狀態做「編輯Modal」開關功能控制，預設狀態：關閉（ 帶入false值 ）
-  const [isOrdersModalOpen, setIsOrdersModalOpen] = useState(false);
-
-  //新增狀態做「刪除Modal」開關功能控制，預設狀態：關閉（ 帶入false值 ）
-  const [isDelOrdersModalOpen, setIsDelOrdersModalOpen] = useState(false);
 
   //開啟 modal 方法
   const [modalMode, setModalMode] = useState(null);
-
-  // 設定刪除模式 (single or all)
-  const [deleteMode, setDeleteMode] = useState("single");
 
   // 打開刪除訂單的 Modal，並設置刪除模式
   const handleOpenDelOrdersModal = (order, mode) => {
@@ -100,14 +94,11 @@ const OrdersManagementPage = () => {
     setIsDelOrdersModalOpen(true);
   };
 
-  {
-    /* 點擊「編輯」按鈕，開啟訂單Ｍodal */
-  }
-  //宣告handleOpenOrdersModal(變數)：進行開關產品的Modal：
-  const handleOpenOrdersModal = (order, mode) => {
-    setModalMode(mode); // 根據 mode 設定刪除模式
-    setTempOrder(order); //// 設置 tempOrder，將當前選擇的訂單資料傳遞到 Modal 中
-    setIsOrdersModalOpen(true); // 改成用 isOpen 做開關判斷 :不能直接取得
+  //* 點擊「編輯」按鈕，開啟訂單Ｍodal */
+  const handleOpenOrdersModal = (order) => {
+    setModalMode("edit"); // 設定為 "edit" 模式
+    setTempOrder(order); // 設置選中的訂單
+    setIsOrdersModalOpen(true); // 開啟 Modal
   };
 
   // 刪除「單一」訂單列表資料函式
@@ -193,10 +184,16 @@ const OrdersManagementPage = () => {
 
             {/* 次要功能：最多銷售商品類別C3.js */}
             <div className="managementList mb-10 rounded-3 ">
-              <div className="pt-10 pb-12 ps-5 pe-8">
+              <div className="pt-10 pb-12 ps-8 pe-8">
                 <h4 className="">最多銷售商品類別</h4>
                 <div className="mt-8" id="chart">
                   <C3Chart />
+                </div>
+                <div className="mt-3 text-muted ps-5">
+                  <small>
+                    *
+                    此圖表顯示各產品類別的總銷售數量，幫助您了解哪些產品類別最受歡迎
+                  </small>
                 </div>
               </div>
             </div>
@@ -206,7 +203,7 @@ const OrdersManagementPage = () => {
                 {/* 沒商品時顯示商品管理頁面顯示： 目前尚未有任何商品資料 */}
                 {ordersList.length === 0 ? (
                   <div className="text-center p-5">
-                    <h2 className="text-neutral60">目前尚未有任何商品資料</h2>
+                    <h2 className="text-neutral60">目前尚未有任何訂單資料</h2>
                   </div>
                 ) : (
                   // 商品管理有商品時呈現畫面
@@ -229,8 +226,8 @@ const OrdersManagementPage = () => {
 
                       {/* 單個訂單的刪除按鈕 */}
                       <tbody>
-                        {ordersList.map((order) => (
-                          <tr key={order.id} className="align-middle">
+                        {ordersList.map((order, index) => (
+                          <tr key={index} className="align-middle">
                             <td scope="row">{order.id}</td>
                             <td>
                               {order.is_paid ? (
@@ -258,9 +255,7 @@ const OrdersManagementPage = () => {
                               <div className="btn-group">
                                 <button
                                   type="button"
-                                  onClick={() =>
-                                    handleOpenOrdersModal("edit", order)
-                                  }
+                                  onClick={() => handleOpenOrdersModal(order)}
                                   className="btn btn-primary btn-outline-primary-dark"
                                 >
                                   編輯
@@ -283,7 +278,7 @@ const OrdersManagementPage = () => {
                   </div>
                 )}
 
-                {/* 分頁元件，條件設定只有當 productList 有數據時，才顯示分頁 */}
+                {/* 分頁元件，條件設定只有當 OrderList 有數據時，才顯示分頁 */}
                 {ordersList?.length > 0 && (
                   <PaginationBackend
                     pageInfo={pageInfo}
@@ -310,26 +305,6 @@ const OrdersManagementPage = () => {
                   removeOrderItem={removeOrderItem}
                   removeAllOrders={removeAllOrders}
                 />
-
-                {/* 全螢幕Loading
-                {isScreenLoading && (
-                  <div
-                    className="d-flex justify-content-center align-items-center"
-                    style={{
-                      position: "fixed", //固定在畫面上，不會隨滾動條移動
-                      inset: 0, //讓 div 充滿整個畫面
-                      backgroundColor: "rgba(255,255,255,0.3)", //半透明白色背景
-                      zIndex: 999, //確保 Loading 畫面顯示在最上層
-                    }}
-                  >
-                    <ReactLoading
-                      type="spin"
-                      color="black"
-                      width="4rem"
-                      height="4rem"
-                    />
-                  </div>
-                )} */}
               </div>
             </div>
           </div>

@@ -1,11 +1,15 @@
+// 外部資源
 import { Link, useNavigate, useParams } from "react-router-dom";
-import orderSuccess from "../../assets/img/illustration/orderSuccess.webp"
-import CartStep from "../components/CartStep";
 import { useCallback, useEffect, useState } from "react";
 import axios from "axios";
-import NotFoundPage from "./NotFoundPage";
 import { useDispatch } from "react-redux";
+
+// 內部資源
+import orderSuccess from "../../assets/img/illustration/orderSuccess.webp"
+import CartStep from "../components/CartStep";
+import NotFoundPage from "./NotFoundPage";
 import { asyncSetLoading } from "../../slices/loadingSlice";
+import ReactHelmetAsync from "../../plugins/ReactHelmetAsync";
 
 // 環境變數
 const BASE_URL = import.meta.env.VITE_BASE_URL;
@@ -37,10 +41,10 @@ export default function SuccessPage(){
     getOrder(orderId);
     
   }, [orderId, getOrder])
-
+  
   return (
     <>
-      
+      <ReactHelmetAsync title="訂購完成" />
       <div className="container py-lg-19">
         {
           orderData === null ? <NotFoundPage /> :

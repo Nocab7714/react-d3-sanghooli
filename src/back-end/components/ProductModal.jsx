@@ -59,14 +59,12 @@ const ProductModal = ({
   setIsOpen,
   getProducts,
 }) => {
-  
   const dispatch = useDispatch();
   //不希望Modal改到tempProduct：再建立新的狀態，預設值帶入tempProduct
   const [modalData, setModalData] = useState({
     ...tempProduct,
     tages: tempProduct?.tages || [], //確保 tages 不為 undefined
   });
-
 
   useEffect(() => {
     if (modalMode === "create") {
@@ -197,7 +195,9 @@ const ProductModal = ({
     });
   };
 
-  {/* 串接新增商品 API */}
+  {
+    /* 串接新增商品 API */
+  }
   const createProduct = async () => {
     try {
       const res = await axios.post(`${baseUrl}/api/${apiPath}/admin/product`, {
@@ -237,10 +237,20 @@ const ProductModal = ({
           },
         }
       );
-      dispatch(createToast(res.data.message))
+      dispatch(createToast(res.data.message));
+      dispatch(
+        createToast({
+          success: true,
+          message: "商品資訊已編輯更新成功",
+        })
+      );
     } catch (error) {
-      const { success, message } = error.response.data.message;
-      dispatch(createToast({ success, message: `編輯產品失敗！${message}`}))
+      dispatch(
+        createToast({
+          success: false,
+          message: "商品編輯、更新失敗",
+        })
+      );
     }
   };
 
@@ -261,10 +271,9 @@ const ProductModal = ({
   }
   const handlUpdateProduct = async () => {
     if (!modalData.title || !modalData.category || !modalData.price) {
-
       dispatch(
         createToast({
-          success: true,
+          success: false,
           message: "請填寫完整的產品資訊！",
         })
       );
@@ -284,8 +293,13 @@ const ProductModal = ({
       );
     } catch (error) {
       // 失敗時僅顯示錯誤訊息，不關閉 Modal
-      const { success, message} = error.response.data.message;
-      dispatch(createToast({ success, message: `更新產品失敗，請檢查輸入內容！${message}`}));
+      const { success, message } = error.response.data.message;
+      dispatch(
+        createToast({
+          success,
+          message: `更新產品失敗，請檢查輸入內容！${message}`,
+        })
+      );
     }
   };
 
@@ -305,11 +319,10 @@ const ProductModal = ({
       );
       dispatch(
         createToast({
-          success: false,
+          success: true,
           message: "上傳圖片成功",
         })
       );
-
 
       const uploadedImagerl = res.data.imageUrl;
 

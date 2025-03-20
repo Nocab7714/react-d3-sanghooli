@@ -1,9 +1,11 @@
+// 外部資源
 import { useForm, useWatch } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import axios from "axios";
 
+// 內部資源
 import Input from "../components/form/Input";
 import Textarea from "../components/form/Textarea";
 import CheckboxRadio from "../components/form/CheckboxRadio";
@@ -12,6 +14,7 @@ import { asyncGetCart } from "../../slices/cartSlice";
 import EmptyBasket from "../components/EmptyBasket";
 import { createAlert } from "../../slices/alertSlice";
 import CheckoutWriteCard from "../components/CheckoutWriteCard";
+import ReactHelmetAsync from "../../plugins/ReactHelmetAsync";
 
 // 環境變數
 const BASE_URL = import.meta.env.VITE_BASE_URL;
@@ -73,22 +76,23 @@ export default function CheckoutPage(){
   }, [dispatch])
 
 
-  // // 填寫電子賀卡
-  // // 若不填寫賀卡，就將下方關於賀卡的資料都設為 null
-  // useEffect(() => {
-  //   if (watchForm.isWriteCard === false){
-  //     setValue('cardContent', null)
-  //     setValue('cardFont', null)
-  //     setValue('cardFrom', null)
-  //     setValue('cardRecipient', null)
-  //     setValue('cardType', null)
-  //     setValue('wrapping', null)
-  //     clearErrors(['cardContent', 'cardFont', 'cardFrom', 'cardRecipient', 'cardType']);
-  //   } 
-  // }, [watchForm.isWriteCard, setValue, clearErrors])
+  // 填寫電子賀卡
+  // 若不填寫賀卡，就將下方關於賀卡的資料都設為 null
+  useEffect(() => {
+    if (watchForm.isWriteCard === false){
+      setValue('cardContent', null)
+      setValue('cardFont', null)
+      setValue('cardFrom', null)
+      setValue('cardRecipient', null)
+      setValue('cardType', null)
+      setValue('wrapping', null)
+      clearErrors(['cardContent', 'cardFont', 'cardFrom', 'cardRecipient', 'cardType']);
+    } 
+  }, [watchForm.isWriteCard, setValue, clearErrors])
 
   return (
     <>
+      <ReactHelmetAsync title="填寫資料" />
       <main className="bg-neutral20">
         <div className="container py-lg-19">
           {
@@ -227,7 +231,7 @@ export default function CheckoutPage(){
                         </div>
                       </div>
                     </div>
-                    {/* <CheckboxRadio
+                    <CheckboxRadio
                       register={register}
                       errors={errors}
                       id="isWriteCard"
@@ -246,7 +250,7 @@ export default function CheckoutPage(){
                           watchForm={watchForm}
                         />
                       )
-                    } */}
+                    }
                     <div className="row">
                       <div className="col-lg-8">
                         <CheckboxRadio

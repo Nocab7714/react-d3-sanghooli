@@ -27,7 +27,7 @@ const ProductCard = ({ product, showIsHot = false }) => {
             favorite
           </span>
         </button>
-        <Link to={`/single-product/${product.id}`} className="product-card">
+        <Link to={`/product-details/${product.id}`} className="product-card">
           <div className="card border-0 position-relative">
             <div className="card-bg"></div>
             <div className="position-relative z-3">

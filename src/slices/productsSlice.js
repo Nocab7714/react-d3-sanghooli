@@ -17,10 +17,11 @@ export const productsSlice = createSlice({
     }, // 存放篩選條件
   },
   reducers: {
+    // 更新後 (篩選條件)
     setFilteredProductsData: (state, action) => {
       state.filteredProductsData = action.payload;
-      console.log('Redux state 更新後 (篩選條件):', state.filteredProductsData);
     },
+    // 清除篩選條件
     clearFilters: (state) => {
       state.filteredProductsData = {
         festival: '',
@@ -28,8 +29,7 @@ export const productsSlice = createSlice({
         category: '',
         priceRange: '',
         searchValue: '',
-      }; // 清空篩選條件
-      console.log('Redux state 已清除篩選條件:', state.filteredProductsData);
+      };
     },
   },
   extraReducers: (builder) => {
@@ -51,8 +51,7 @@ export const getProducts = createAsyncThunk(
       const res = await axios.get(`${baseUrl}/api/${apiPath}/products/all`);
       return res.data.products; // 回傳全部商品資料
     } catch (error) {
-      alert('取得產品失敗');
-      return rejectWithValue(error.response?.data || error.message);
+      return rejectWithValue(error.response?.data || error.message); // 回傳取得產品失敗資訊
     } finally {
       dispatch(asyncSetLoading(['globalLoading', false]));
     }
