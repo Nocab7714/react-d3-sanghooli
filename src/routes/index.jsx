@@ -5,7 +5,7 @@ import NotFoundPage from '../front-end/pages/NotFoundPage.jsx'
 import HomePage from '../front-end/pages/HomePage.jsx'
 import AboutUsPage from '../front-end/pages/AboutUsPage.jsx'
 import ProductsListPage from '../front-end/pages/ProductsListPage.jsx'
-import SingleProductPage from '../front-end/pages/SingleProductPage.jsx'
+import ProductDetailsPage from '../front-end/pages/ProductDetailsPage.jsx'
 import PrivacyPolicyPage from '../front-end/pages/PrivacyPolicyPage.jsx'
 import HowToBuyPage from '../front-end/pages/HowToBuyPage.jsx'
 import CartPage from '../front-end/pages/CartPage.jsx'
@@ -45,8 +45,8 @@ const routes = [
         element: <ProductsListPage />,
       },
       {
-        path: 'single-product/:id',
-        element: <SingleProductPage />,
+        path: 'product-details/:id',
+        element: <ProductDetailsPage />,
       },
       {
         path: 'privacy-policy',
@@ -97,10 +97,6 @@ const routes = [
         path: 'wish-list',
         element: <WishListPage />,
       },
-      // {
-      //   path : '*',
-      //   element: <NotFoundPage />
-      // },
     ],
   },
   {

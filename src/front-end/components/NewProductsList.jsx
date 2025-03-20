@@ -25,7 +25,7 @@ const NewProductsList = ({
               className="new-product-item "
               key={`new-product-item-${product.id}`}
             >
-              <Link to={`/single-product/${product.id}`}>
+              <Link to={`/product-details/${product.id}`}>
                 <div className="new-product-item-bg"></div>
                 <div
                   className={`d-flex align-items-center border-neutral40 py-4 z-3 ${
