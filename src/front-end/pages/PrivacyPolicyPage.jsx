@@ -1,5 +1,5 @@
 // 外部資源
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import Breadcrumb from '../components/Breadcrumb.jsx';
 import ReactHelmetAsync from '../../plugins/ReactHelmetAsync';
 
@@ -38,20 +38,6 @@ const PrivacyPolicyPage = () => {
           block: "center" });
       }
     };
-
-    // 監聽滾動事件：內部控制 activeLink，確保點擊 GoToTop 時，左側的「隱私權政策」錨點會亮起
-    // 0305發現：會影響服務條款（錨點第二項標題）點擊的 activeLink呈現效果，因此先隱定
-    // useEffect(() => {
-    //     const handleScroll = () => {
-    //     if (window.scrollY < 50) {
-    //         setActiveLink("privacy-policy");
-    //     }
-    //     };
-
-    //     window.addEventListener("scroll", handleScroll);
-    //     return () => window.removeEventListener("scroll", handleScroll);
-    // }, []);
-
 
     return(
         <>

@@ -42,10 +42,13 @@ export const AdminAuthProvider = ({ children }) => {
       await axios.post(`${baseUrl}/api/user/check`);
       setIsLoggedIn(true);
     } catch (error) {
-      const { success, message } = error.response.data.message;
       dispatch(
-        createToast({ success, message: `登入失敗，請稍後再試！${message}` })
+        createToast({
+          success: false,
+          message: "登入失敗，請稍後再試！",
+        })
       );
+    } finally {
       setIsLoggedIn(false);
     }
   };
@@ -93,6 +96,7 @@ export const AdminAuthProvider = ({ children }) => {
 
   // 登出函式＋登出時重設狀態並回到首頁
   const handleLogout = async () => {
+    dispatch(asyncSetLoading(["sectionLoading", true]));
     try {
       await axios.post(`${baseUrl}/logout`);
 
@@ -105,6 +109,8 @@ export const AdminAuthProvider = ({ children }) => {
       navigate("/admin/login"); // 登出後導向登入頁面
     } catch (error) {
       console.error(error);
+    } finally {
+      dispatch(asyncSetLoading(["sectionLoading", false]));
     }
   };
 
