@@ -66,17 +66,19 @@ const Pagination = ({ paginationData, onPageChange }) => {
   };
 
   const generatePagination = () => {
+    // 總頁數小於等於5時，顯示所有頁碼
     if (total_pages <= 5)
       return Array.from({ length: total_pages }, (_, i) => i + 1);
 
+    // 當前頁小於等於3時，顯示前3頁，省略號，和最後一頁
     if (current_page <= 3) return [1, 2, 3, '...', total_pages];
 
+    // 當前頁接近尾頁時，顯示省略號和最後3頁
     if (current_page >= total_pages - 2)
-      return [1, '...', total_pages - 2, total_pages - 1, total_pages];
+      return ['...', total_pages - 2, total_pages - 1, total_pages];
 
+    // 當前頁在中間位置時，只顯示當前頁及其前後頁，然後是省略號和最後一頁
     return [
-      1,
-      '...',
       current_page - 1,
       current_page,
       current_page + 1,

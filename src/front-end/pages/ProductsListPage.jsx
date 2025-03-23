@@ -56,8 +56,6 @@ const ProductsListPage = () => {
 
   // 使用分頁 hook
   const {
-    // eslint-disable-next-line no-unused-vars
-    currentPage,
     setCurrentPage,
     paginatedItems,
     paginationData,
