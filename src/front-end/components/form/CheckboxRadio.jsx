@@ -43,4 +43,5 @@ CheckboxRadio.propTypes = {
   name: PropTypes.string.isRequired,
   img: PropTypes.string,
   rules: PropTypes.object,
+  value: PropTypes.string,
 };

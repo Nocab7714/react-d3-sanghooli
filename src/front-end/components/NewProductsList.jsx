@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import PropTypes from "prop-types";
+import PropTypes from 'prop-types';
 
 const NewProductsList = ({
   products,
@@ -63,7 +63,14 @@ const NewProductsList = ({
 export default NewProductsList;
 
 NewProductsList.propTypes = {
-  products: PropTypes.array,
+  products: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string,
+      title: PropTypes.string,
+      category: PropTypes.string,
+      imageUrl: PropTypes.string,
+    })
+  ),
   listTitle: PropTypes.string,
-  iconMaterial: PropTypes.string,
+  iconMaterial: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
 };

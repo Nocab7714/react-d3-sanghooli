@@ -93,7 +93,7 @@ export default ProductCard;
 ProductCard.propTypes = {
   product: PropTypes.shape({
     id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-    is_hot: PropTypes.bool.isRequired,
+    is_hot: PropTypes.oneOfType([PropTypes.bool, PropTypes.number]).isRequired,
     imageUrl: PropTypes.string.isRequired,
     category: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
