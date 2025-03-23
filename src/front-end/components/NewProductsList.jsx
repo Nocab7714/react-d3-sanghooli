@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import PropTypes from "prop-types";
 
 const NewProductsList = ({
   products,
@@ -60,3 +61,9 @@ const NewProductsList = ({
 };
 
 export default NewProductsList;
+
+NewProductsList.propTypes = {
+  products: PropTypes.array,
+  listTitle: PropTypes.string,
+  iconMaterial: PropTypes.string,
+};

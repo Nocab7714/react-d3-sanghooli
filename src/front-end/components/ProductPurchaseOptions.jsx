@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
+import PropTypes from 'prop-types';
 
 const { VITE_BASE_URL: baseUrl, VITE_API_PATH: apiPath } = import.meta.env;
 
@@ -106,3 +107,8 @@ const ProductPurchaseOptions = ({ productId, product }) => {
 };
 
 export default ProductPurchaseOptions;
+
+ProductPurchaseOptions.propTypes = {
+  productId: PropTypes.string,
+  product: PropTypes.object,
+};

@@ -1,5 +1,6 @@
 import { forwardRef } from 'react';
 import { sortOptions } from '../constants/filterOptions';
+import PropTypes from 'prop-types';
 
 const SearchResultHeader = forwardRef(
   ({ resultsCount, sortOption, onSortChange }, ref) => {
@@ -48,3 +49,9 @@ const SearchResultHeader = forwardRef(
 SearchResultHeader.displayName = 'SearchResultHeader';
 
 export default SearchResultHeader;
+
+SearchResultHeader.propTypes = {
+  resultsCount: PropTypes.number,
+  sortOption: PropTypes.string,
+  onSortChange: PropTypes.func,
+};

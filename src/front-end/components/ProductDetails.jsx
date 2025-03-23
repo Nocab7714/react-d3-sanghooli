@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
+import PropTypes from 'prop-types';
 
 const { VITE_BASE_URL: baseUrl, VITE_API_PATH: apiPath } = import.meta.env;
 
@@ -184,9 +185,7 @@ const ProductDetails = ({ product, productId }) => {
                     <span className="material-symbols-outlined  me-1">
                       local_mall
                     </span>
-                    {
-                      product.qty <= 0 ? '已售完' : '加入購物車'
-                    }
+                    {product.qty <= 0 ? '已售完' : '加入購物車'}
                   </button>
                 </div>
               </div>
@@ -199,3 +198,8 @@ const ProductDetails = ({ product, productId }) => {
 };
 
 export default ProductDetails;
+
+ProductDetails.propTypes = {
+  product: PropTypes.object,
+  productId: PropTypes.string,
+};

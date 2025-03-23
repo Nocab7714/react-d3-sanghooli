@@ -1,5 +1,5 @@
 // 外部資源
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 // Import Swiper React components
 import { Swiper, SwiperSlide } from 'swiper/react';
 // import Swiper core and required modules
@@ -10,6 +10,7 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import 'swiper/css/autoplay';
 import ProductCard from './ProductCard';
+import PropTypes from 'prop-types';
 
 function SwiperProducts({ carouselData, autoplay = false }) {
   const swiperRef = useRef(null);
@@ -101,3 +102,8 @@ function SwiperProducts({ carouselData, autoplay = false }) {
 }
 
 export default SwiperProducts;
+
+SwiperProducts.propTypes = {
+  carouselData: PropTypes.array,
+  autoplay: PropTypes.bool,
+};

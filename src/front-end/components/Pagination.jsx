@@ -1,4 +1,5 @@
 import Swal from 'sweetalert2';
+import PropTypes from 'prop-types';
 
 const Pagination = ({ paginationData, onPageChange }) => {
   if (!paginationData) {
@@ -11,17 +12,20 @@ const Pagination = ({ paginationData, onPageChange }) => {
     if (page >= 1 && page <= total_pages && page !== current_page) {
       // 調用頁面變化處理函數
       onPageChange(page);
-      
+
       // 強制滾動到上方
       // 這是一個備用方法，以防頁面組件的滾動邏輯失敗
       setTimeout(() => {
-        const searchTitle = document.querySelector('[data-scroll-target="search-results"]');
+        const searchTitle = document.querySelector(
+          '[data-scroll-target="search-results"]'
+        );
         if (searchTitle) {
-          const offsetTop = searchTitle.getBoundingClientRect().top + window.scrollY;
+          const offsetTop =
+            searchTitle.getBoundingClientRect().top + window.scrollY;
           const offsetAdjustment = 180;
           window.scrollTo({
             top: Math.max(0, offsetTop - offsetAdjustment),
-            behavior: 'smooth'
+            behavior: 'smooth',
           });
         }
       }, 150);
@@ -171,3 +175,13 @@ const Pagination = ({ paginationData, onPageChange }) => {
 };
 
 export default Pagination;
+
+Pagination.propTypes = {
+  paginationData: PropTypes.shape({
+    total_pages: PropTypes.number.isRequired,
+    current_page: PropTypes.number.isRequired,
+    has_pre: PropTypes.bool.isRequired,
+    has_next: PropTypes.bool.isRequired,
+  }).isRequired,
+  onPageChange: PropTypes.func.isRequired,
+};
