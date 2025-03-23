@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
+import PropTypes from 'prop-types';
 
 const { VITE_BASE_URL: baseUrl, VITE_API_PATH: apiPath } = import.meta.env;
 
@@ -20,7 +21,9 @@ const ProductDetails = ({ product, productId }) => {
   useEffect(() => {
     // 確保 product 是有效物件且 product.qty 存在才設置
     if (product && typeof product.qty !== 'undefined') {
-      setProductStockQty(product.qty);
+      // 將字串轉為數字
+      const qtyNumber = Number(product.qty);
+      setProductStockQty(qtyNumber);
       setProductQty(1);
     }
   }, [product, productId]);
@@ -118,22 +121,17 @@ const ProductDetails = ({ product, productId }) => {
                     {product?.content?.notes}
                   </p>
                 </div>
-                {/* 熱門度 - 區塊保留 */}
-                {/* <div className="d-flex justify-content-between align-items-center">
-                      <p className="card-text fs-7 text-neutral60">熱門度</p>
-                      <p className="card-text fs-7 fw-semibold text-end w-md-75 w-50">
-                        已售出 50 次
-                      </p>
-                    </div> */}
               </div>
             </div>
             {/* product-price */}
             <p className="d-flex align-items-center fs-5 fs-md-3 fw-semibold fw-md-bold text-primary-dark  mb-0 mb-md-8">
               NT$&nbsp;
-              <span className="me-4 me-md-6">{product.price}</span>
+              <span className="me-4 me-md-6">
+                {Number(product.price).toLocaleString()}
+              </span>
               {product.origin_price !== product.price && (
                 <span className="fs-6 fs-md-5 fw-normal text-decoration-line-through text-neutral60">
-                  NT$&nbsp;{product.origin_price}
+                  NT$&nbsp;{Number(product.origin_price).toLocaleString()}
                 </span>
               )}
             </p>
@@ -149,7 +147,7 @@ const ProductDetails = ({ product, productId }) => {
                   />
                 </div>
                 <span className="fs-6 text-neutral60">
-                  庫存尚有{product.qty}件
+                  庫存尚有{Number(product.qty)}件
                 </span>
               </div>
               {/* add-to-cart & add-to-favorite */}
@@ -176,7 +174,7 @@ const ProductDetails = ({ product, productId }) => {
                     onClick={() => addCartItem(product.id)}
                     type="button"
                     className="btn btn-primary w-100 d-flex align-items-center justify-content-center"
-                    disabled={product.qty <= 0 || isLoadingAddCart}
+                    disabled={Number(product.qty) <= 0 || isLoadingAddCart}
                   >
                     <span className={isLoadingAddCart ? 'me-3' : ''}>
                       <ButtonLoading isLoading={isLoadingAddCart} />
@@ -184,9 +182,7 @@ const ProductDetails = ({ product, productId }) => {
                     <span className="material-symbols-outlined  me-1">
                       local_mall
                     </span>
-                    {
-                      product.qty <= 0 ? '已售完' : '加入購物車'
-                    }
+                    {Number(product.qty) <= 0 ? '已售完' : '加入購物車'}
                   </button>
                 </div>
               </div>
@@ -199,3 +195,22 @@ const ProductDetails = ({ product, productId }) => {
 };
 
 export default ProductDetails;
+
+ProductDetails.propTypes = {
+  product: PropTypes.shape({
+    id: PropTypes.string,
+    title: PropTypes.string,
+    description: PropTypes.string,
+    price: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    origin_price: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    qty: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    imageUrl: PropTypes.string,
+    content: PropTypes.shape({
+      material_contents: PropTypes.string,
+      expiry_date: PropTypes.string,
+      origin: PropTypes.string,
+      notes: PropTypes.string,
+    }),
+  }),
+  productId: PropTypes.string,
+};

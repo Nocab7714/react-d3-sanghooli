@@ -27,7 +27,7 @@ const SelectExample = () => {
       {/* select no-selected disabled */}
       <div className="mb-5">
         <select className="form-select">
-          <option value="" selected >
+          <option value="" selected>
             請選擇價格範圍
           </option>
           {selectData.map((item, index) => {

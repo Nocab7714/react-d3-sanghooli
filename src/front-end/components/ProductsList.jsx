@@ -1,4 +1,5 @@
 import ProductCard from './ProductCard';
+import PropTypes from 'prop-types';
 
 const ProductsList = ({ products, showIsHot = true }) => {
   return (
@@ -19,3 +20,8 @@ const ProductsList = ({ products, showIsHot = true }) => {
 };
 
 export default ProductsList;
+
+ProductsList.propTypes = {
+  products: PropTypes.array,
+  showIsHot: PropTypes.bool,
+};

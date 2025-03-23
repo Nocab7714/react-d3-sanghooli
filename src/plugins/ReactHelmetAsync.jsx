@@ -2,8 +2,9 @@
 // 套件連結 : https://www.npmjs.com/package/react-helmet-async
 
 import { Helmet, HelmetProvider } from 'react-helmet-async';
+import PropTypes from 'prop-types';
 
-const ReactHelmetAsync = ({title="請設定 title"}) => {
+const ReactHelmetAsync = ({ title = '請設定 title' }) => {
   return (
     <>
       <HelmetProvider>
@@ -16,3 +17,7 @@ const ReactHelmetAsync = ({title="請設定 title"}) => {
 };
 
 export default ReactHelmetAsync;
+
+ReactHelmetAsync.propTypes = {
+  title: PropTypes.string,
+};

@@ -1,18 +1,18 @@
 // 外部資源
-import { useCallback, useEffect, useState } from "react";
-import axios from "axios";
-import SwiperProducts from "../components/SwiperProducts";
-import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
-import { useForm, useWatch } from "react-hook-form";
+import { useCallback, useEffect, useState } from 'react';
+import axios from 'axios';
+import SwiperProducts from '../components/SwiperProducts';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
+import { useForm, useWatch } from 'react-hook-form';
 
 // 內部資源
-import EmptyBasket from "../components/EmptyBasket";
-import CartStep from "../components/CartStep";
-import { asyncGetCart } from "../../slices/cartSlice";
-import { asyncSetLoading } from "../../slices/loadingSlice";
-import { createAlert } from "../../slices/alertSlice";
-import ReactHelmetAsync from "../../plugins/ReactHelmetAsync";
+import EmptyBasket from '../components/EmptyBasket';
+import CartStep from '../components/CartStep';
+import { asyncGetCart } from '../../slices/cartSlice';
+import { asyncSetLoading } from '../../slices/loadingSlice';
+import { createAlert } from '../../slices/alertSlice';
+import ReactHelmetAsync from '../../plugins/ReactHelmetAsync';
 
 // 環境變數
 const BASE_URL = import.meta.env.VITE_BASE_URL;
@@ -26,7 +26,7 @@ function CartPage() {
   const dispatch = useDispatch();
 
   const updateCart = async (cartId, productId, qty) => {
-    dispatch(asyncSetLoading(["sectionLoading", true]));
+    dispatch(asyncSetLoading(['sectionLoading', true]));
     try {
       qty = Number(qty);
       if (isNaN(qty) || qty < 1) qty = 1;
@@ -42,12 +42,12 @@ function CartPage() {
     } catch (error) {
       console.error(error);
     } finally {
-      dispatch(asyncSetLoading(["sectionLoading", false]));
+      dispatch(asyncSetLoading(['sectionLoading', false]));
     }
   };
 
   const deleteCartOne = async (cartId) => {
-    dispatch(asyncSetLoading(["sectionLoading", true]));
+    dispatch(asyncSetLoading(['sectionLoading', true]));
     try {
       const url = `${BASE_URL}/api/${API_PATH}/cart/${cartId}`;
       await axios.delete(url);
@@ -55,7 +55,7 @@ function CartPage() {
     } catch (error) {
       console.error(error);
     } finally {
-      dispatch(asyncSetLoading(["sectionLoading", false]));
+      dispatch(asyncSetLoading(['sectionLoading', false]));
     }
   };
 
@@ -63,11 +63,10 @@ function CartPage() {
     try {
       const url = `${BASE_URL}/api/${API_PATH}/carts`;
       const response = await axios.delete(url);
-      return response.data.success
-      
+      return response.data.success;
     } catch (error) {
       console.error(error);
-      return error.response.data.success
+      return error.response.data.success;
     }
   };
 
@@ -77,7 +76,7 @@ function CartPage() {
     (categories) => {
       // 取得與參數 categories 相同的所有產品
       const filteredProducts =
-        categories?.length === 0 || categories === "all"
+        categories?.length === 0 || categories === 'all'
           ? [...products]
           : products.filter((item) => categories.includes(item.category));
 
@@ -117,7 +116,7 @@ function CartPage() {
     if (cartCategories) {
       getRecommendedProducts(cartCategories);
     } else {
-      getRecommendedProducts("all"); // 使用 'all' 類別
+      getRecommendedProducts('all'); // 使用 'all' 類別
     }
   }, [getRecommendedProducts]);
   // 只當頁面載入時觸發 getRecommendedProducts 就好，不要每次 cartCategories 更新時觸發 getRecommendedProducts，因此不填入 cartCategories 依賴。
@@ -125,21 +124,21 @@ function CartPage() {
   // 使用優惠券
   const [isCouponValid, setIsCouponValid] = useState(null);
   const [couponResult, setCouponResult] = useState({
-    text: "",
-    className: ""
+    text: '',
+    className: '',
   });
-  
+
   const { register, control, reset } = useForm({
     defaultValues: {
-      coupon: coupon
-    }
+      coupon: coupon,
+    },
   });
   const watchForm = useWatch({
     control,
   });
 
-  const applyCoupon = useCallback(async () => {   
-    if(watchForm.coupon === "" ) return; 
+  const applyCoupon = useCallback(async () => {
+    if (watchForm.coupon === '') return;
     try {
       const url = `${BASE_URL}/api/${API_PATH}/coupon`;
       const data = {
@@ -150,88 +149,96 @@ function CartPage() {
       const response = await axios.post(url, data);
       setIsCouponValid(response.data.success);
       setCouponResult({
-        text: "您的優惠券已成功套用！",
-        className: "text-success"
-      })
+        text: '您的優惠券已成功套用！',
+        className: 'text-success',
+      });
       dispatch(asyncGetCart());
     } catch (error) {
       console.error(error);
       setIsCouponValid(error.response.data.success);
       setCouponResult({
-        text: "輸入的優惠代碼無效，請重新檢查是否輸入有誤或是已過期！",
-        className: "text-secondary"
-      })
+        text: '輸入的優惠代碼無效，請重新檢查是否輸入有誤或是已過期！',
+        className: 'text-secondary',
+      });
     }
-  }, [dispatch, watchForm.coupon]) 
+  }, [dispatch, watchForm.coupon]);
 
-  const removeCoupon = useCallback(async () => {    
+  const removeCoupon = useCallback(async () => {
     try {
       setCouponResult({
-        text: "移除中...",
-        className: "text-dark"
-      })
+        text: '移除中...',
+        className: 'text-dark',
+      });
 
-      if(await deleteCartAll()){
-        const savedCarts = JSON.parse(localStorage.getItem("carts"));
-      
+      if (await deleteCartAll()) {
+        const savedCarts = JSON.parse(localStorage.getItem('carts'));
+
         let successfullyReset = true;
-        for(const cart of savedCarts) {
+        for (const cart of savedCarts) {
           try {
             const url = `${BASE_URL}/api/${API_PATH}/cart`;
             const data = {
-            data: {
-              product_id: cart.product_id,
-              qty: Number(cart.qty),
-            },
-          };
-          const response = await axios.post(url, data);
-          
-          if(!response.data.success){
-            throw new Error("Add item failed");
-          }
+              data: {
+                product_id: cart.product_id,
+                qty: Number(cart.qty),
+              },
+            };
+            const response = await axios.post(url, data);
+
+            if (!response.data.success) {
+              throw new Error('Add item failed');
+            }
           } catch (error) {
             console.error(error);
-            
+
             const { success } = error.response.data;
-            dispatch(createAlert({success, message: '優惠券移除失敗，進入結帳流程前，請再次確認購物車品項是否正確'}))
+            dispatch(
+              createAlert({
+                success,
+                message:
+                  '優惠券移除失敗，進入結帳流程前，請再次確認購物車品項是否正確',
+              })
+            );
             successfullyReset = false;
-            break
+            break;
           }
         }
-        if(successfullyReset){
-          reset({coupon: ""})
+        if (successfullyReset) {
+          reset({ coupon: '' });
           setIsCouponValid(null);
           setCouponResult({
-            text: "已移除優惠券！",
-            className: "text-success"
-          })
-          
+            text: '已移除優惠券！',
+            className: 'text-success',
+          });
         }
-        dispatch(asyncGetCart({skipSectionLoading: true}));
+        dispatch(asyncGetCart({ skipSectionLoading: true }));
+      } else {
+        throw new Error('Delete cart failed');
       }
-      else {
-        throw new Error("Delete cart failed")
-      }
-      
     } catch (error) {
       console.error(error);
       setCouponResult({
-        text: "優惠券移除失敗，請與客服人員聯繫！",
-        className: "text-secondary"
-      })
-      dispatch(createAlert({success: false, message: '優惠券移除失敗，請與客服人員聯繫'}))
+        text: '優惠券移除失敗，請與客服人員聯繫！',
+        className: 'text-secondary',
+      });
+      dispatch(
+        createAlert({
+          success: false,
+          message: '優惠券移除失敗，請與客服人員聯繫',
+        })
+      );
     }
-  }, [dispatch, reset]) 
+  }, [dispatch, reset]);
 
   useEffect(() => {
-    if (coupon){
-      applyCoupon()
+    if (coupon) {
+      applyCoupon();
     }
-  }, [coupon, applyCoupon])
+  }, [coupon, applyCoupon]);
 
   useEffect(() => {
-    reset({ coupon })
-  }, [coupon, reset])
+    reset({ coupon });
+  }, [coupon, reset]);
 
   useEffect(() => {
     dispatch(asyncGetCart({ skipSectionLoading: false }));
@@ -287,7 +294,7 @@ function CartPage() {
                             {cartItem.product.price !==
                               cartItem.product.origin_price && (
                               <del className="text-neutral60">
-                                NT${" "}
+                                NT${' '}
                                 {cartItem.product.origin_price * cartItem.qty}
                               </del>
                             )}
@@ -388,7 +395,7 @@ function CartPage() {
                                   cartItem.product.origin_price && (
                                   <>
                                     <del className="text-neutral60 ms-md-2">
-                                      NT${" "}
+                                      NT${' '}
                                       {cartItem.product.origin_price.toLocaleString()}
                                     </del>
                                   </>
@@ -397,7 +404,7 @@ function CartPage() {
                               <td className="">
                                 <div
                                   className="d-flex position-relative"
-                                  style={{ maxWidth: "116px" }}
+                                  style={{ maxWidth: '116px' }}
                                 >
                                   <button
                                     type="button"
@@ -479,19 +486,21 @@ function CartPage() {
                             <span className="fw-semibold">NT$ 0</span>
                           </div>
                           {isCouponValid === null
-                            ? ""
+                            ? ''
                             : isCouponValid && (
                                 <div className="d-flex justify-content-between align-items-center fs-7 mb-5 mb-md-6">
                                   <p className="text-neutral60">優惠券</p>
                                   <span className="fw-semibold">
-                                    -NT${" "}
-                                    {Math.floor((total - final_total)).toLocaleString()}
+                                    -NT${' '}
+                                    {Math.floor(
+                                      total - final_total
+                                    ).toLocaleString()}
                                   </span>
                                 </div>
                               )}
                           <div className="input-group search-input-container mb-2">
                             <input
-                              {...register("coupon")}
+                              {...register('coupon')}
                               type="text"
                               className="form-control border-0"
                               placeholder="輸入折扣代碼或禮品卡"
@@ -499,31 +508,32 @@ function CartPage() {
                               aria-describedby="button-addon2"
                               disabled={isCouponValid}
                             />
-                            {
-                              
-                              (!isCouponValid) ? (
-                                <button
+                            {!isCouponValid ? (
+                              <button
                                 className="btn btn-primary"
                                 type="button"
                                 id="button-addon2"
                                 onClick={applyCoupon}
-                                >
+                              >
                                 套用
-                                </button>
-                              ) : (
+                              </button>
+                            ) : (
                               // watchForm.coupon ? (
-                                <button
-                                  className="btn position-absolute top-0 end-0 border-0"
-                                  type="button"
-                                  id="button-addon2"
-                                  onClick={removeCoupon}
-                                >
-                                  <span className="material-symbols-outlined material-filled">cancel</span>
-                                </button>
-                              )
-                            }
+                              <button
+                                className="btn position-absolute top-0 end-0 border-0"
+                                type="button"
+                                id="button-addon2"
+                                onClick={removeCoupon}
+                              >
+                                <span className="material-symbols-outlined material-filled">
+                                  cancel
+                                </span>
+                              </button>
+                            )}
                           </div>
-                          <span className={couponResult.className}>{couponResult.text}</span>
+                          <span className={couponResult.className}>
+                            {couponResult.text}
+                          </span>
                         </div>
                         <div className="p-4 p-md-8">
                           <div className="d-flex justify-content-between align-items-center mb-5 mb-md-6">
@@ -548,7 +558,7 @@ function CartPage() {
             carts?.length === 0 ? (
               <EmptyBasket />
             ) : (
-              ""
+              ''
             )}
           </section>
         </div>

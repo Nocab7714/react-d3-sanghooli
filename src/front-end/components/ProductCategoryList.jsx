@@ -4,6 +4,7 @@ import { Icon } from '@iconify-icon/react';
 
 import ProductCard from './ProductCard';
 import SwiperProducts from './SwiperProducts';
+import PropTypes from 'prop-types';
 
 const ProductCategoryList = ({
   products,
@@ -94,3 +95,13 @@ const ProductCategoryList = ({
 };
 
 export default ProductCategoryList;
+
+ProductCategoryList.propTypes = {
+  products: PropTypes.array,
+  listTitle: PropTypes.string,
+  iconMaterial: PropTypes.string,
+  iconify: PropTypes.string,
+  path: PropTypes.string,
+  showIsHot: PropTypes.bool,
+  autoShowSwiper: PropTypes.bool,
+};
