@@ -41,7 +41,7 @@ const HomePage = () => {
     );
 
     setNewProductsList(
-      products.slice(-10) // 取最後 10 項
+      products.slice(-10).reverse() // 取最後 10 項
     );
   }, [products]);
 

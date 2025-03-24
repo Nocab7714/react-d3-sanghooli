@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 const NewProductsList = ({
   products,
@@ -25,7 +26,7 @@ const NewProductsList = ({
               className="new-product-item "
               key={`new-product-item-${product.id}`}
             >
-              <Link to={`/single-product/${product.id}`}>
+              <Link to={`/product-details/${product.id}`}>
                 <div className="new-product-item-bg"></div>
                 <div
                   className={`d-flex align-items-center border-neutral40 py-4 z-3 ${
@@ -60,3 +61,16 @@ const NewProductsList = ({
 };
 
 export default NewProductsList;
+
+NewProductsList.propTypes = {
+  products: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string,
+      title: PropTypes.string,
+      category: PropTypes.string,
+      imageUrl: PropTypes.string,
+    })
+  ),
+  listTitle: PropTypes.string,
+  iconMaterial: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
+};

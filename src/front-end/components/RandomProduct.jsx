@@ -2,7 +2,6 @@ import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 const RandomProduct = () => {
-  
   // 透過 useSelector 取得 Redux state 存放的所有產品資料
   const products = useSelector((state) => state.products.products);
 
@@ -15,7 +14,7 @@ const RandomProduct = () => {
     // || null：如果 products 為空陣列或 undefined，則設為 null，避免報錯。
     const randomProduct =
       products?.[Math.floor(Math.random() * products.length)] || null;
-    navigate(`single-product/${randomProduct?.id}`);
+    navigate(`product-details/${randomProduct?.id}`);
   };
   return (
     <>

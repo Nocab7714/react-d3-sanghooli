@@ -1,10 +1,7 @@
-// 資料驅動範例
-// 1. 請從外層傳入 paginationData 資料
-// 2. 資料請使用 API Get 到的回傳的資料做驅動
-// 3. 後台系統也可以使用
+import Swal from 'sweetalert2';
+import PropTypes from 'prop-types';
 
 const Pagination = ({ paginationData, onPageChange }) => {
-
   if (!paginationData) {
     return null;
   }
@@ -12,31 +9,75 @@ const Pagination = ({ paginationData, onPageChange }) => {
   const { total_pages, current_page, has_pre, has_next } = paginationData;
 
   const goToPage = (page) => {
-    if (page >= 1 && page <= total_pages) {
+    if (page >= 1 && page <= total_pages && page !== current_page) {
+      // 調用頁面變化處理函數
       onPageChange(page);
+
+      // 強制滾動到上方
+      // 這是一個備用方法，以防頁面組件的滾動邏輯失敗
+      setTimeout(() => {
+        const searchTitle = document.querySelector(
+          '[data-scroll-target="search-results"]'
+        );
+        if (searchTitle) {
+          const offsetTop =
+            searchTitle.getBoundingClientRect().top + window.scrollY;
+          const offsetAdjustment = 180;
+          window.scrollTo({
+            top: Math.max(0, offsetTop - offsetAdjustment),
+            behavior: 'smooth',
+          });
+        }
+      }, 150);
     }
   };
 
   const handleEllipsisClick = () => {
-    const userInput = window.prompt(`請輸入要跳轉的頁碼 (1 - ${total_pages})`);
-    const pageNumber = Number(userInput);
-
-    if (!isNaN(pageNumber) && pageNumber >= 1 && pageNumber <= total_pages) {
-      goToPage(pageNumber);
-    } else {
-      alert('請輸入有效的頁碼！');
-    }
+    Swal.fire({
+      title: '請輸入要跳轉的頁碼',
+      input: 'number',
+      inputAttributes: {
+        min: 1,
+        max: total_pages,
+        step: 1,
+      },
+      showCancelButton: true,
+      confirmButtonText: '跳轉',
+      cancelButtonText: '取消',
+      customClass: {
+        popup: 'custom-alert',
+        confirmButton: 'custom-confirm-btn',
+        cancelButton: 'custom-cancel-btn',
+        input: 'custom-input',
+      },
+      preConfirm: (value) => {
+        const pageNumber = Number(value);
+        if (isNaN(pageNumber) || pageNumber < 1 || pageNumber > total_pages) {
+          Swal.showValidationMessage('請輸入有效的頁碼！');
+          return false;
+        }
+        return pageNumber;
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        goToPage(result.value);
+      }
+    });
   };
 
   const generatePagination = () => {
+    // 總頁數小於等於5時，顯示所有頁碼
     if (total_pages <= 5)
       return Array.from({ length: total_pages }, (_, i) => i + 1);
 
+    // 當前頁小於等於3時，顯示前3頁，省略號，和最後一頁
     if (current_page <= 3) return [1, 2, 3, '...', total_pages];
 
+    // 當前頁接近尾頁時，顯示省略號和最後3頁
     if (current_page >= total_pages - 2)
       return ['...', total_pages - 2, total_pages - 1, total_pages];
 
+    // 當前頁在中間位置時，只顯示當前頁及其前後頁，然後是省略號和最後一頁
     return [
       current_page - 1,
       current_page,
@@ -55,6 +96,7 @@ const Pagination = ({ paginationData, onPageChange }) => {
             className="page-link"
             type="button"
             onClick={() => goToPage(1)}
+            disabled={!has_pre}
           >
             <span className="material-symbols-outlined fs-6 align-middle">
               keyboard_double_arrow_left
@@ -68,6 +110,7 @@ const Pagination = ({ paginationData, onPageChange }) => {
             className="page-link"
             type="button"
             onClick={() => goToPage(current_page - 1)}
+            disabled={!has_pre}
           >
             <span className="material-symbols-outlined fs-6 align-middle">
               chevron_left
@@ -107,6 +150,7 @@ const Pagination = ({ paginationData, onPageChange }) => {
             className="page-link"
             type="button"
             onClick={() => goToPage(current_page + 1)}
+            disabled={!has_next}
           >
             <span className="material-symbols-outlined fs-6 align-middle">
               chevron_right
@@ -120,6 +164,7 @@ const Pagination = ({ paginationData, onPageChange }) => {
             className="page-link"
             type="button"
             onClick={() => goToPage(total_pages)}
+            disabled={!has_next}
           >
             <span className="material-symbols-outlined fs-6 align-middle">
               keyboard_double_arrow_right
@@ -132,3 +177,13 @@ const Pagination = ({ paginationData, onPageChange }) => {
 };
 
 export default Pagination;
+
+Pagination.propTypes = {
+  paginationData: PropTypes.shape({
+    total_pages: PropTypes.number.isRequired,
+    current_page: PropTypes.number.isRequired,
+    has_pre: PropTypes.bool.isRequired,
+    has_next: PropTypes.bool.isRequired,
+  }).isRequired,
+  onPageChange: PropTypes.func.isRequired,
+};

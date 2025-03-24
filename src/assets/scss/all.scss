@@ -48,6 +48,7 @@
 @import "../scss/components/breadcrumb";
 @import "../scss/components/go-to-top";
 @import "../scss/components/accordion";
+@import "../scss/components/product-card";
 
 // Helpers
 @import "bootstrap/scss/helpers";
@@ -60,7 +61,6 @@
 
 // layout
 @import './layout/HeaderBacked';
-@import './layout/HeaderFront';
 @import './layout/FooterFront';
 
 // pages ( 頁面樣式設定 )
@@ -69,8 +69,7 @@
 @import './pages/front-end/CheckoutPage';
 @import './pages/front-end/HowToBuyPage';
 @import './pages/front-end/ProductsListPage';
-@import './pages/front-end/SingleProductPage';
-@import './pages/front-end/AboutUsPage';
+@import './pages/front-end/ProductDetailsPage';
 
 @import './pages/back-end/ProductsManagement';
 

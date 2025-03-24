@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
+import PropTypes from 'prop-types';
 
 // 若需要新增跑馬燈訊息請在這裡新增
 const messages = [
@@ -23,7 +24,7 @@ const MarqueeText = ({ headerRef, headerHeight, setHeaderHeight }) => {
     // 監聽視窗大小變化，當跑馬燈換行時重新計算
     window.addEventListener('resize', updateHeaderHeight);
     return () => window.removeEventListener('resize', updateHeaderHeight);
-  }, [headerHeight]);
+  }, [headerHeight, headerRef, setHeaderHeight]);
 
   // 文字淡入淡出動畫
   const [index, setIndex] = useState(0);
@@ -68,3 +69,9 @@ const MarqueeText = ({ headerRef, headerHeight, setHeaderHeight }) => {
 };
 
 export default MarqueeText;
+
+MarqueeText.propTypes = {
+  headerRef: PropTypes.object,
+  headerHeight: PropTypes.number,
+  setHeaderHeight: PropTypes.func,
+};

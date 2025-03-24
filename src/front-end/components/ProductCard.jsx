@@ -1,8 +1,9 @@
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import crownIcon from '@/assets/img/illustration/crown.svg';
 import { formatNumber } from '../../utils/formatNumber';
 import { useDispatch, useSelector } from 'react-redux';
 import { asyncToggleWishList } from '../../slices/wishListSlice';
+import PropTypes from 'prop-types';
 
 // props 備註說明
 // product 為傳入單項商品資料
@@ -23,11 +24,15 @@ const ProductCard = ({ product, showIsHot = false }) => {
           type="button"
           className="position-absolute btn btn-favorite p-2 "
         >
-          <span className={`material-symbols-outlined align-middle text-white ${wishList[product.id] ? "material-filled" : ""}`}>
+          <span
+            className={`material-symbols-outlined align-middle text-white ${
+              wishList[product.id] ? 'material-filled' : ''
+            }`}
+          >
             favorite
           </span>
         </button>
-        <Link to={`/single-product/${product.id}`} className="product-card">
+        <Link to={`/product-details/${product.id}`} className="product-card">
           <div className="card border-0 position-relative">
             <div className="card-bg"></div>
             <div className="position-relative z-3">
@@ -84,3 +89,16 @@ const ProductCard = ({ product, showIsHot = false }) => {
 };
 
 export default ProductCard;
+
+ProductCard.propTypes = {
+  product: PropTypes.shape({
+    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+    is_hot: PropTypes.oneOfType([PropTypes.bool, PropTypes.number]).isRequired,
+    imageUrl: PropTypes.string.isRequired,
+    category: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
+    price: PropTypes.number.isRequired,
+    origin_price: PropTypes.number.isRequired,
+  }).isRequired,
+  showIsHot: PropTypes.bool,
+};

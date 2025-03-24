@@ -90,5 +90,32 @@
 }
 
 .custom-confirm-btn:hover {
-  background-color: $primary-dark !important; 
+  background-color: $primary !important; 
+}
+
+.custom-cancel-btn{
+  background-color: $neutral60 !important; 
+  color: white !important;
+  border: none !important;
+  border-radius: 8px !important;
+  box-shadow: none !important;
+}
+
+.custom-cancel-btn:hover {
+  background-color: $neutral40 !important; 
+}
+
+.custom-input{
+  border-radius: 0.75rem;
+  border: 1px solid $neutral40;
+  text-align: center;
+
+  &:focus{
+    box-shadow: 0px 0px 0px 4px rgba(255, 171, 74, 0.2);
+    border: 1px solid $primary-dark;
+  }
+
+  &:hover{
+    border: 1px solid $primary-dark;
+  }
 }

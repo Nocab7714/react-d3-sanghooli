@@ -207,42 +207,42 @@ const ProductsListPage = () => {
     scrollToSearchTitle();
   };
 
-// 3️⃣ `select` 變更時，行動版不滑動，桌機才會滑動
-const handleFestivalChange = (e) => {
-  setFestival(e.target.value);
-  setCurrentPage(1);
-  if (!isMobile) scrollToSearchTitle(); // 只有桌機才會滑動
-};
+  // 3️⃣ `select` 變更時，行動版不滑動，桌機才會滑動
+  const handleFestivalChange = (e) => {
+    setFestival(e.target.value);
+    setCurrentPage(1);
+    if (!isMobile) scrollToSearchTitle(); // 只有桌機才會滑動
+  };
 
-const handleRelationChange = (e) => {
-  setRelation(e.target.value);
-  setCurrentPage(1);
-  if (!isMobile) scrollToSearchTitle();
-};
+  const handleRelationChange = (e) => {
+    setRelation(e.target.value);
+    setCurrentPage(1);
+    if (!isMobile) scrollToSearchTitle();
+  };
 
-const handleCategoryChange = (e) => {
-  setCategory(e.target.value);
-  setCurrentPage(1);
-  if (!isMobile) scrollToSearchTitle();
-};
+  const handleCategoryChange = (e) => {
+    setCategory(e.target.value);
+    setCurrentPage(1);
+    if (!isMobile) scrollToSearchTitle();
+  };
 
-const handlePriceRangeChange = (e) => {
-  setPriceRange(e.target.value);
-  setCurrentPage(1);
-  if (!isMobile) scrollToSearchTitle();
-};
+  const handlePriceRangeChange = (e) => {
+    setPriceRange(e.target.value);
+    setCurrentPage(1);
+    if (!isMobile) scrollToSearchTitle();
+  };
 
-// 4️⃣ `input` 關鍵字搜尋時，桌機 & 行動版都會滑動
-const handleSearchValueChange = (val) => {
-  setSearchValue(val);
-  if (val === '') {
-    setTriggerSearch(false);
-  } else {
-    setTriggerSearch(true);
-  }
-  setCurrentPage(1);
-  scrollToSearchTitle(); // 桌機 & 行動版都會滑動
-};
+  // 4️⃣ `input` 關鍵字搜尋時，桌機 & 行動版都會滑動
+  const handleSearchValueChange = (val) => {
+    setSearchValue(val);
+    if (val === '') {
+      setTriggerSearch(false);
+    } else {
+      setTriggerSearch(true);
+    }
+    setCurrentPage(1);
+    scrollToSearchTitle(); // 桌機 & 行動版都會滑動
+  };
 
   return (
     <>

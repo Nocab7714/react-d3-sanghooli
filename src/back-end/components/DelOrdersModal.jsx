@@ -1,10 +1,10 @@
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import { useEffect, useRef, useState } from "react";
-import { Modal } from "bootstrap";
-import { useDispatch } from "react-redux";
-import { createToast } from "../../slices/toastSlice";
-import { asyncSetLoading } from "../../slices/loadingSlice";
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { useEffect, useRef, useState } from 'react';
+import { Modal } from 'bootstrap';
+import { useDispatch } from 'react-redux';
+import { createToast } from '../../slices/toastSlice';
+import PropTypes from 'prop-types';
 
 //環境變數
 const { VITE_BASE_URL: baseUrl, VITE_API_PATH: apiPath } = import.meta.env;
@@ -18,6 +18,7 @@ const DelOrdersModal = ({
 }) => {
   const navigate = useNavigate(); // 檢查使用者登入狀態
   const dispatch = useDispatch();
+  // eslint-disable-next-line no-unused-vars
   const [isScreenLoading, setIsScreenLoading] = useState(false);
 
   // 檢查用戶是否登入
@@ -28,19 +29,20 @@ const DelOrdersModal = ({
       dispatch(
         createToast({
           success: false,
-          message: "請先登入",
+          message: '請先登入',
         })
       );
-      navigate("/admin/login");
+      navigate('/admin/login');
+      console.error(error);
     }
   };
 
   useEffect(() => {
     const token = document.cookie.replace(
-      /(?:(?:^|.*;\s*)D3Token\s*\=\s*([^;]*).*$)|^.*$/,
-      "$1"
+      /(?:(?:^|.*;\s*)D3Token\s*=\s*([^;]*).*$)|^.*$/,
+      '$1'
     );
-    axios.defaults.headers.common["Authorization"] = token; //設定 axios token
+    axios.defaults.headers.common['Authorization'] = token; //設定 axios token
     checkUserLogin(); // 檢查用戶登入狀態
   }, []);
 
@@ -49,7 +51,7 @@ const DelOrdersModal = ({
   // 初始化 Bootstrap Modal
   useEffect(() => {
     const modalInstance = new Modal(delOrdersModalRef.current, {
-      backdrop: "static",
+      backdrop: 'static',
     });
     isOpen ? modalInstance.show() : modalInstance.hide();
   }, [isOpen]);
@@ -65,11 +67,14 @@ const DelOrdersModal = ({
   const removeOrder = async (url) => {
     setIsScreenLoading(true);
     try {
-      const res = await axios.delete(url);
-      dispatch(createToast({
-        success: true,
-        message: deleteMode === "single" ? "此筆訂單已刪除" : "所有訂單已清空"
-      }));
+      await axios.delete(url);
+      dispatch(
+        createToast({
+          success: true,
+          message:
+            deleteMode === 'single' ? '此筆訂單已刪除' : '所有訂單已清空',
+        })
+      );
       getOrders(); // 更新訂單列表
       setIsOpen(false);
     } catch (error) {
@@ -87,7 +92,7 @@ const DelOrdersModal = ({
   // 單筆訂單刪除
   const handleDeleteOrderItem = () => {
     if (!tempOrder?.id) {
-      dispatch(createToast({ success: false, message: "無法取得訂單資料" }));
+      dispatch(createToast({ success: false, message: '無法取得訂單資料' }));
       return;
     }
     removeOrder(`${baseUrl}/api/${apiPath}/admin/order/${tempOrder.id}`);
@@ -109,7 +114,7 @@ const DelOrdersModal = ({
         className="modal fade"
         id="delOrdersModalRef"
         tabIndex="-1"
-        style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
+        style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
       >
         <div className="modal-dialog">
           <div className="modal-content">
@@ -125,12 +130,12 @@ const DelOrdersModal = ({
               ></button>
             </div>
             <div className="modal-body mt-5 mb-5 text-center">
-              {deleteMode === "single" ? (
+              {deleteMode === 'single' ? (
                 <>
                   確定要刪除這筆編號：
                   <span className="fw-bold text-secondary">
                     {tempOrder?.id}
-                  </span>{" "}
+                  </span>{' '}
                   訂單嗎？
                 </>
               ) : (
@@ -156,7 +161,7 @@ const DelOrdersModal = ({
               </button>
               <button
                 onClick={
-                  deleteMode === "single"
+                  deleteMode === 'single'
                     ? handleDeleteOrderItem
                     : handleDeleteOrdersList
                 }
@@ -174,3 +179,11 @@ const DelOrdersModal = ({
 };
 
 export default DelOrdersModal;
+
+DelOrdersModal.propTypes = {
+  tempOrder: PropTypes.object,
+  isOpen: PropTypes.bool,
+  setIsOpen: PropTypes.func,
+  getOrders: PropTypes.func,
+  deleteMode: PropTypes.string,
+};

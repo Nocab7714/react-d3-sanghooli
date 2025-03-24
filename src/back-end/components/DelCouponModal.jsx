@@ -1,11 +1,12 @@
 // DelCouponModal.jsx
-import { useEffect, useRef } from 'react'
-import { Modal } from 'bootstrap'
-import axios from 'axios'
-import { useDispatch } from 'react-redux'
-import { createToast } from '../../slices/toastSlice'
+import { useEffect, useRef } from 'react';
+import { Modal } from 'bootstrap';
+import axios from 'axios';
+import { useDispatch } from 'react-redux';
+import { createToast } from '../../slices/toastSlice';
+import PropTypes from 'prop-types';
 
-const { VITE_BASE_URL: baseUrl, VITE_API_PATH: apiPath } = import.meta.env
+const { VITE_BASE_URL: baseUrl, VITE_API_PATH: apiPath } = import.meta.env;
 
 export default function DelCouponModal({
   tempCoupon,
@@ -13,40 +14,41 @@ export default function DelCouponModal({
   setIsOpen,
   getCoupons,
 }) {
-  const dispatch = useDispatch()
-  const delCouponModalRef = useRef(null)
+  const dispatch = useDispatch();
+  const delCouponModalRef = useRef(null);
 
   // 初始化 Modal
   useEffect(() => {
-    new Modal(delCouponModalRef.current, { backdrop: false })
-  }, [])
+    new Modal(delCouponModalRef.current, { backdrop: false });
+  }, []);
 
   // isOpen === true 時，打開 Modal
   useEffect(() => {
     if (isOpen) {
-      Modal.getInstance(delCouponModalRef.current).show()
+      Modal.getInstance(delCouponModalRef.current).show();
     }
-  }, [isOpen])
+  }, [isOpen]);
 
   // 關閉 Modal
   const handleClose = () => {
-    Modal.getInstance(delCouponModalRef.current).hide()
-    setIsOpen(false) // 設成 false，父元件就知道 Modal 已關閉
-  }
+    Modal.getInstance(delCouponModalRef.current).hide();
+    setIsOpen(false); // 設成 false，父元件就知道 Modal 已關閉
+  };
 
   // 呼叫後端刪除 API
   const handleDeleteCoupon = async () => {
     try {
       await axios.delete(
         `${baseUrl}/api/${apiPath}/admin/coupon/${tempCoupon.id}`
-      )
-      dispatch(createToast({ success: true, message: '刪除優惠券成功' }))
-      getCoupons() // 刪除成功後重新抓取列表
-      handleClose() // 關閉 Modal
+      );
+      dispatch(createToast({ success: true, message: '刪除優惠券成功' }));
+      getCoupons(); // 刪除成功後重新抓取列表
+      handleClose(); // 關閉 Modal
     } catch (error) {
-      dispatch(createToast({ success: false, message: '刪除優惠券失敗' }))
+      dispatch(createToast({ success: false, message: '刪除優惠券失敗' }));
+      console.error(error);
     }
-  }
+  };
 
   return (
     <div
@@ -90,5 +92,12 @@ export default function DelCouponModal({
         </div>
       </div>
     </div>
-  )
+  );
 }
+
+DelCouponModal.propTypes = {
+  tempCoupon: PropTypes.object,
+  isOpen: PropTypes.bool,
+  setIsOpen: PropTypes.func,
+  getCoupons: PropTypes.func,
+};

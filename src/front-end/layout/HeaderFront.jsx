@@ -1,27 +1,21 @@
-import { useState, useRef, useEffect } from 'react'
-import MarqueeText from './MarqueeText'
-import { Link, NavLink } from 'react-router-dom'
-import { useDispatch, useSelector } from 'react-redux'
+import { useState, useRef } from 'react';
+import MarqueeText from './MarqueeText';
+import { Link, NavLink } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
-import logo from '@/assets/img/illustration/logo-SANGHOOLI.svg'
-import { asyncGetCart } from '../../slices/cartSlice'
+import logo from '@/assets/img/illustration/logo-SANGHOOLI.svg';
 
 const HeaderFront = () => {
-  const dispatch = useDispatch()
-  const basketQty = useSelector((state) => state.cart.basketQty)
-  const wishList = useSelector((state) => state.wishList)
+  const basketQty = useSelector((state) => state.cart.basketQty);
+  const wishList = useSelector((state) => state.wishList);
   const wishListQty = Object.values(wishList).reduce(
     (count, value) => count + (value ? 1 : 0),
     0
-  )
+  );
 
   // 控制修正 header 使用 fix top 的高度使用
-  const headerRef = useRef(null)
-  const [headerHeight, setHeaderHeight] = useState(0)
-
-  // useEffect(() => {
-  //   dispatch(asyncGetCart());
-  // }, [dispatch])
+  const headerRef = useRef(null);
+  const [headerHeight, setHeaderHeight] = useState(0);
 
   return (
     <>
@@ -115,7 +109,7 @@ const HeaderFront = () => {
       {/* 下方區塊用於補足 navbar 設定 fixed top 的空間 */}
       <div style={{ marginTop: `${headerHeight}px` }}></div>
     </>
-  )
-}
+  );
+};
 
-export default HeaderFront
+export default HeaderFront;

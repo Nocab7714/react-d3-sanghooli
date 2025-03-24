@@ -1,12 +1,13 @@
 import { useEffect, useState, useRef } from 'react';
+import PropTypes from 'prop-types';
 
 // 若需要新增跑馬燈訊息請在這裡新增
 const messages = [
-    '為提供更穩定的服務，系統後台將於 2025.03.16 進行維護作業，造成不便處請多包涵！ ',
-    '全新客製化電子卡片 和 包裝挑選功能，預計2025 ~ ∞ 上線，敬請期待！',
+  '為提供更穩定的服務，系統後台將於 2025.03.16 進行維護作業，造成不便處請多包涵！ ',
+  '全新客製化電子卡片 和 包裝挑選功能，預計2025 ~ ∞ 上線，敬請期待！',
 ];
 
-const MarqueeTextBacked = ({ headerRef, headerHeight, setHeaderHeight}) => {
+const MarqueeTextBacked = ({ headerRef, headerHeight, setHeaderHeight }) => {
   // 控制修正 header 使用 fix top 的高度使用
   const bannerRef = useRef(null);
 
@@ -44,7 +45,7 @@ const MarqueeTextBacked = ({ headerRef, headerHeight, setHeaderHeight}) => {
 
   return (
     <>
-      <div ref={bannerRef}  className="bg-white">
+      <div ref={bannerRef} className="bg-white">
         <div
           className="py-3 border border-light"
           style={{
@@ -68,3 +69,13 @@ const MarqueeTextBacked = ({ headerRef, headerHeight, setHeaderHeight}) => {
 };
 
 export default MarqueeTextBacked;
+
+MarqueeTextBacked.propTypes = {
+  headerRef: PropTypes.shape({
+    current: PropTypes.shape({
+      offsetHeight: PropTypes.number,
+    }),
+  }).isRequired,
+  headerHeight: PropTypes.number.isRequired,
+  setHeaderHeight: PropTypes.func.isRequired,
+};
