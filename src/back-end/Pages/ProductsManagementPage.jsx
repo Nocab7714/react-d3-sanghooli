@@ -130,7 +130,7 @@ const ProductsManagementPage = () => {
   const [pageInfo, setPageInfo] = useState({});
 
   //讀取當前頁面的「頁碼」 資料的判斷式條件＆動作：
-  const handlePageChenge = (page) => {
+  const handlePageChange = (page) => {
     getProducts(page);
     window.scrollTo({ top: 380, behavior: 'auto' }); // 滑動回到頁面頂部
   };
@@ -238,7 +238,7 @@ const ProductsManagementPage = () => {
               {productList?.length > 0 && (
                 <PaginationBackend
                   pageInfo={pageInfo}
-                  handlePageChenge={handlePageChenge}
+                  handlePageChange={handlePageChange}
                 />
               )}
 

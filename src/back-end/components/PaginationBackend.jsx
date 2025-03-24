@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 
-const PaginationBackend = ({ pageInfo, handlePageChenge }) => {
+const PaginationBackend = ({ pageInfo, handlePageChange }) => {
   return (
     // 分頁元件模板版型放置處
     <div className="d-flex justify-content-center mt-19">
@@ -15,7 +15,7 @@ const PaginationBackend = ({ pageInfo, handlePageChenge }) => {
             <button
               className="page-link"
               type="button"
-              onClick={() => handlePageChenge(1)}
+              onClick={() => handlePageChange(1)}
             >
               <span className="material-symbols-outlined fs-6 align-middle">
                 keyboard_double_arrow_left
@@ -28,7 +28,7 @@ const PaginationBackend = ({ pageInfo, handlePageChenge }) => {
             <button
               type="button"
               className="page-link"
-              onClick={() => handlePageChenge(pageInfo.current_page - 1)}
+              onClick={() => handlePageChange(pageInfo.current_page - 1)}
             >
               <span className="material-symbols-outlined fs-6 align-middle">
                 chevron_left
@@ -48,7 +48,7 @@ const PaginationBackend = ({ pageInfo, handlePageChenge }) => {
               <button
                 type="button"
                 className="page-link"
-                onClick={() => handlePageChenge(index + 1)}
+                onClick={() => handlePageChange(index + 1)}
               >
                 {/* 在頁碼處帶上:因為index 是從0開始，所以用+1方式，讓頁碼從 1 開始做顯示 */}
                 {index + 1}
@@ -61,7 +61,7 @@ const PaginationBackend = ({ pageInfo, handlePageChenge }) => {
             <button
               type="button"
               className="page-link"
-              onClick={() => handlePageChenge(pageInfo.current_page + 1)}
+              onClick={() => handlePageChange(pageInfo.current_page + 1)}
             >
               <span className="material-symbols-outlined fs-6 align-middle">
                 chevron_right
@@ -78,7 +78,7 @@ const PaginationBackend = ({ pageInfo, handlePageChenge }) => {
             <button
               className="page-link"
               type="button"
-              onClick={() => handlePageChenge(pageInfo.total_pages)}
+              onClick={() => handlePageChange(pageInfo.total_pages)}
             >
               <span className="material-symbols-outlined fs-6 align-middle">
                 keyboard_double_arrow_right
@@ -100,5 +100,5 @@ PaginationBackend.propTypes = {
     has_pre: PropTypes.bool.isRequired,
     has_next: PropTypes.bool.isRequired,
   }).isRequired,
-  handlePageChenge: PropTypes.func.isRequired,
+  handlePageChange: PropTypes.func.isRequired,
 };

@@ -771,7 +771,7 @@ const ProductModal = ({
 export default ProductModal;
 
 ProductModal.propTypes = {
-  modalMode: PropTypes.string.isRequired,
+  modalMode: PropTypes.string,
   tempProduct: PropTypes.shape({
     id: PropTypes.string,
     title: PropTypes.string,
