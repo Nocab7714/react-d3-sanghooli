@@ -43,10 +43,8 @@ export const AdminAuthProvider = ({ children }) => {
       await axios.post(`${baseUrl}/api/user/check`);
       setIsLoggedIn(true);
     } catch (error) {
-      const { success, message } = error.response.data.message;
-      dispatch(
-        createToast({ success, message: `登入失敗，請稍後再試！${message}` })
-      );
+      console.error(error);
+      
       setIsLoggedIn(false);
     }
   };
