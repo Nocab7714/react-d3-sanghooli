@@ -272,7 +272,7 @@ const OrdersManagementPage = () => {
                 {ordersList?.length > 0 && (
                   <PaginationBackend
                     pageInfo={pageInfo}
-                    handlePageChenge={handlePageChange}
+                    handlePageChange={handlePageChange}
                   />
                 )}
 
