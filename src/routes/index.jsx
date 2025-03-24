@@ -77,26 +77,6 @@ const routes = [
         element: <WishListPage />,
       },
       { path: 'member-login', element: <MemberLogin /> },
-      {
-        path: 'cart',
-        element: <CartPage />,
-      },
-      {
-        path: 'checkout',
-        element: <CheckoutPage />,
-      },
-      {
-        path: 'payment/:orderId',
-        element: <PaymentPage />,
-      },
-      {
-        path: 'success/:orderId',
-        element: <SuccessPage />,
-      },
-      {
-        path: 'wish-list',
-        element: <WishListPage />,
-      },
     ],
   },
   {
