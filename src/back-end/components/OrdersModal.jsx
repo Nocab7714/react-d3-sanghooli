@@ -1,31 +1,32 @@
-import axios from "axios";
-import { useEffect, useRef, useState } from "react";
-import { Modal } from "bootstrap";
-import { useDispatch } from "react-redux";
-import { createToast } from "../../slices/toastSlice";
-import { asyncSetLoading } from "../../slices/loadingSlice";
+import axios from 'axios';
+import { useEffect, useRef, useState } from 'react';
+import { Modal } from 'bootstrap';
+import { useDispatch } from 'react-redux';
+import { createToast } from '../../slices/toastSlice';
+import { asyncSetLoading } from '../../slices/loadingSlice';
+import PropTypes from 'prop-types';
 
 // 環境變數
 const { VITE_BASE_URL: baseUrl, VITE_API_PATH: apiPath } = import.meta.env;
 
 const OrdersModal = ({
+  // eslint-disable-next-line no-unused-vars
   modalMode,
   tempOrder,
   isOpen,
   setIsOpen,
   getOrders,
 }) => {
-  //不希望Modal改到tempProduct：再建立新的狀態，預設值帶入tempProduct
   const dispatch = useDispatch();
   const [modalData, setModalData] = useState(tempOrder || {});
   const [isScreenLoading, setIsScreenLoading] = useState(false);
-  const ordersModalRef = useRef(null); //透過 useRef 取得 DOM：以下為將OrdersModal 邏輯對應的函式動作
+  const ordersModalRef = useRef(null);
   const modalInstance = useRef(null);
 
   // 訂單狀態選項
   const isPaidOptions = [
-    { value: true, label: "已付款" },
-    { value: false, label: "未付款" },
+    { value: true, label: '已付款' },
+    { value: false, label: '未付款' },
   ];
 
   //只在 isOpen 開啟時，才確保 modalData 會更新
@@ -34,7 +35,7 @@ const OrdersModal = ({
       setModalData({
         ...tempOrder,
         is_paid: Boolean(tempOrder.is_paid), // 確保 is_paid 是布林值
-        messages: tempOrder.messages ?? "", // 確保 messages 不為 null
+        message: tempOrder.message ?? '', // 確保 message 不為 null (統一使用 message)
       });
     }
   }, [isOpen, tempOrder]);
@@ -46,24 +47,24 @@ const OrdersModal = ({
     });
   }, []);
 
-  //新增useEffect 判斷Modal開關狀態:如果是「開」的判斷式，並且在陣列帶入[isOpen]
+  //判斷Modal開關狀態
   useEffect(() => {
     if (isOpen && modalInstance.current) {
       modalInstance.current.show();
     } else if (!isOpen && modalInstance.current) {
       modalInstance.current.hide();
     }
-  }, [isOpen]); //當isOpen有更新時， 判斷是否需要開modal
+  }, [isOpen]);
 
   const handleModalInputChange = (e) => {
     const { value, name } = e.target;
-    const newValue = name === "is_paid" ? value === "true" : value;
+    const newValue = name === 'is_paid' ? value === 'true' : value;
 
     setModalData((prevData) => ({
       ...prevData,
-      ...(name === "message"
+      ...(name === 'message'
         ? { [name]: newValue }
-        : name === "is_paid"
+        : name === 'is_paid'
         ? { [name]: newValue }
         : {
             user: {
@@ -82,12 +83,12 @@ const OrdersModal = ({
         setModalData({
           ...res.data.order,
           is_paid: Boolean(res.data.order.is_paid),
-          messages: res.data.order.messages ?? "",
+          message: res.data.order.message ?? '',
           user: {
-            name: res.data.order.user?.name || "",
-            tel: res.data.order.user?.tel || "",
-            email: res.data.order.user?.email || "",
-            address: res.data.order.user?.address || "",
+            name: res.data.order.user?.name || '',
+            tel: res.data.order.user?.tel || '',
+            email: res.data.order.user?.email || '',
+            address: res.data.order.user?.address || '',
           },
         });
       }
@@ -95,9 +96,10 @@ const OrdersModal = ({
       dispatch(
         createToast({
           success: false,
-          message: "取得訂單資料失敗！",
+          message: '取得訂單資料失敗！',
         })
       );
+      console.error(error);
     }
   };
 
@@ -108,25 +110,22 @@ const OrdersModal = ({
     }
   }, [isOpen, tempOrder?.id]);
 
-  //* 串接編輯商品 API */
+  // 串接更新訂單 API
   const updateOrder = async () => {
-    dispatch(asyncSetLoading(["sectionLoading", true]));
+    dispatch(asyncSetLoading(['sectionLoading', true]));
     setIsScreenLoading(true);
     try {
-      const res = await axios.put(
-        `${baseUrl}/api/${apiPath}/admin/order/${modalData.id}`,
-        {
-          data: {
-            ...modalData,
-            is_paid: Boolean(modalData.is_paid), // 確保 is_paid 是布林值
-          },
-        }
-      );
+      await axios.put(`${baseUrl}/api/${apiPath}/admin/order/${modalData.id}`, {
+        data: {
+          ...modalData,
+          is_paid: Boolean(modalData.is_paid), // 確保 is_paid 是布林值
+        },
+      });
       await getOrders(); // 重新取得訂單列表
       dispatch(
         createToast({
           success: true,
-          message: "訂單已成功更新！",
+          message: '訂單已成功更新！',
         })
       );
       handleCloseOrdersModal();
@@ -134,60 +133,21 @@ const OrdersModal = ({
       dispatch(
         createToast({
           success: false,
-          message: "更新訂單失敗！",
+          message: '更新訂單失敗！',
         })
       );
+      console.error(error);
     } finally {
-      dispatch(asyncSetLoading(["sectionLoading", false]));
+      dispatch(asyncSetLoading(['sectionLoading', false]));
       setIsScreenLoading(false);
-    }
-  };
-
-  // 更新 tages 的 onChange 處理
-  const handleTagChange = (event) => {
-    const { value, checked } = event.target;
-
-    setModalData((prevData) => ({
-      ...prevData,
-      tages: checked
-        ? [...(prevData?.tages || []), value] // 如果被勾選，新增進去，並確保 prevData?.tages 不為 undefined
-        : prevData?.tages?.filter((tag) => tag !== value) || [], // 否則移除，且避免 `filter` 出錯
-    }));
-  };
-
-  // 點擊Modal 的「確認」按鈕條件
-  const handlUpdateOrders = async () => {
-    try {
-      await updateOrder();
-      setModalData((prev) => ({
-        ...prev,
-        is_paid: Boolean(prev.is_paid),
-      }));
-
-      dispatch(
-        createToast({
-          success: true,
-          message: "訂單已成功更新！",
-        })
-      );
-      handleCloseOrdersModal();
-    } catch (error) {
-      // 失敗時僅顯示錯誤訊息，不關閉 Modal
-      dispatch(
-        createToast({
-          success: true,
-          message: "更新訂單失敗，請檢查輸入內容！",
-        })
-      );
     }
   };
 
   // 點擊Ｍodal的取消＆Ｘ按鈕會進行關閉
   const handleCloseOrdersModal = () => {
     const modalInstance = Modal.getInstance(ordersModalRef.current);
-    //拿到Modal實例後，即可透過modalInstance.hide(); 關閉Modal
     modalInstance.hide();
-    setIsOpen(false); //判斷Modal開關狀態:如果是「關」的調整方式
+    setIsOpen(false);
   };
 
   // 訂單明細：計算折扣金額和折扣後金額
@@ -219,12 +179,11 @@ const OrdersModal = ({
         ref={ordersModalRef}
         id="ordersModal"
         className="modal"
-        style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
+        style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
       >
         <div className="modal-dialog modal-dialog-centered modal-xl">
           <div className="modal-content border-0 shadow">
             <div className="modal-header border-bottom">
-              {/* 調整訂單 Modal 的標題、傳入的值 */}
               <h5 className="modal-title fs-4"> 編輯訂單</h5>
               <button
                 onClick={handleCloseOrdersModal}
@@ -248,7 +207,7 @@ const OrdersModal = ({
                     訂單編號
                   </label>
                   <input
-                    value={modalData?.id || ""}
+                    value={modalData?.id || ''}
                     name="id"
                     id="order_id"
                     type="text"
@@ -283,7 +242,7 @@ const OrdersModal = ({
                     className="form-select"
                     name="is_paid"
                     value={String(modalData?.is_paid)}
-                    onChange={handleModalInputChange} // 確保更新布林值
+                    onChange={handleModalInputChange}
                   >
                     {isPaidOptions.map((option) => (
                       <option key={option.value} value={String(option.value)}>
@@ -306,7 +265,7 @@ const OrdersModal = ({
                           姓名
                         </label>
                         <input
-                          value={modalData?.user?.name || ""}
+                          value={modalData?.user?.name || ''}
                           onChange={handleModalInputChange}
                           name="name"
                           id="user_name"
@@ -321,7 +280,7 @@ const OrdersModal = ({
                           聯絡電話
                         </label>
                         <input
-                          value={modalData?.user?.tel || ""}
+                          value={modalData?.user?.tel || ''}
                           onChange={handleModalInputChange}
                           name="tel"
                           id="user_tel"
@@ -336,7 +295,7 @@ const OrdersModal = ({
                           聯絡郵箱
                         </label>
                         <input
-                          value={modalData?.user?.email || ""}
+                          value={modalData?.user?.email || ''}
                           onChange={handleModalInputChange}
                           name="email"
                           id="user_email"
@@ -351,7 +310,7 @@ const OrdersModal = ({
                           收件地址
                         </label>
                         <input
-                          value={modalData?.user?.address || ""}
+                          value={modalData?.user?.address || ''}
                           onChange={handleModalInputChange}
                           name="address"
                           id="user_address"
@@ -366,7 +325,7 @@ const OrdersModal = ({
                           訂單備註
                         </label>
                         <textarea
-                          value={modalData?.message || ""}
+                          value={modalData?.message || ''}
                           onChange={handleModalInputChange}
                           name="message"
                           id="user_messages"
@@ -408,11 +367,9 @@ const OrdersModal = ({
                       {modalData?.products &&
                       Object.keys(modalData.products).length > 0 ? (
                         Object.values(modalData.products).map((item) => {
-                          const {
-                            discountAmount,
-                            discountPercent,
-                            discountedPrice,
-                          } = calculateDiscountedAmount(item);
+                          // eslint-disable-next-line no-unused-vars
+                          const calculatedValues =
+                            calculateDiscountedAmount(item);
                           return (
                             <tr
                               key={item.product_id}
@@ -446,7 +403,7 @@ const OrdersModal = ({
                                 {item.product?.price !==
                                   item.product?.origin_price && (
                                   <del className="text-neutral40 fs-7">
-                                    NT${" "}
+                                    NT${' '}
                                     {item.product?.origin_price?.toLocaleString()}
                                   </del>
                                 )}
@@ -457,7 +414,7 @@ const OrdersModal = ({
                                 <p className="text-neutral80">
                                   {item.coupon
                                     ? item.coupon?.code
-                                    : "未使用優惠券"}
+                                    : '未使用優惠券'}
                                 </p>
                                 {item.coupon && (
                                   <p className="h6 text-neutral80">
@@ -471,7 +428,7 @@ const OrdersModal = ({
 
                               {/* 小計 */}
                               <td className="text-center">
-                                NT${" "}
+                                NT${' '}
                                 {(
                                   item.product?.price * item.qty
                                 ).toLocaleString()}
@@ -498,7 +455,7 @@ const OrdersModal = ({
                           <div className="d-flex justify-content-end align-items-center mb-4 pe-8">
                             <p className="me-12 ">小計</p>
                             <p className="fw-bold">
-                              NT${" "}
+                              NT${' '}
                               <span>
                                 {(() => {
                                   // 計算總小計：每個商品的原價 (item.product?.price * item.qty)
@@ -620,12 +577,12 @@ const OrdersModal = ({
                 取消
               </button>
               <button
-                onClick={handlUpdateOrders}
+                onClick={updateOrder}
                 type="button"
                 className="btn btn-primary btn-outline-primary fs-6"
                 disabled={isScreenLoading}
               >
-                {isScreenLoading ? "更新中..." : "確認修改"}
+                {isScreenLoading ? '更新中...' : '確認修改'}
               </button>
             </div>
           </div>
@@ -634,4 +591,13 @@ const OrdersModal = ({
     </>
   );
 };
+
 export default OrdersModal;
+
+OrdersModal.propTypes = {
+  modalMode: PropTypes.string,
+  tempOrder: PropTypes.object,
+  isOpen: PropTypes.bool.isRequired,
+  setIsOpen: PropTypes.func.isRequired,
+  getOrders: PropTypes.func.isRequired,
+};

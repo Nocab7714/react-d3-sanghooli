@@ -2,7 +2,6 @@ import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 const RandomProduct = () => {
-  
   // 透過 useSelector 取得 Redux state 存放的所有產品資料
   const products = useSelector((state) => state.products.products);
 

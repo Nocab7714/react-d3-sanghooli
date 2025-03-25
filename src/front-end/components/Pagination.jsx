@@ -1,4 +1,5 @@
 import Swal from 'sweetalert2';
+import PropTypes from 'prop-types';
 
 const Pagination = ({ paginationData, onPageChange }) => {
   if (!paginationData) {
@@ -11,17 +12,20 @@ const Pagination = ({ paginationData, onPageChange }) => {
     if (page >= 1 && page <= total_pages && page !== current_page) {
       // 調用頁面變化處理函數
       onPageChange(page);
-      
+
       // 強制滾動到上方
       // 這是一個備用方法，以防頁面組件的滾動邏輯失敗
       setTimeout(() => {
-        const searchTitle = document.querySelector('[data-scroll-target="search-results"]');
+        const searchTitle = document.querySelector(
+          '[data-scroll-target="search-results"]'
+        );
         if (searchTitle) {
-          const offsetTop = searchTitle.getBoundingClientRect().top + window.scrollY;
+          const offsetTop =
+            searchTitle.getBoundingClientRect().top + window.scrollY;
           const offsetAdjustment = 180;
           window.scrollTo({
             top: Math.max(0, offsetTop - offsetAdjustment),
-            behavior: 'smooth'
+            behavior: 'smooth',
           });
         }
       }, 150);
@@ -62,17 +66,19 @@ const Pagination = ({ paginationData, onPageChange }) => {
   };
 
   const generatePagination = () => {
+    // 總頁數小於等於5時，顯示所有頁碼
     if (total_pages <= 5)
       return Array.from({ length: total_pages }, (_, i) => i + 1);
 
+    // 當前頁小於等於3時，顯示前3頁，省略號，和最後一頁
     if (current_page <= 3) return [1, 2, 3, '...', total_pages];
 
+    // 當前頁接近尾頁時，顯示省略號和最後3頁
     if (current_page >= total_pages - 2)
-      return [1, '...', total_pages - 2, total_pages - 1, total_pages];
+      return ['...', total_pages - 2, total_pages - 1, total_pages];
 
+    // 當前頁在中間位置時，只顯示當前頁及其前後頁，然後是省略號和最後一頁
     return [
-      1,
-      '...',
       current_page - 1,
       current_page,
       current_page + 1,
@@ -171,3 +177,13 @@ const Pagination = ({ paginationData, onPageChange }) => {
 };
 
 export default Pagination;
+
+Pagination.propTypes = {
+  paginationData: PropTypes.shape({
+    total_pages: PropTypes.number.isRequired,
+    current_page: PropTypes.number.isRequired,
+    has_pre: PropTypes.bool.isRequired,
+    has_next: PropTypes.bool.isRequired,
+  }).isRequired,
+  onPageChange: PropTypes.func.isRequired,
+};

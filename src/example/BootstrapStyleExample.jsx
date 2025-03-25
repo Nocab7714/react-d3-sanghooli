@@ -50,10 +50,6 @@ const BootstrapStyleExample = () => {
           <li>23: $spacer * 7.75, //124px</li>
           <li>24: $spacer * 8.75, //140px</li>
           <li>25: $spacer * 9.25, //148x</li>
-          <li>
-            如果需要額外新增其他的 spacer 數值，請在下方按照範例方式直接增加。
-            // ex. 165: $spacer * 10.3125, //165px
-          </li>
         </ul>
       </div>
       <hr />
@@ -156,7 +152,8 @@ const BootstrapStyleExample = () => {
             標題 - 行高：<code>$headings-line-height: 1.2 !default;</code>
           </li>
           <li>
-            標題、段落 -字距：<code>letter-spacing</code> 目前在設計稿上看不到，設定放在 _base.scss 當中，待與教練確認
+            標題、段落 -字距：<code>letter-spacing</code>{' '}
+            目前在設計稿上看不到，設定放在 _base.scss 當中，待與教練確認
           </li>
         </ul>
       </div>
@@ -199,7 +196,6 @@ const BootstrapStyleExample = () => {
               </a>
             </li>
             <li>
-              {' '}
               <a target="_blank" href="https://icon-sets.iconify.design/">
                 iconify icon 搜尋
               </a>
@@ -210,7 +206,7 @@ const BootstrapStyleExample = () => {
             <li>先在設計稿確定 icon 名稱</li>
             <li>
               進到「 iconify icon 搜尋」頁面以後，透過右上角「Search
-              icons」才可以搜得到需要的 icon{' '}
+              icons」才可以搜得到需要的 icon
             </li>
             <li>
               點擊需要的 icon 後，在下方列表選擇 react ，之後再複製 ICON
@@ -228,7 +224,7 @@ const BootstrapStyleExample = () => {
             </li>
             <li>
               目前測試過 ICON 的顏色不能夠直接帶 BS
-              設定的變數，需要直接設定"色碼"
+              設定的變數，需要直接設定色碼。
             </li>
           </ul>
           <Icon

@@ -1,6 +1,6 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
-const  loadingSlice = createSlice({
+const loadingSlice = createSlice({
   name: 'loading',
   initialState: {
     globalLoading: false,
@@ -21,22 +21,22 @@ const  loadingSlice = createSlice({
     setLoading(state, action) {
       const { key, value } = action.payload;
       state[key] = value;
-    }
-  }
-})
+    },
+  },
+});
 
 const asyncSetLoading = createAsyncThunk(
-  "loading/asyncSetLoading",
-  async function([key, value], {dispatch}){
-    if(value){
-      dispatch(setLoading({key, value: true}))
+  'loading/asyncSetLoading',
+  async function ([key, value], { dispatch }) {
+    if (value) {
+      dispatch(setLoading({ key, value: true }));
     } else {
       setTimeout(() => {
-        dispatch(setLoading({key, value}))
-      }, 500)
+        dispatch(setLoading({ key, value }));
+      }, 500);
     }
   }
-)
+);
 export { asyncSetLoading };
 export const { setLoading } = loadingSlice.actions;
 export default loadingSlice.reducer;

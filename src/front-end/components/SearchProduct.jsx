@@ -7,60 +7,13 @@ import ReactHelmetAsync from '../../plugins/ReactHelmetAsync';
 import ProductCard from '../components/ProductCard';
 import ProductCategoryList from '../components/ProductCategoryList';
 import InputSearchDefault from '../components/form/InputSearchDefault';
+import {festivalOptions, relationOptions, categoryOptions, priceRangeOptions} from '../utils/filterOptions';
 
 const { VITE_BASE_URL: baseUrl, VITE_API_PATH: apiPath } = import.meta.env;
 
 const breadcrumbItem = [
   { page: '首頁', link: '/' },
   { page: '產品列表', link: '/products-list' },
-];
-
-// 篩選條件選單的選項
-const festivalOptions = [
-  '畢業季',
-  '生日',
-  '婚禮',
-  '喬遷',
-  '情人節',
-  '母親節',
-  '父親節',
-  '兒童滿月',
-  '春節',
-  '兒童節',
-  '中秋節',
-  '聖誕節',
-];
-const relationOptions = [
-  '父母',
-  '父親',
-  '母親',
-  '祖父母',
-  '子女',
-  '男性朋友',
-  '女性朋友',
-  '男性情人',
-  '女性情人',
-  '丈夫',
-  '妻子',
-  '師長',
-  '同事',
-  '商業夥伴',
-];
-const categoryOptions = [
-  '食品與飲品',
-  '電子與實用',
-  '花卉與植物',
-  '美妝與保養',
-  '服飾與配件',
-  '文具與書籍',
-  '居家與生活',
-  '嬰幼兒與兒童',
-];
-const priceRangeOptions = [
-  '500 元以下',
-  '500 ~ 1,000 元',
-  '1,000 ~ 3,000 元',
-  '3,000 元以上',
 ];
 
 const ProductsListPage = () => {
@@ -207,42 +160,42 @@ const ProductsListPage = () => {
     scrollToSearchTitle();
   };
 
-// 3️⃣ `select` 變更時，行動版不滑動，桌機才會滑動
-const handleFestivalChange = (e) => {
-  setFestival(e.target.value);
-  setCurrentPage(1);
-  if (!isMobile) scrollToSearchTitle(); // 只有桌機才會滑動
-};
+  // 3️⃣ `select` 變更時，行動版不滑動，桌機才會滑動
+  const handleFestivalChange = (e) => {
+    setFestival(e.target.value);
+    setCurrentPage(1);
+    if (!isMobile) scrollToSearchTitle(); // 只有桌機才會滑動
+  };
 
-const handleRelationChange = (e) => {
-  setRelation(e.target.value);
-  setCurrentPage(1);
-  if (!isMobile) scrollToSearchTitle();
-};
+  const handleRelationChange = (e) => {
+    setRelation(e.target.value);
+    setCurrentPage(1);
+    if (!isMobile) scrollToSearchTitle();
+  };
 
-const handleCategoryChange = (e) => {
-  setCategory(e.target.value);
-  setCurrentPage(1);
-  if (!isMobile) scrollToSearchTitle();
-};
+  const handleCategoryChange = (e) => {
+    setCategory(e.target.value);
+    setCurrentPage(1);
+    if (!isMobile) scrollToSearchTitle();
+  };
 
-const handlePriceRangeChange = (e) => {
-  setPriceRange(e.target.value);
-  setCurrentPage(1);
-  if (!isMobile) scrollToSearchTitle();
-};
+  const handlePriceRangeChange = (e) => {
+    setPriceRange(e.target.value);
+    setCurrentPage(1);
+    if (!isMobile) scrollToSearchTitle();
+  };
 
-// 4️⃣ `input` 關鍵字搜尋時，桌機 & 行動版都會滑動
-const handleSearchValueChange = (val) => {
-  setSearchValue(val);
-  if (val === '') {
-    setTriggerSearch(false);
-  } else {
-    setTriggerSearch(true);
-  }
-  setCurrentPage(1);
-  scrollToSearchTitle(); // 桌機 & 行動版都會滑動
-};
+  // 4️⃣ `input` 關鍵字搜尋時，桌機 & 行動版都會滑動
+  const handleSearchValueChange = (val) => {
+    setSearchValue(val);
+    if (val === '') {
+      setTriggerSearch(false);
+    } else {
+      setTriggerSearch(true);
+    }
+    setCurrentPage(1);
+    scrollToSearchTitle(); // 桌機 & 行動版都會滑動
+  };
 
   return (
     <>

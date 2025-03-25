@@ -1,9 +1,6 @@
-// 外部資源
-import { useState, useRef, useEffect } from 'react'
-import Breadcrumb from '../components/Breadcrumb.jsx'
-import ReactHelmetAsync from '../../plugins/ReactHelmetAsync'
+import Breadcrumb from '../components/Breadcrumb.jsx';
+import ReactHelmetAsync from '../../plugins/ReactHelmetAsync';
 
-//視 麵包屑breadcrumb 階層保留對應資料
 const breadcrumbItem = [
   {
     page: '首頁',
@@ -13,7 +10,7 @@ const breadcrumbItem = [
     page: '登入',
     link: '/member-login',
   },
-]
+];
 
 function MemberLogin() {
   return (
@@ -66,7 +63,7 @@ function MemberLogin() {
         </div>
       </div>
     </>
-  )
+  );
 }
 
-export default MemberLogin
+export default MemberLogin;

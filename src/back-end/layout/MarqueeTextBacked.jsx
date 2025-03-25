@@ -1,9 +1,10 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef } from 'react';
+import PropTypes from 'prop-types';
 
 // 若需要新增跑馬燈訊息請在這裡新增
 const messages = [
-  "為提供更穩定的服務，系統後台將於 2025.03.16 進行維護作業，造成不便處請多包涵！ ",
-  "全新客製化電子卡片 和 包裝挑選功能，預計2025 ~ ∞ 上線，敬請期待！",
+  '為提供更穩定的服務，系統後台將於 2025.03.16 進行維護作業，造成不便處請多包涵！ ',
+  '全新客製化電子卡片 和 包裝挑選功能，預計2025 ~ ∞ 上線，敬請期待！',
 ];
 
 const MarqueeTextBacked = ({ headerRef, headerHeight, setHeaderHeight }) => {
@@ -21,8 +22,8 @@ const MarqueeTextBacked = ({ headerRef, headerHeight, setHeaderHeight }) => {
     updateHeaderHeight();
 
     // 監聽視窗大小變化，當跑馬燈換行時重新計算
-    window.addEventListener("resize", updateHeaderHeight);
-    return () => window.removeEventListener("resize", updateHeaderHeight);
+    window.addEventListener('resize', updateHeaderHeight);
+    return () => window.removeEventListener('resize', updateHeaderHeight);
   }, [headerHeight]);
 
   // 文字淡入淡出動畫
@@ -49,14 +50,14 @@ const MarqueeTextBacked = ({ headerRef, headerHeight, setHeaderHeight }) => {
           className="py-3 border border-light"
           style={{
             background:
-              "linear-gradient(90deg, rgba(255, 238, 219, 0) 0%, #FFEEDB 50%, rgba(255, 238, 219, 0) 100%)",
+              'linear-gradient(90deg, rgba(255, 238, 219, 0) 0%, #FFEEDB 50%, rgba(255, 238, 219, 0) 100%)',
           }}
         >
           <p
             className="text-center fs-7 fs-md-6"
             style={{
               opacity: fade ? 1 : 0, // 使用 opacity 做淡入淡出
-              transition: "opacity 0.5s ease-in-out", // 0.5 秒內淡入淡出
+              transition: 'opacity 0.5s ease-in-out', // 0.5 秒內淡入淡出
             }}
           >
             {messages[index]}
@@ -68,3 +69,13 @@ const MarqueeTextBacked = ({ headerRef, headerHeight, setHeaderHeight }) => {
 };
 
 export default MarqueeTextBacked;
+
+MarqueeTextBacked.propTypes = {
+  headerRef: PropTypes.shape({
+    current: PropTypes.shape({
+      offsetHeight: PropTypes.number,
+    }),
+  }).isRequired,
+  headerHeight: PropTypes.number.isRequired,
+  setHeaderHeight: PropTypes.func.isRequired,
+};

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 // 資源引入方式範例
 // 1.外部資源（排序：React hooks -> 第三方工具庫）
 import { useState, useEffect, useRef } from 'react';
@@ -16,9 +17,8 @@ import HomePage from './front-end/pages/HomePage.jsx';
 import ProductsListPage from './front-end/pages/ProductsListPage.jsx';
 import SingleProductPage from './front-end/pages/SingleProductPage.jsx';
 
-
-const ResourceImportExample = () =>{
-  return(<></>)
-}
+const ResourceImportExample = () => {
+  return <></>;
+};
 
 export default ResourceImportExample;
