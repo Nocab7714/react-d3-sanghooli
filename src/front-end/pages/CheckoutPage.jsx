@@ -38,6 +38,8 @@ export default function CheckoutPage() {
     defaultValues: {
       // cardType: cardOptions[0].imgUrl,
       // cardFont: "ff-noto-sans"
+      // isWriteCard: false,
+      // cardType: ''
     },
     mode: 'onTouched',
   });

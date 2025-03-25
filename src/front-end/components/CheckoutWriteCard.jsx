@@ -142,7 +142,8 @@ export default function CheckoutWriteCard({
               <div
                 className="p-6 rounded-4"
                 style={{
-                  backgroundImage: `url(${watchForm.cardType})`,
+                  // backgroundImage: `url(${watchForm.cardType})`,
+                  backgroundImage: `url(${watchForm.cardType || cardOptions[0].imgUrl})`,
                   backgroundPosition: 'center',
                   backgroundSize: 'cover',
                 }}
