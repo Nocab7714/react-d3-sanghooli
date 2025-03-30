@@ -1,4 +1,6 @@
-const PaginationBackend = ({ pageInfo, handlePageChenge }) => {
+import PropTypes from 'prop-types';
+
+const PaginationBackend = ({ pageInfo, handlePageChange }) => {
   return (
     // 分頁元件模板版型放置處
     <div className="d-flex justify-content-center mt-19">
@@ -7,13 +9,13 @@ const PaginationBackend = ({ pageInfo, handlePageChenge }) => {
           {/* 第一頁按鈕 */}
           <li
             className={`page-item ${
-              pageInfo.current_page === 1 ? "disabled" : ""
+              pageInfo.current_page === 1 ? 'disabled' : ''
             }`}
           >
             <button
               className="page-link"
               type="button"
-              onClick={() => handlePageChenge(1)}
+              onClick={() => handlePageChange(1)}
             >
               <span className="material-symbols-outlined fs-6 align-middle">
                 keyboard_double_arrow_left
@@ -22,11 +24,11 @@ const PaginationBackend = ({ pageInfo, handlePageChenge }) => {
           </li>
 
           {/* 前一頁按鈕 */}
-          <li className={`page-item ${!pageInfo.has_pre ? "disabled" : ""}`}>
+          <li className={`page-item ${!pageInfo.has_pre ? 'disabled' : ''}`}>
             <button
               type="button"
               className="page-link"
-              onClick={() => handlePageChenge(pageInfo.current_page - 1)}
+              onClick={() => handlePageChange(pageInfo.current_page - 1)}
             >
               <span className="material-symbols-outlined fs-6 align-middle">
                 chevron_left
@@ -39,14 +41,14 @@ const PaginationBackend = ({ pageInfo, handlePageChenge }) => {
             <li
               key={index}
               className={`page-item ${
-                pageInfo.current_page === index + 1 && "active"
+                pageInfo.current_page === index + 1 && 'active'
               }`}
             >
               {/* 取得前頁面資料的判斷式條件 */}
               <button
                 type="button"
                 className="page-link"
-                onClick={() => handlePageChenge(index + 1)}
+                onClick={() => handlePageChange(index + 1)}
               >
                 {/* 在頁碼處帶上:因為index 是從0開始，所以用+1方式，讓頁碼從 1 開始做顯示 */}
                 {index + 1}
@@ -55,11 +57,11 @@ const PaginationBackend = ({ pageInfo, handlePageChenge }) => {
           ))}
 
           {/* 下一頁按鈕 */}
-          <li className={`page-item ${!pageInfo.has_next ? "disabled" : ""}`}>
+          <li className={`page-item ${!pageInfo.has_next ? 'disabled' : ''}`}>
             <button
               type="button"
               className="page-link"
-              onClick={() => handlePageChenge(pageInfo.current_page + 1)}
+              onClick={() => handlePageChange(pageInfo.current_page + 1)}
             >
               <span className="material-symbols-outlined fs-6 align-middle">
                 chevron_right
@@ -70,13 +72,13 @@ const PaginationBackend = ({ pageInfo, handlePageChenge }) => {
           {/* 最後一頁按鈕 */}
           <li
             className={`page-item ${
-              pageInfo.current_page === pageInfo.total_pages ? "disabled" : ""
+              pageInfo.current_page === pageInfo.total_pages ? 'disabled' : ''
             }`}
           >
             <button
               className="page-link"
               type="button"
-              onClick={() => handlePageChenge(pageInfo.total_pages)}
+              onClick={() => handlePageChange(pageInfo.total_pages)}
             >
               <span className="material-symbols-outlined fs-6 align-middle">
                 keyboard_double_arrow_right
@@ -90,3 +92,13 @@ const PaginationBackend = ({ pageInfo, handlePageChenge }) => {
 };
 
 export default PaginationBackend;
+
+PaginationBackend.propTypes = {
+  pageInfo: PropTypes.shape({
+    current_page: PropTypes.number.isRequired,
+    total_pages: PropTypes.number.isRequired,
+    has_pre: PropTypes.bool.isRequired,
+    has_next: PropTypes.bool.isRequired,
+  }).isRequired,
+  handlePageChange: PropTypes.func.isRequired,
+};

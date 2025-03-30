@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
+import PropTypes from 'prop-types';
 
 const { VITE_BASE_URL: baseUrl, VITE_API_PATH: apiPath } = import.meta.env;
 
@@ -21,7 +22,9 @@ const ProductPurchaseOptions = ({ productId, product }) => {
   useEffect(() => {
     // 確保 product 是有效物件且 product.qty 存在才設置
     if (product && typeof product.qty !== 'undefined') {
-      setProductStockQty(product.qty);
+      // 將字串轉為數字
+      const qtyNumber = Number(product.qty);
+      setProductStockQty(qtyNumber);
       setProductQty(1);
     }
   }, [product, productId]);
@@ -62,7 +65,9 @@ const ProductPurchaseOptions = ({ productId, product }) => {
               setProductQty={setProductQty}
               productStockQty={productStockQty}
             />
-            <span className="fs-6 text-neutral60">庫存尚有{product.qty}件</span>
+            <span className="fs-6 text-neutral60">
+              庫存尚有{Number(product.qty)}件
+            </span>
           </div>
           {/* add-to-cart & add-to-favorite */}
           <div className="row g-4">
@@ -87,7 +92,7 @@ const ProductPurchaseOptions = ({ productId, product }) => {
                 onClick={() => addCartItem(product.id)}
                 type="button"
                 className="btn btn-primary fs-6 w-100 px-2 d-flex align-items-center justify-content-center"
-                disabled={product.qty <= 0 || isLoadingAddCart}
+                disabled={Number(product.qty) <= 0 || isLoadingAddCart}
               >
                 <span className={isLoadingAddCart ? 'me-2' : ''}>
                   <ButtonLoading isLoading={isLoadingAddCart} />
@@ -95,7 +100,7 @@ const ProductPurchaseOptions = ({ productId, product }) => {
                 <span className="material-symbols-outlined fs-5 align-middle me-1">
                   local_mall
                 </span>
-                {product.qty <= 0 ? '已售完' : '加入購物車'}
+                {Number(product.qty) <= 0 ? '已售完' : '加入購物車'}
               </button>
             </div>
           </div>
@@ -106,3 +111,21 @@ const ProductPurchaseOptions = ({ productId, product }) => {
 };
 
 export default ProductPurchaseOptions;
+
+ProductPurchaseOptions.propTypes = {
+  productId: PropTypes.string,
+  product: PropTypes.shape({
+    id: PropTypes.string,
+    title: PropTypes.string,
+    price: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    origin_price: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    qty: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    imageUrl: PropTypes.string,
+    content: PropTypes.shape({
+      material_contents: PropTypes.string,
+      expiry_date: PropTypes.string,
+      origin: PropTypes.string,
+      notes: PropTypes.string,
+    }),
+  }),
+};

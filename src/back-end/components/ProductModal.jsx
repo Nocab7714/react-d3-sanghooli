@@ -1,55 +1,56 @@
-import axios from "axios";
-import { useEffect, useRef, useState } from "react";
-import { Modal } from "bootstrap";
-import { useDispatch } from "react-redux";
+import axios from 'axios';
+import { useEffect, useRef, useState } from 'react';
+import { Modal } from 'bootstrap';
+import { useDispatch } from 'react-redux';
+import PropTypes from 'prop-types';
 
-import { createToast } from "../../slices/toastSlice";
+import { createToast } from '../../slices/toastSlice';
 
 // 環境變數
 const { VITE_BASE_URL: baseUrl, VITE_API_PATH: apiPath } = import.meta.env;
 
 //商品分類選單的選項
 const categoryOptions = [
-  "食品與飲品",
-  "電子與實用",
-  "花卉與植物",
-  "美妝與保養",
-  "服飾與配件",
-  "文具與書籍",
-  "居家與生活",
-  "嬰幼兒與兒童",
+  '食品與飲品',
+  '電子與實用',
+  '花卉與植物',
+  '美妝與保養',
+  '服飾與配件',
+  '文具與書籍',
+  '居家與生活',
+  '嬰幼兒與兒童',
 ];
 
 const festivalOptions = [
-  "畢業季",
-  "生日",
-  "婚禮",
-  "喬遷",
-  "情人節",
-  "母親節",
-  "父親節",
-  "兒童滿月",
-  "春節",
-  "兒童節",
-  "中秋節",
-  "聖誕節",
+  '畢業季',
+  '生日',
+  '婚禮',
+  '喬遷',
+  '情人節',
+  '母親節',
+  '父親節',
+  '兒童滿月',
+  '春節',
+  '兒童節',
+  '中秋節',
+  '聖誕節',
 ];
 
 const relationOptions = [
-  "父母",
-  "父親",
-  "母親",
-  "祖父母",
-  "子女",
-  "男性朋友",
-  "女性朋友",
-  "男性情人",
-  "女性情人",
-  "丈夫",
-  "妻子",
-  "師長",
-  "同事",
-  "商業夥伴",
+  '父母',
+  '父親',
+  '母親',
+  '祖父母',
+  '子女',
+  '男性朋友',
+  '女性朋友',
+  '男性情人',
+  '女性情人',
+  '丈夫',
+  '妻子',
+  '師長',
+  '同事',
+  '商業夥伴',
 ];
 
 const ProductModal = ({
@@ -67,24 +68,24 @@ const ProductModal = ({
   });
 
   useEffect(() => {
-    if (modalMode === "create") {
+    if (modalMode === 'create') {
       // 重新把ModalData設成最新的值 -> 清空表單資料
       setModalData({
-        title: "",
-        category: "",
-        unit: "",
-        qty: "",
-        origin_price: "",
-        price: "",
-        description: "",
+        title: '',
+        category: '',
+        unit: '',
+        qty: '',
+        origin_price: '',
+        price: '',
+        description: '',
         // 新增 content 屬性
         content: {
-          material_contents: "",
-          expiry_date: "",
-          origin: "",
-          notes: "",
+          material_contents: '',
+          expiry_date: '',
+          origin: '',
+          notes: '',
         },
-        imageUrl: "",
+        imageUrl: '',
         imagesUrl: [], // 初始值設為空陣列
         is_hot: false,
         is_enabled: false,
@@ -104,7 +105,7 @@ const ProductModal = ({
   //以下為將ProductModal 邏輯對應的函式動作
   const productModalRef = useRef(null); //透過 useRef 取得 DOM
 
-  //透過 useEffect ​的 hook，在頁面渲染後取得 productModalRef的 DOM元素
+  //透過 useEffect 的 hook，在頁面渲染後取得 productModalRef的 DOM元素
   useEffect(() => {
     new Modal(productModalRef.current, {
       backdrop: false, // 點擊Modal灰色區塊不進行關閉
@@ -136,7 +137,7 @@ const ProductModal = ({
 
     // 如果修改的是 content 內的屬性
     if (
-      ["material_contents", "expiry_date", "origin", "notes"].includes(name)
+      ['material_contents', 'expiry_date', 'origin', 'notes'].includes(name)
     ) {
       setModalData({
         ...modalData,
@@ -151,7 +152,7 @@ const ProductModal = ({
         //展開TempProduct->改為：modalData
         ...modalData,
         //當值(type)為 checkbox 時，就會傳入`checked`值 ; 若type不為 checkbox 時，就會將`value`傳入`name`的屬性裡
-        [name]: type === "checkbox" ? checked : value,
+        [name]: type === 'checkbox' ? checked : value,
       });
     }
   };
@@ -173,7 +174,7 @@ const ProductModal = ({
     /* 新增按鈕顯示條件：點擊時對陣列「新增」一個空字串 */
   }
   const handleAddImage = () => {
-    const newImages = [...modalData.imagesUrl, " "]; //複製imagesUrl到newImages的新陣列裡
+    const newImages = [...modalData.imagesUrl, ' ']; //複製imagesUrl到newImages的新陣列裡
 
     setModalData({
       ...modalData,
@@ -241,16 +242,17 @@ const ProductModal = ({
       dispatch(
         createToast({
           success: true,
-          message: "商品資訊已編輯更新成功",
+          message: '商品資訊已編輯更新成功',
         })
       );
     } catch (error) {
       dispatch(
         createToast({
           success: false,
-          message: "商品編輯、更新失敗",
+          message: '商品編輯、更新失敗',
         })
       );
+      console.error(error);
     }
   };
 
@@ -274,13 +276,13 @@ const ProductModal = ({
       dispatch(
         createToast({
           success: false,
-          message: "請填寫完整的產品資訊！",
+          message: '請填寫完整的產品資訊！',
         })
       );
       return; // 如果欄位不完整，直接顯示錯誤，不執行 API
     }
 
-    const apiCall = modalMode === "create" ? createProduct : updateProduct;
+    const apiCall = modalMode === 'create' ? createProduct : updateProduct;
     try {
       await apiCall();
       getProducts();
@@ -288,7 +290,7 @@ const ProductModal = ({
       dispatch(
         createToast({
           success: true,
-          message: "產品已成功更新！",
+          message: '產品已成功更新！',
         })
       );
     } catch (error) {
@@ -310,7 +312,7 @@ const ProductModal = ({
     //使用FormData格式上傳
     const formData = new FormData();
     //加入file-to-upload的欄位，並存入使用者選擇的檔案（file)
-    formData.append("file-to-upload", file);
+    formData.append('file-to-upload', file);
 
     try {
       const res = await axios.post(
@@ -320,7 +322,7 @@ const ProductModal = ({
       dispatch(
         createToast({
           success: true,
-          message: "上傳圖片成功",
+          message: '上傳圖片成功',
         })
       );
 
@@ -335,9 +337,10 @@ const ProductModal = ({
       dispatch(
         createToast({
           success: false,
-          message: "上傳圖片失敗，請確認圖片格式及大小的相關限制",
+          message: '上傳圖片失敗，請確認圖片格式及大小的相關限制',
         })
       );
+      console.error(error);
     }
   };
 
@@ -349,14 +352,14 @@ const ProductModal = ({
         ref={productModalRef}
         id="productModal"
         className="modal"
-        style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
+        style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
       >
         <div className="modal-dialog modal-dialog-centered modal-xl">
           <div className="modal-content border-0 shadow">
             <div className="modal-header border-bottom">
               {/* 調整產品 Modal 的標題、傳入的值 */}
               <h5 className="modal-title fs-4">
-                {modalMode === "create" ? "新增產品" : "編輯產品"}
+                {modalMode === 'create' ? '新增產品' : '編輯產品'}
               </h5>
               <button
                 onClick={handleCloseProductModal}
@@ -372,8 +375,8 @@ const ProductModal = ({
                   {/* 主圖的圖片上傳功能 */}
                   <div className="mb-5">
                     <label htmlFor="fileInput" className="form-label">
-                      {" "}
-                      圖片上傳{" "}
+                      {' '}
+                      圖片上傳{' '}
                     </label>
                     <input
                       type="file"
@@ -438,7 +441,7 @@ const ProductModal = ({
                     <div className="btn-group w-100">
                       {modalData.imagesUrl?.length < 5 &&
                         modalData.imagesUrl[modalData.imagesUrl.length - 1] !==
-                          "" && (
+                          '' && (
                           <button
                             onClick={handleAddImage}
                             className="btn btn-primary w-100"
@@ -766,3 +769,30 @@ const ProductModal = ({
   );
 };
 export default ProductModal;
+
+ProductModal.propTypes = {
+  modalMode: PropTypes.string,
+  tempProduct: PropTypes.shape({
+    id: PropTypes.string,
+    title: PropTypes.string,
+    category: PropTypes.string,
+    unit: PropTypes.string,
+    origin_price: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    price: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    description: PropTypes.string,
+    content: PropTypes.shape({
+      material_contents: PropTypes.string,
+      expiry_date: PropTypes.string,
+      origin: PropTypes.string,
+      notes: PropTypes.string,
+    }),
+    is_enabled: PropTypes.oneOfType([PropTypes.bool, PropTypes.number]),
+    is_hot: PropTypes.oneOfType([PropTypes.bool, PropTypes.number]),
+    imageUrl: PropTypes.string,
+    imagesUrl: PropTypes.array,
+    tages: PropTypes.array,
+  }),
+  isOpen: PropTypes.bool.isRequired,
+  setIsOpen: PropTypes.func.isRequired,
+  getProducts: PropTypes.func.isRequired,
+};

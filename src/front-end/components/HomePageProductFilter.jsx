@@ -5,7 +5,12 @@ import { useDispatch } from 'react-redux';
 import { setFilteredProductsData } from '../../slices/productsSlice';
 import InputSearchDefault from '../components/form/InputSearchDefault';
 
-import { festivalOptions, relationOptions, categoryOptions, priceRangeOptions } from '../constants/filterOptions';
+import {
+  festivalOptions,
+  relationOptions,
+  categoryOptions,
+  priceRangeOptions,
+} from '../constants/filterOptions';
 
 const HomePageProductFilter = () => {
   const navigate = useNavigate();
@@ -59,8 +64,9 @@ const HomePageProductFilter = () => {
         <div className="row gx-4 gx-md-6 mb-4 mb-lg-6 ">
           <div className="col-6 col-md-3 ">
             <select
-              className={`form-select mb-4 mb-md-0 ${isLarge ? 'form-select-lg' : ''
-                }`}
+              className={`form-select mb-4 mb-md-0 ${
+                isLarge ? 'form-select-lg' : ''
+              }`}
               name="festival"
               value={searchFormData.festival}
               onChange={handleInputChange}
@@ -75,8 +81,9 @@ const HomePageProductFilter = () => {
           </div>
           <div className="col-6 col-md-3">
             <select
-              className={`form-select mb-4 mb-md-0 ${isLarge ? 'form-select-lg' : ''
-                }`}
+              className={`form-select mb-4 mb-md-0 ${
+                isLarge ? 'form-select-lg' : ''
+              }`}
               name="relation"
               value={searchFormData.relation}
               onChange={handleInputChange}

@@ -22,7 +22,7 @@ const wishListSlice = createSlice({
 });
 const asyncToggleWishList = createAsyncThunk(
   'wishList/asyncToggleWishList',
-  async function (payload, { getState, dispatch, requestId }) {
+  async function (payload, { getState, dispatch }) {
     try {
       const wishList = getState().wishList;
       dispatch(toggleWishList(payload));
@@ -36,6 +36,7 @@ const asyncToggleWishList = createAsyncThunk(
       );
     } catch (error) {
       dispatch(createToast({ success: false, message: '願望清單操作失敗' }));
+      console.error(error);
     }
   }
 );
