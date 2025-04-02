@@ -51,10 +51,10 @@ const InputSearchDefault = ({
       {/* 搜尋 icon */}
       <span
         className={`input-group-text bg-white border-0 pe-0 ${
-          isLg ? 'ps-6' : ''
+          isLg ? 'ps-4' : ''
         }`}
       >
-        <span className="material-symbols-outlined input-search-icon text-neutral40 fs-6">
+        <span className="material-symbols-outlined input-search-icon text-neutral40 fs-5">
           search
         </span>
       </span>
