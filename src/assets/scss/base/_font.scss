@@ -12,7 +12,10 @@
   'FILL' 0,
   'wght' 400,
   'GRAD' 0,
-  'opsz' 24
+  'opsz' 24;
+  
+  // 初始隱藏
+  visibility: hidden;
 }
 
 .material-filled {
@@ -20,6 +23,10 @@
   'FILL' 1,
 }
 
+html.fonts-loaded .material-symbols-outlined {
+  visibility: visible; // 字體加載完成後顯示
+  transition: visibility 0s;
+}
 
 // 卡片字體
 .ff-noto-sans{
