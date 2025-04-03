@@ -44,7 +44,6 @@ export const AdminAuthProvider = ({ children }) => {
       setIsLoggedIn(true);
     } catch (error) {
       console.error(error);
-      
       setIsLoggedIn(false);
     }
   };
@@ -93,6 +92,7 @@ export const AdminAuthProvider = ({ children }) => {
 
   // 登出函式＋登出時重設狀態並回到首頁
   const handleLogout = async () => {
+    dispatch(asyncSetLoading(["sectionLoading", true]));
     try {
       await axios.post(`${baseUrl}/logout`);
 
@@ -105,6 +105,8 @@ export const AdminAuthProvider = ({ children }) => {
       navigate('/admin/login'); // 登出後導向登入頁面
     } catch (error) {
       console.error(error);
+    } finally {
+      dispatch(asyncSetLoading(["sectionLoading", false]));
     }
   };
 
