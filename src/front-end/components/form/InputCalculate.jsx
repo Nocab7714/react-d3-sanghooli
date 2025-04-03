@@ -1,3 +1,5 @@
+import PropTypes from 'prop-types';
+
 const InputCalculate = ({
   inputSize = 'm',
   productQty,
@@ -58,3 +60,10 @@ const InputCalculate = ({
 };
 
 export default InputCalculate;
+
+InputCalculate.propTypes = {
+  inputSize: PropTypes.string,
+  productQty: PropTypes.number,
+  setProductQty: PropTypes.func,
+  productStockQty: PropTypes.number,
+};

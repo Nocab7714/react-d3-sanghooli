@@ -15,10 +15,12 @@ const breadcrumbItem = [
   },
 ];
 
-const BreadcrumbParentExample = () =>{
-  return(<>
-        <Breadcrumb breadcrumbItem={breadcrumbItem}/>
-      </>)
-}
+const BreadcrumbParentExample = () => {
+  return (
+    <>
+      <Breadcrumb breadcrumbItem={breadcrumbItem} />
+    </>
+  );
+};
 
-export default BreadcrumbParentExample
+export default BreadcrumbParentExample;

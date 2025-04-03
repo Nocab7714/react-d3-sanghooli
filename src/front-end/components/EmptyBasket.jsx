@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import cartEmptyImg from '../../assets/img/illustration/cart-empty.webp';
-export default function EmptyBasket(){
+export default function EmptyBasket() {
   return (
     <>
       <div className="text-neutral60 mb-10">
@@ -13,10 +13,16 @@ export default function EmptyBasket(){
         </a>
       </div>
       <div className="text-center py-6 py-lg-19 mb-10">
-        <img src={cartEmptyImg} alt="cartEmpty image" className='cart-img mb-2'/>
-        <p className='mb-4'>購物車目前尚無商品</p>
-        <Link to="/" type="button" className='btn btn-primary'>立即購物</Link>
+        <img
+          src={cartEmptyImg}
+          alt="cartEmpty image"
+          className="cart-img mb-2"
+        />
+        <p className="mb-4">購物車目前尚無商品</p>
+        <Link to="/" type="button" className="btn btn-primary">
+          立即購物
+        </Link>
       </div>
     </>
-  )
+  );
 }

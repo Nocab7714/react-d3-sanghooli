@@ -1,3 +1,5 @@
+import PropTypes from 'prop-types';
+
 const ButtonLoading = ({ isLoading = false }) => {
   return (
     <>
@@ -11,3 +13,7 @@ const ButtonLoading = ({ isLoading = false }) => {
 };
 
 export default ButtonLoading;
+
+ButtonLoading.propTypes = {
+  isLoading: PropTypes.bool,
+};

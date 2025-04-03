@@ -56,7 +56,6 @@ const ProductsListPage = () => {
 
   // 使用分頁 hook
   const {
-    currentPage,
     setCurrentPage,
     paginatedItems,
     paginationData,

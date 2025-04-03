@@ -3,8 +3,14 @@
 // （例如搜尋 button 變成 clear button、search icon 消失）
 
 import { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 
-const InputSearchDefault = ({ size = 'standard', value, onChange, onSearch }) => {
+const InputSearchDefault = ({
+  size = 'standard',
+  value,
+  onChange,
+  onSearch,
+}) => {
   // localValue 是 input 內部的本地狀態，用來同步顯示輸入框的值
   const [localValue, setLocalValue] = useState(value);
 
@@ -37,10 +43,18 @@ const InputSearchDefault = ({ size = 'standard', value, onChange, onSearch }) =>
   };
 
   return (
-    <div className={`input-group search-input-container ${isLg ? 'input-group-lg mt-5' : ''}`}>
+    <div
+      className={`input-group search-input-container ${
+        isLg ? 'input-group-lg mt-5' : ''
+      }`}
+    >
       {/* 搜尋 icon */}
-      <span className={`input-group-text bg-white border-0 pe-0 ${isLg ? 'ps-6' : ''}`}>
-        <span className="material-symbols-outlined input-search-icon text-neutral40 fs-6">
+      <span
+        className={`input-group-text bg-white border-0 pe-0 ${
+          isLg ? 'ps-4' : ''
+        }`}
+      >
+        <span className="material-symbols-outlined input-search-icon text-neutral40 fs-5">
           search
         </span>
       </span>
@@ -60,7 +74,7 @@ const InputSearchDefault = ({ size = 'standard', value, onChange, onSearch }) =>
       {/* 搜尋按鈕 - 觸發 `onSearch` */}
       <button
         className={`btn btn-primary ${isLg ? 'px-8 fs-5' : ''}`}
-        type='button'
+        type="button"
         onClick={onSearch} // 只有按鈕點擊時才會執行搜尋
       >
         搜尋
@@ -70,3 +84,10 @@ const InputSearchDefault = ({ size = 'standard', value, onChange, onSearch }) =>
 };
 
 export default InputSearchDefault;
+
+InputSearchDefault.propTypes = {
+  size: PropTypes.oneOf(['standard', 'lg']),
+  value: PropTypes.string,
+  onChange: PropTypes.func,
+  onSearch: PropTypes.func,
+};

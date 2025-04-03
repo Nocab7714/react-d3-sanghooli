@@ -1,16 +1,18 @@
 import InputSearchDefault from './form/InputSearchDefault';
-import { festivalOptions, relationOptions, categoryOptions, priceRangeOptions } from '../constants/filterOptions';
+import {
+  festivalOptions,
+  relationOptions,
+  categoryOptions,
+  priceRangeOptions,
+} from '../constants/filterOptions';
+import PropTypes from 'prop-types';
 
-const FilterForm = ({
-  filters,
-  actions,
-  isLarge
-}) => {
+const FilterForm = ({ filters, actions, isLarge }) => {
   const { searchValue, festival, relation, category, priceRange } = filters;
   const { handleFilterChange, handleSearchValueChange, handleSearch } = actions;
 
   return (
-    <div className="productsList-search-form bg-neutral20 px-3 px-sm-6 px-xl-8 py-6 py-xl-8 sticky-top">
+    <div className="productsList-search-form bg-neutral20 px-3 px-sm-6 px-xl-8 py-6 py-xl-8 sticky-top mx-0 mx-sm-3">
       <form onSubmit={(e) => e.preventDefault()}>
         <h3 className="fs-4 mb-6">篩選</h3>
         <div className="row gy-4 gy-xl-6 gx-4 gx-xl-0">
@@ -93,3 +95,19 @@ const FilterForm = ({
 };
 
 export default FilterForm;
+
+FilterForm.propTypes = {
+  filters: PropTypes.shape({
+    searchValue: PropTypes.string,
+    festival: PropTypes.string,
+    relation: PropTypes.string,
+    category: PropTypes.string,
+    priceRange: PropTypes.string,
+  }).isRequired,
+  actions: PropTypes.shape({
+    handleFilterChange: PropTypes.func.isRequired,
+    handleSearchValueChange: PropTypes.func.isRequired,
+    handleSearch: PropTypes.func.isRequired,
+  }).isRequired,
+  isLarge: PropTypes.bool,
+};

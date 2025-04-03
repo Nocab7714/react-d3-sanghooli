@@ -8,10 +8,10 @@ import logo from '@/assets/img/illustration/logo-SANGHOOLI.svg';
 import { useSelector } from 'react-redux';
 
 const ScreenLoading = () => {
-  const { globalLoading } = useSelector((state) => state.loading)
+  const { globalLoading } = useSelector((state) => state.loading);
   return (
     <>
-      { globalLoading && (
+      {globalLoading && (
         <div
           className="d-flex justify-content-center align-items-center"
           style={{
