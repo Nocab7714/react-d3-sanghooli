@@ -65,7 +65,7 @@ const HeaderBacked = () => {
           {/* 品牌 LOGO */}
           <div className="container">
             <Link
-              className="navbar-brand py-0 active d-flex align-items-center ms-10"
+              className="navbar-brand py-0 active d-flex align-items-center"
               to={isLoggedIn ? '/admin/orders' : '/admin/login'} // 根據登入狀態變換路徑
             >
               <img
@@ -108,7 +108,7 @@ const HeaderBacked = () => {
                     <NavLink
                       to={item.path}
                       className={({ isActive }) =>
-                        `d-inline-block fs-6 link-neutral60 px-4 py-3 mx-0 mx-md-1 gap-3 ${
+                        `d-inline-block fs-6 link-neutral60 px-4 py-2 ${
                           isActive ? 'active' : ''
                         }`
                       }
