@@ -1,22 +1,22 @@
 // 外部資源
-import { useState, useRef } from 'react';
-import Breadcrumb from '../components/Breadcrumb.jsx';
-import ReactHelmetAsync from '../../plugins/ReactHelmetAsync';
+import { useState, useRef } from "react";
+import Breadcrumb from "../components/Breadcrumb.jsx";
+import ReactHelmetAsync from "../../plugins/ReactHelmetAsync";
 
 //視 麵包屑breadcrumb 階層保留對應資料
 const breadcrumbItem = [
   {
-    page: '首頁',
-    link: '/',
+    page: "首頁",
+    link: "/",
   },
   {
-    page: '購物流程與常見Q&A',
-    link: '/how-to-buy',
+    page: "購物流程與常見Q&A",
+    link: "/how-to-buy",
   },
 ];
 
 const HowToBuyPage = () => {
-  const [activeLink, setActiveLink] = useState('shipping'); // 預設選中 "配送方式"
+  const [activeLink, setActiveLink] = useState("shipping"); // 預設選中 "配送方式"
 
   //將錨點改為 Ref 方式設定
   const shippingRef = useRef(null);
@@ -27,16 +27,16 @@ const HowToBuyPage = () => {
     setActiveLink(id); // 確保點擊後立即更新 activeLink
 
     //錨點連動與樣式設定
-    if (id === 'shipping') {
+    if (id === "shipping") {
       shippingRef.current?.scrollIntoView({
-        behavior: 'smooth',
-        block: 'center',
-        inline: 'nearest',
+        behavior: "smooth",
+        block: "center",
+        inline: "nearest",
       });
-    } else if (id === 'return-policy') {
+    } else if (id === "return-policy") {
       returnPolicyRef.current?.scrollIntoView({
-        behavior: 'smooth',
-        block: 'center',
+        behavior: "smooth",
+        block: "center",
       });
     }
   };
@@ -59,7 +59,7 @@ const HowToBuyPage = () => {
       <ReactHelmetAsync title="購物流程與常見Q&A" />
       <div className="container">
         <div className="row">
-          <div className="col d-flex mt-19 mb-10">
+          <div className="col d-flex mt-12 mb-10">
             {/* <!-- 麵包屑Breadcrumbs --> */}
             <Breadcrumb breadcrumbItem={breadcrumbItem} />
           </div>
@@ -73,25 +73,25 @@ const HowToBuyPage = () => {
             <div className="timeline ps-10">
               <a
                 className={`timeline-item fs-5 mt-4 mb-4 ms-6 me-6 ${
-                  activeLink === 'shipping' ? 'active' : ''
+                  activeLink === "shipping" ? "active" : ""
                 }`}
-                onClick={() => handleClick('shipping')}
+                onClick={() => handleClick("shipping")}
               >
                 配送方式
               </a>
 
               <a
                 className={`timeline-item fs-5 mt-4 mb-4 ms-6 me-6 ${
-                  activeLink === 'return-policy' ? 'active' : ''
+                  activeLink === "return-policy" ? "active" : ""
                 }`}
-                onClick={() => handleClick('return-policy')}
+                onClick={() => handleClick("return-policy")}
               >
                 退換貨規則
               </a>
             </div>
           </div>
 
-          <div className="col-md-8 ps-5 mb-19 mt-4 col-12">
+          <div className="col-md-8 ps-5 mb-19 mt-4">
             {/* <!-- 資訊說明區塊（右側） --> */}
             <h4 ref={shippingRef}>配送方式</h4>
             <p className="fs-6 text-neutral60 mb-6 mt-6">

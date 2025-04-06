@@ -353,7 +353,6 @@ const ProductModal = ({
   return (
     <>
       {/* //加入產品 Modal */}
-
       <div
         ref={productModalRef}
         id="productModal"
@@ -575,7 +574,7 @@ const ProductModal = ({
                     </h3>
                   </div>
 
-                  <div className="col-12 mb-5">
+                  <div className="mb-5">
                     <div className="row">
                       {festivalOptions.map((option) => (
                         <div
@@ -610,7 +609,7 @@ const ProductModal = ({
                     </h3>
                   </div>
 
-                  <div className="col-12 mb-5">
+                  <div className="mb-5">
                     <div className="row">
                       {relationOptions.map((option) => (
                         <div

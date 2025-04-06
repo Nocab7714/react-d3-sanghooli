@@ -20,10 +20,9 @@ function AdminLoginPage() {
 
   //確保 handleLogin 獲得的是 react-hook-form 處理後的表單資料
   const onSubmit = async (data) => {
-    
     setIsLoading(true);
     try {
-      await handleLogin(data); 
+      await handleLogin(data);
     } finally {
       setIsLoading(false);
     }
@@ -33,7 +32,6 @@ function AdminLoginPage() {
       navigate("/admin/orders"); // 直接導向管理頁面
     }
   }, [isLoggedIn, navigate]);
-
 
   return (
     <>
@@ -50,7 +48,9 @@ function AdminLoginPage() {
             <div className="form-floating mb-3 mt-5">
               <input
                 type="email"
-                className={`form-control ${errors.username ? "is-invalid" : " "}`} // 根據錯誤顯示樣式
+                className={`form-control ${
+                  errors.username ? "is-invalid" : " "
+                }`} // 根據錯誤顯示樣式
                 id="email"
                 name="username"
                 placeholder="name@example.com"
@@ -73,7 +73,9 @@ function AdminLoginPage() {
             <div className="form-floating">
               <input
                 type="password"
-                className={`form-control ${errors.password ? "is-invalid" : ""}`}
+                className={`form-control ${
+                  errors.password ? "is-invalid" : ""
+                }`}
                 id="password"
                 name="password"
                 placeholder="Password"
@@ -86,13 +88,13 @@ function AdminLoginPage() {
             </div>
 
             {/* 登入按鈕 */}
-              <button
-                type="submit"
-                className="btn btn-primary mt-3"
-                disabled={isLoading} // 登入後禁用按鈕，避免重複提交
-              >
-                {isLoading ? "登入中…" : "登入"}
-              </button>
+            <button
+              type="submit"
+              className="btn btn-primary mt-3"
+              disabled={isLoading} // 登入後禁用按鈕，避免重複提交
+            >
+              {isLoading ? "登入中…" : "登入"}
+            </button>
           </form>
         </div>
       </div>
