@@ -119,7 +119,6 @@ const ProductsManagementPage = () => {
       case 'edit':
         setTempProduct(product);
         break;
-
       default:
         break;
     }

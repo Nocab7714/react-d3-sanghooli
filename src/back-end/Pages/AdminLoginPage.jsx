@@ -38,7 +38,7 @@ function AdminLoginPage() {
   return (
     <>
       <ReactHelmetAsync title="後台系統-傳送門" />
-      {/* //登入模板 */}
+      {/* 登入模板 */}
       <div className="container pt-22 pb-24">
         <div className="d-flex flex-column justify-content-center align-items-center">
           <h2 className="mb-5 ">SANGHOOLI 後台登入</h2>
@@ -50,7 +50,7 @@ function AdminLoginPage() {
             <div className="form-floating mb-3 mt-5">
               <input
                 type="email"
-                className={`form-control ${errors.username ? "is-invalid" : ""}`} // 根據錯誤顯示樣式
+                className={`form-control ${errors.username ? "is-invalid" : " "}`} // 根據錯誤顯示樣式
                 id="email"
                 name="username"
                 placeholder="name@example.com"
