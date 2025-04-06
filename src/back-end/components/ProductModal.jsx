@@ -68,39 +68,41 @@ const ProductModal = ({
   });
 
   useEffect(() => {
-    if (modalMode === "create") {
-      // 重新把ModalData設成最新的值 -> 清空表單資料
-      setModalData({
-        title: "",
-        category: "",
-        unit: "",
-        qty: "",
-        origin_price: "",
-        price: "",
-        description: "",
-        // 新增 content 屬性
-        content: {
-          material_contents: "",
-          expiry_date: "",
-          origin: "",
-          notes: "",
-        },
-        imageUrl: "",
-        imagesUrl: [], // 初始值設為空陣列
-        is_hot: false,
-        is_enabled: false,
-        tages: [], // 避免 undefined
-      });
-    } else {
-      // 編輯模式帶入商品資料
-      setModalData({
-        ...tempProduct,
-        // 修改useEffect初始化(modalData):在 useEffect 裡加上 is_hot 預設值false，避免 undefined
-        is_hot: tempProduct.is_hot ?? false,
-        tages: tempProduct?.tages || [],
-      });
+    if (isOpen) {
+      if (modalMode === "create") {
+        // 重新把ModalData設成最新的值 -> 清空表單資料
+        setModalData({
+          title: "",
+          category: "",
+          unit: "",
+          qty: "",
+          origin_price: "",
+          price: "",
+          description: "",
+          // 新增 content 屬性
+          content: {
+            material_contents: "",
+            expiry_date: "",
+            origin: "",
+            notes: "",
+          },
+          imageUrl: "",
+          imagesUrl: [], // 初始值設為空陣列
+          is_hot: false,
+          is_enabled: false,
+          tages: [], // 避免 undefined
+        });
+      } else {
+        // 編輯模式帶入商品資料
+        setModalData({
+          ...tempProduct,
+          // 修改useEffect初始化(modalData):在 useEffect 裡加上 is_hot 預設值false，避免 undefined
+          is_hot: tempProduct.is_hot ?? false,
+          tages: tempProduct?.tages || [],
+        });
+      }
     }
-  }, [tempProduct]); //當tempPeoduct更新後，重新讓setModalData也更新一份
+  }, [isOpen, modalMode, tempProduct]); //當tempPeoduct更新後，重新讓setModalData也更新一份
 
   //以下為將ProductModal 邏輯對應的函式動作
   const productModalRef = useRef(null); //透過 useRef 取得 DOM
