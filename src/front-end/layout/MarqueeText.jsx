@@ -45,13 +45,9 @@ const MarqueeText = ({ headerRef, headerHeight, setHeaderHeight }) => {
 
   return (
     <>
-      <div ref={bannerRef} className="bg-white ">
+      <div ref={bannerRef} >
         <div
           className="container py-3"
-          style={{
-            background:
-              'linear-gradient(90deg, rgba(255, 238, 219, 0) 0%, #FFEEDB 50%, rgba(255, 238, 219, 0) 100%)',
-          }}
         >
           <p
             className="text-center fs-7 fs-md-6"
