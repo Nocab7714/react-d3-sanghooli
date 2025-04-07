@@ -12,7 +12,7 @@ const FilterForm = ({ filters, actions, isLarge }) => {
   const { handleFilterChange, handleSearchValueChange, handleSearch } = actions;
 
   return (
-    <div className="productsList-search-form bg-neutral20 px-3 px-sm-6 px-xl-8 py-6 py-xl-8 sticky-top">
+    <div className="productsList-search-form bg-neutral20 px-3 px-sm-6 px-xl-8 py-6 py-xl-8 sticky-top mx-0 mx-sm-3">
       <form onSubmit={(e) => e.preventDefault()}>
         <h3 className="fs-4 mb-6">篩選</h3>
         <div className="row gy-4 gy-xl-6 gx-4 gx-xl-0">

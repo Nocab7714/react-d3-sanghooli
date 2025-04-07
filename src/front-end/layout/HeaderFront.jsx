@@ -19,7 +19,13 @@ const HeaderFront = () => {
 
   return (
     <>
-      <div className="fixed-top">
+      <div
+        className="fixed-top bg-white"
+        style={{
+          background:
+            'linear-gradient(90deg, rgba(255, 238, 219, 0) 0%, #FFEEDB 50%, rgba(255, 238, 219, 0) 100%)',
+        }}
+      >
         <MarqueeText
           headerRef={headerRef}
           headerHeight={headerHeight}
