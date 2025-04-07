@@ -24,17 +24,31 @@ const PrivacyPolicyPage = () => {
 
   const handleClick = (id) => {
     setActiveLink(id);
-    //錨點連動與樣式設定
-    if (id === "privacy-policy") {
-      privacyPolicyRef.current?.scrollIntoView({
+
+    // 獲取頁面頂部到視窗頂部的距離
+    const headerOffset = 156; // 假設頁面頂部有固定導航欄高度(根據實際情況調整)
+
+    if (id === "privacy-policy" && privacyPolicyRef.current) {
+      // 計算元素位置
+      const elementPosition =
+        privacyPolicyRef.current.getBoundingClientRect().top;
+      // 計算滾動位置 (當前滾動位置 + 元素位置 - 頂部偏移)
+      const offsetPosition =
+        window.pageYOffset + elementPosition - headerOffset;
+
+      window.scrollTo({
+        top: offsetPosition,
         behavior: "smooth",
-        block: "center",
-        inline: "nearest",
       });
-    } else if (id === "service-policy") {
-      servicePolicyRef.current?.scrollIntoView({
+    } else if (id === "service-policy" && servicePolicyRef.current) {
+      const elementPosition =
+        servicePolicyRef.current.getBoundingClientRect().top;
+      const offsetPosition =
+        window.pageYOffset + elementPosition - headerOffset;
+
+      window.scrollTo({
+        top: offsetPosition,
         behavior: "smooth",
-        block: "center",
       });
     }
   };
@@ -91,7 +105,9 @@ const PrivacyPolicyPage = () => {
 
           <div className="col-md-8 ps-5 mb-19 mt-4">
             {/* <!-- 資訊說明區塊（右側） --> */}
-            <h4 ref={privacyPolicyRef}>隱私權政策</h4>
+            <h4 className="policy-section" ref={privacyPolicyRef}>
+              隱私權政策
+            </h4>
             <p className="fs-6 text-neutral60 mb-6 mt-6">
               我們深知您的隱私對您至關重要，因此致力於保護您的個人資料安全。以下為我們的隱私權政策概要：
             </p>
@@ -159,66 +175,66 @@ const PrivacyPolicyPage = () => {
               </li>
             </ol>
 
-            <h4 ref={servicePolicyRef} className="mt-20 mb-6">
-              服務條款
-            </h4>
-            <ol className="ordered-list fs-6">
-              <li className="mb-2 text-neutral60">
-                <strong className="text-black">接受條款</strong>
-                <p className="mt-2 mb-4">
-                  當您使用本網站服務，即表示您已閱讀並同意本服務條款。若您不同意，請勿繼續使用本網站。
-                </p>
-              </li>
+            <div className="policy-section" ref={servicePolicyRef}>
+              <h4 className="mt-20 mb-6">服務條款</h4>
+              <ol className="ordered-list fs-6">
+                <li className="mb-2 text-neutral60">
+                  <strong className="text-black">接受條款</strong>
+                  <p className="mt-2 mb-4">
+                    當您使用本網站服務，即表示您已閱讀並同意本服務條款。若您不同意，請勿繼續使用本網站。
+                  </p>
+                </li>
 
-              <li className="mb-2 text-neutral60">
-                <strong className="text-black">服務範圍</strong>
-                <p className="mt-2 mb-4">
-                  我們提供的服務包括但不限於：商品展示、線上購物、禮物配送及相關客製化服務。本網站有權隨時調整服務內容，恕不另行通知。
-                </p>
-              </li>
+                <li className="mb-2 text-neutral60">
+                  <strong className="text-black">服務範圍</strong>
+                  <p className="mt-2 mb-4">
+                    我們提供的服務包括但不限於：商品展示、線上購物、禮物配送及相關客製化服務。本網站有權隨時調整服務內容，恕不另行通知。
+                  </p>
+                </li>
 
-              <li className="mb-2 text-neutral60">
-                <strong className="text-black">用戶義務</strong>
-                <ul>
-                  <li className="mt-2 mb-2">
-                    提供正確的個人資訊以完成訂單處理。
-                  </li>
-                  <li className="mt-2 mb-4">
-                    禁止以非法或不當方式使用本網站，包括但不限於攻擊網站、散播惡意程式等行為。
-                  </li>
-                </ul>
-              </li>
-              <li className="mb-2 text-neutral60">
-                <strong className="text-black">訂單處理</strong>
-                <ul>
-                  <li className="mt-2 mb-2">
-                    {" "}
-                    訂單一經確認即進入處理流程，若需修改或取消，請於訂單未出貨前聯繫客服。
-                  </li>
-                  <li className="mt-2 mb-4">
-                    {" "}
-                    若因供應商或其他不可抗力因素導致商品無法供應，我們將主動通知並安排退款或替代方案。
-                  </li>
-                </ul>
-              </li>
+                <li className="mb-2 text-neutral60">
+                  <strong className="text-black">用戶義務</strong>
+                  <ul>
+                    <li className="mt-2 mb-2">
+                      提供正確的個人資訊以完成訂單處理。
+                    </li>
+                    <li className="mt-2 mb-4">
+                      禁止以非法或不當方式使用本網站，包括但不限於攻擊網站、散播惡意程式等行為。
+                    </li>
+                  </ul>
+                </li>
+                <li className="mb-2 text-neutral60">
+                  <strong className="text-black">訂單處理</strong>
+                  <ul>
+                    <li className="mt-2 mb-2">
+                      {" "}
+                      訂單一經確認即進入處理流程，若需修改或取消，請於訂單未出貨前聯繫客服。
+                    </li>
+                    <li className="mt-2 mb-4">
+                      {" "}
+                      若因供應商或其他不可抗力因素導致商品無法供應，我們將主動通知並安排退款或替代方案。
+                    </li>
+                  </ul>
+                </li>
 
-              <li className="mb-2 text-neutral60">
-                <strong className="text-black">責任限制</strong>
-                <p className="mt-2 mb-4">
-                  我們承諾盡力提供準確的商品資訊與服務，但不保證完全無誤，若有疑慮請聯繫客服。我們對因不可抗力（如天災、交通延誤等）導致的損失不負責。
-                </p>
-              </li>
+                <li className="mb-2 text-neutral60">
+                  <strong className="text-black">責任限制</strong>
+                  <p className="mt-2 mb-4">
+                    我們承諾盡力提供準確的商品資訊與服務，但不保證完全無誤，若有疑慮請聯繫客服。我們對因不可抗力（如天災、交通延誤等）導致的損失不負責。
+                  </p>
+                </li>
 
-              <li className="mb-2 text-neutral60">
-                <strong className="text-black">條款修改</strong>
-                <p className="mt-2 mb-4">
-                  本網站保留隨時修改服務條款的權利，最新版本將公佈於本頁面。繼續使用本網站即表示您接受修訂後的條款。
-                </p>
-              </li>
-            </ol>
-            <p className="text-neutral60 mt-10">
-              如對隱私權政策或服務條款有任何疑問，歡迎隨時聯繫我們的客服團隊！
-            </p>
+                <li className="mb-2 text-neutral60">
+                  <strong className="text-black">條款修改</strong>
+                  <p className="mt-2 mb-4">
+                    本網站保留隨時修改服務條款的權利，最新版本將公佈於本頁面。繼續使用本網站即表示您接受修訂後的條款。
+                  </p>
+                </li>
+              </ol>
+              <p className="text-neutral60 mt-10">
+                如對隱私權政策或服務條款有任何疑問，歡迎隨時聯繫我們的客服團隊！
+              </p>
+            </div>
           </div>
         </div>
       </div>
