@@ -1,9 +1,9 @@
 // 外部資源
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Breadcrumb from "../components/Breadcrumb.jsx";
 import ReactHelmetAsync from "../../plugins/ReactHelmetAsync";
 
-//視 麵包屑breadcrumb 階層保留對應資料
+//視麵包屑breadcrumb 階層保留對應資料
 const breadcrumbItem = [
   {
     page: "首頁",
@@ -52,19 +52,27 @@ const HowToBuyPage = () => {
       });
     }
   };
+// 監聽滾動事件：點擊 GoToTop 時，左側的「配送方式」錨點會亮起
+  useEffect(() => {
+    const handleScroll = () => {
+      if (shippingRef.current && returnPolicyRef.current) {
+        const shippingPosition = shippingRef.current.getBoundingClientRect().top;
+        const returnPosition = returnPolicyRef.current.getBoundingClientRect().top;
+        
+        const threshold = 200;
+        
+        if (returnPosition < threshold) {
+          setActiveLink("return-policy");
+        } 
+        else {
+          setActiveLink("shipping");
+        }
+      }
+    };
 
-  // 監聽滾動事件：內部控制 activeLink，確保點擊 GoToTop 時，左側的「」錨點會亮起
-  // 0305發現：會影響退換貨規則（錨點第二項標題）點擊的 activeLink呈現效果，因此先隱藏設定
-  // useEffect(() => {
-  //   const handleScroll = () => {
-  //   if (window.scrollY < 50) {
-  //       setActiveLink("shipping");
-  //   }
-  //   };
-
-  //   window.addEventListener("scroll", handleScroll);
-  //   return () => window.removeEventListener("scroll", handleScroll);
-  // }, []);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []); 
 
   return (
     <>
