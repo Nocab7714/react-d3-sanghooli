@@ -1,32 +1,32 @@
 // 外部資源
-import ReactHelmetAsync from '../../plugins/ReactHelmetAsync';
-import axios from 'axios';
-import { useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
-import { useEffect, useRef, useState } from 'react';
-import PaginationBackend from '../components/PaginationBackend';
-import { createToast } from '../../slices/toastSlice';
-import { Modal } from 'bootstrap';
-import DelCouponModal from '../components/DelCouponModal';
-import { useDispatch } from 'react-redux';
-import { asyncSetLoading } from '../../slices/loadingSlice';
+import ReactHelmetAsync from '../../plugins/ReactHelmetAsync'
+import axios from 'axios'
+import { useForm } from 'react-hook-form'
+import { useNavigate } from 'react-router-dom'
+import { useEffect, useRef, useState } from 'react'
+import PaginationBackend from '../components/PaginationBackend'
+import { createToast } from '../../slices/toastSlice'
+import { Modal } from 'bootstrap'
+import DelCouponModal from '../components/DelCouponModal'
+import { useDispatch } from 'react-redux'
+import { asyncSetLoading } from '../../slices/loadingSlice'
 
 // 環境變數
-const { VITE_BASE_URL: baseUrl, VITE_API_PATH: apiPath } = import.meta.env;
+const { VITE_BASE_URL: baseUrl, VITE_API_PATH: apiPath } = import.meta.env
 
 const CouponManagementPage = () => {
-  const navigate = useNavigate();
-  const dispatch = useDispatch(); // 用於觸發 toast
+  const navigate = useNavigate()
+  const dispatch = useDispatch() // 用於觸發 toast
   // 優惠券列表、分頁資訊
-  const [couponList, setCouponList] = useState([]);
-  const [pageInfo, setPageInfo] = useState({});
-  const [modalType, setModalType] = useState(''); // 'create' 或 'edit'
-  const [tempCoupon, setTempCoupon] = useState({});
+  const [couponList, setCouponList] = useState([])
+  const [pageInfo, setPageInfo] = useState({})
+  const [modalType, setModalType] = useState('') // 'create' 或 'edit'
+  const [tempCoupon, setTempCoupon] = useState({})
   // 管理「刪除優惠券 Modal」的顯示
-  const [isDelModalOpen, setIsDelModalOpen] = useState(false);
+  const [isDelModalOpen, setIsDelModalOpen] = useState(false)
   // 優惠券時間
   // eslint-disable-next-line no-unused-vars
-  const [dateTime, setDateTime] = useState(new Date());
+  const [dateTime, setDateTime] = useState(new Date())
 
   // React Hook Form
   const {
@@ -35,26 +35,28 @@ const CouponManagementPage = () => {
     formState: { errors },
     reset,
     setValue,
-  } = useForm();
+  } = useForm()
 
   // 當 tempCoupon 更新時，更新表單值
   useEffect(() => {
     if (tempCoupon) {
-      setValue('title', tempCoupon.title || '');
-      setValue('code', tempCoupon.code || '');
-      setValue('percent', tempCoupon.percent || 0);
-      setValue('is_enabled', tempCoupon.is_enabled || false);
+      setValue('title', tempCoupon.title || '')
+      setValue('code', tempCoupon.code || '')
+      setValue('percent', tempCoupon.percent || 0)
+      setValue('is_enabled', tempCoupon.is_enabled || false)
 
       // 日期需要特殊處理為 yyyy-MM-dd 格式
       if (tempCoupon.due_date) {
-        const date = new Date(tempCoupon.due_date);
+        const date = new Date(tempCoupon.due_date)
         const formattedDate = `${date.getFullYear()}-${String(
           date.getMonth() + 1
-        ).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
-        setValue('due_date', formattedDate);
+        ).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}T${String(
+          date.getHours()
+        ).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`
+        setValue('due_date', formattedDate)
       }
     }
-  }, [tempCoupon, setValue]);
+  }, [tempCoupon, setValue])
 
   // 表單提交處理
   const onSubmit = (data) => {
@@ -65,81 +67,81 @@ const CouponManagementPage = () => {
       percent: Number(data.percent),
       is_enabled: data.is_enabled,
       due_date: new Date(data.due_date).getTime(),
-    };
+    }
 
     if (modalType === 'create') {
-      createCoupon(formattedData);
+      createCoupon(formattedData)
     } else if (modalType === 'edit') {
-      updateCoupon(formattedData);
+      updateCoupon(formattedData)
     }
-    closeModal();
-  };
+    closeModal()
+  }
 
   // 驗證登入
   const checkUserLogin = async () => {
     try {
-      await axios.post(`${baseUrl}/api/user/check`);
+      await axios.post(`${baseUrl}/api/user/check`)
     } catch (error) {
-      navigate('/admin/login');
-      console.error(error);
+      navigate('/admin/login')
+      console.error(error)
     }
-  };
+  }
 
   // 取出 Cookie 中的 Token，設置到 axios headers
   useEffect(() => {
     const token = document.cookie.replace(
       /(?:(?:^|.*;\s*)D3Token\s*=\s*([^;]*).*$)|^.*$/,
       '$1'
-    );
-    axios.defaults.headers.common['Authorization'] = token;
-    checkUserLogin();
-    getCoupons();
-  }, []);
+    )
+    axios.defaults.headers.common['Authorization'] = token
+    checkUserLogin()
+    getCoupons()
+  }, [])
 
   // 取得優惠券清單
   const getCoupons = async (page = 1) => {
-    dispatch(asyncSetLoading(['sectionLoading', true]));
+    dispatch(asyncSetLoading(['sectionLoading', true]))
 
     try {
       const res = await axios.get(
         `${baseUrl}/api/${apiPath}/admin/coupons?page=${page}`
-      );
-      setCouponList(res.data.coupons);
-      setPageInfo(res.data.pagination);
+      )
+      setCouponList(res.data.coupons)
+      setPageInfo(res.data.pagination)
     } catch (error) {
       dispatch(
         createToast({ success: false, message: '取得優惠券失敗，請稍後再試' })
-      );
-      console.error(error);
+      )
+      console.error(error)
     } finally {
-      dispatch(asyncSetLoading(['sectionLoading', false]));
+      dispatch(asyncSetLoading(['sectionLoading', false]))
     }
-  };
+  }
 
   // 分頁點擊
   const handlePageChange = (page) => {
-    getCoupons(page);
-    window.scrollTo({ top: 100, behavior: 'auto' });
-  };
+    getCoupons(page)
+    window.scrollTo({ top: 100, behavior: 'auto' })
+  }
 
   // ================== Modal 狀態與邏輯 ==================
-  const couponModalRef = useRef(null); // 綁定 Modal 容器
+  const couponModalRef = useRef(null) // 綁定 Modal 容器
 
   // 初始化 Bootstrap Modal
   useEffect(() => {
     // 只要第一次進入頁面時，new 一次即可
     new Modal(couponModalRef.current, {
       backdrop: 'true', // 點 backdrop 可改成 true/false
-    });
-  }, []);
+    })
+  }, [])
 
   // 開啟 Modal
   const openModal = (type, couponData = null) => {
-    setModalType(type);
+    setModalType(type)
 
     if (type === 'create') {
-      const currentDate = new Date();
-      setDateTime(currentDate);
+      const currentDate = new Date()
+      setDateTime(currentDate)
       // 新增時，表單初始化
       setTempCoupon({
         title: '',
@@ -147,32 +149,32 @@ const CouponManagementPage = () => {
         percent: 0,
         due_date: currentDate.getTime(),
         is_enabled: false,
-      });
+      })
     } else if (type === 'edit' && couponData) {
-      setModalType('edit');
-      setDateTime(new Date(couponData.due_date));
+      setModalType('edit')
+      setDateTime(new Date(couponData.due_date))
       // 編輯時，帶入該筆優惠券的資料
       setTempCoupon({
         ...couponData,
         // 後端若傳回 1/0，需轉為 true/false 方便 checkbox 顯示
         is_enabled: couponData.is_enabled === 1 ? true : false,
-      });
+      })
     }
 
     // 顯示 Modal
-    Modal.getInstance(couponModalRef.current).show();
-  };
+    Modal.getInstance(couponModalRef.current).show()
+  }
 
   // 關閉 Modal  並重置表單
   const closeModal = () => {
-    Modal.getInstance(couponModalRef.current).hide();
-    reset(); // 重置表單
-  };
+    Modal.getInstance(couponModalRef.current).hide()
+    reset() // 重置表單
+  }
 
   // ================== 新增、編輯、刪除優惠券 ==================
   // 新增優惠券
   const createCoupon = async (couponData) => {
-    dispatch(asyncSetLoading(['sectionLoading', true]));
+    dispatch(asyncSetLoading(['sectionLoading', true]))
     try {
       await axios.post(`${baseUrl}/api/${apiPath}/admin/coupon`, {
         data: {
@@ -180,20 +182,20 @@ const CouponManagementPage = () => {
           is_enabled: couponData.is_enabled ? 1 : 0,
           due_date: Number(couponData.due_date),
         },
-      });
-      dispatch(createToast({ success: true, message: '新增優惠券成功' }));
-      getCoupons(); // 重新撈取列表
+      })
+      dispatch(createToast({ success: true, message: '新增優惠券成功' }))
+      getCoupons() // 重新撈取列表
     } catch (error) {
-      dispatch(createToast({ success: false, message: '新增優惠券失敗' }));
-      console.error(error);
+      dispatch(createToast({ success: false, message: '新增優惠券失敗' }))
+      console.error(error)
     } finally {
-      dispatch(asyncSetLoading(['sectionLoading', false]));
+      dispatch(asyncSetLoading(['sectionLoading', false]))
     }
-  };
+  }
 
   // 編輯優惠券
   const updateCoupon = async (couponData) => {
-    dispatch(asyncSetLoading(['sectionLoading', true]));
+    dispatch(asyncSetLoading(['sectionLoading', true]))
     try {
       await axios.put(
         `${baseUrl}/api/${apiPath}/admin/coupon/${couponData.id}`,
@@ -204,22 +206,22 @@ const CouponManagementPage = () => {
             due_date: Number(couponData.due_date),
           },
         }
-      );
-      dispatch(createToast({ success: true, message: '更新優惠券成功' }));
-      getCoupons();
+      )
+      dispatch(createToast({ success: true, message: '更新優惠券成功' }))
+      getCoupons()
     } catch (error) {
-      dispatch(createToast({ success: false, message: '更新優惠券失敗' }));
-      console.error(error);
+      dispatch(createToast({ success: false, message: '更新優惠券失敗' }))
+      console.error(error)
     } finally {
-      dispatch(asyncSetLoading(['sectionLoading', false]));
+      dispatch(asyncSetLoading(['sectionLoading', false]))
     }
-  };
+  }
 
   // 刪除優惠券
   const handleOpenDelCouponModal = (coupon) => {
-    setTempCoupon(coupon); // 設定要刪除的優惠券
-    setIsDelModalOpen(true); // 打開 DelCouponModal
-  };
+    setTempCoupon(coupon) // 設定要刪除的優惠券
+    setIsDelModalOpen(true) // 打開 DelCouponModal
+  }
 
   // ================== 畫面呈現 ==================
   return (
@@ -267,9 +269,7 @@ const CouponManagementPage = () => {
                           <td>{data.code}</td>
                           <td>{data.percent}%</td>
                           <td>
-                            {new Date(data.due_date).toLocaleDateString(
-                              'zh-TW'
-                            )}
+                            {new Date(data.due_date).toLocaleString('zh-TW')}
                           </td>
                           <td>
                             {data.is_enabled ? (
@@ -376,10 +376,6 @@ const CouponManagementPage = () => {
                     }`}
                     {...register('code', {
                       required: '優惠券代碼為必填',
-                      pattern: {
-                        value: /^[A-Z0-9]{4,12}$/,
-                        message: '代碼須為4-12位大寫英文字母或數字',
-                      },
                     })}
                   />
                   {errors.code && (
@@ -412,17 +408,16 @@ const CouponManagementPage = () => {
                 <div className="mb-3">
                   <label className="form-label">使用期限</label>
                   <input
-                    type="date"
+                    type="datetime-local"
                     className={`form-control ${
                       errors.due_date ? 'is-invalid' : ''
                     }`}
                     {...register('due_date', {
                       required: '使用期限為必填',
                       validate: (value) => {
-                        const today = new Date();
-                        today.setHours(0, 0, 0, 0);
-                        const selectedDate = new Date(value);
-                        return selectedDate >= today || '日期不能早於今天';
+                        const today = new Date()
+                        const selectedDate = new Date(value)
+                        return selectedDate >= today || '日期和時間不能早於現在'
                       },
                     })}
                   />
@@ -462,7 +457,7 @@ const CouponManagementPage = () => {
         </div>
       </div>
     </>
-  );
-};
+  )
+}
 
-export default CouponManagementPage;
+export default CouponManagementPage
