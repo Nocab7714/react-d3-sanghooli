@@ -2,8 +2,8 @@ const FooterBacked = () => {
   return (
     <>
       <footer>
-        <div className="bg-neutral80">
-          <div className="container py-6">
+        <div className="bg-neutral80 mt-auto py-6 bg-light">
+          <div className="container">
             <div className="d-flex flex-column flex-md-row justify-content-between align-items-center">
               <span className="text-neutral20 fs-7 mb-2 mb-md-0">
                 Copyright © 2024 React D3 Team. All rights reserved.
