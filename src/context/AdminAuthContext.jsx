@@ -1,12 +1,12 @@
-import axios from 'axios';
-import { createContext, useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import PropTypes from 'prop-types';
+import axios from "axios";
+import { createContext, useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import PropTypes from "prop-types";
 
 //內部資源
-import { createToast } from '../slices/toastSlice';
-import { asyncSetLoading } from '../slices/loadingSlice';
+import { createToast } from "../slices/toastSlice";
+import { asyncSetLoading } from "../slices/loadingSlice";
 
 // 環境變數
 const { VITE_BASE_URL: baseUrl } = import.meta.env;
@@ -20,8 +20,8 @@ export const AdminAuthProvider = ({ children }) => {
 
   //登入資訊
   const [account, setAccount] = useState({
-    username: '',
-    password: '',
+    username: "",
+    password: "",
   });
   const navigate = useNavigate();
 
@@ -31,14 +31,14 @@ export const AdminAuthProvider = ({ children }) => {
       // 如果 token 不存在，直接跳轉到登入頁面
       const token = document.cookie.replace(
         /(?:(?:^|.*;\s*)D3Token\s*=\s*([^;]*).*$)|^.*$/,
-        '$1'
+        "$1"
       );
       if (!token) {
-        navigate('/admin/login'); // 沒有 token，導向登入頁面
+        navigate("/admin/login"); // 沒有 token，導向登入頁面
         return;
       }
 
-      axios.defaults.headers.common['Authorization'] = token; //將 token 帶到 axios 上
+      axios.defaults.headers.common["Authorization"] = token; //將 token 帶到 axios 上
 
       await axios.post(`${baseUrl}/api/user/check`);
       setIsLoggedIn(true);
@@ -65,28 +65,28 @@ export const AdminAuthProvider = ({ children }) => {
 
   // 處理登入，data 是表單經過驗證後的資料
   const handleLogin = async (data) => {
-    dispatch(asyncSetLoading(['sectionLoading', true]));
+    dispatch(asyncSetLoading(["sectionLoading", true]));
     try {
       const res = await axios.post(`${baseUrl}/admin/signin`, data);
       const { token, expired } = res.data;
 
       //將 token 存入 cookie
       document.cookie = `D3Token=${token}; expires=${new Date(expired)}`;
-      axios.defaults.headers.common['Authorization'] = token;
+      axios.defaults.headers.common["Authorization"] = token;
 
       setIsLoggedIn(true);
       dispatch(createToast(res.data));
-      navigate('/admin/orders'); // 登入後導向訂單管理
+      navigate("/admin/orders"); // 登入後導向訂單管理
     } catch (error) {
       dispatch(
         createToast({
           success: false,
-          message: '登入失敗，請稍後再試！',
+          message: "登入失敗，請稍後再試！",
         })
       );
       console.error(error);
     } finally {
-      dispatch(asyncSetLoading(['sectionLoading', false]));
+      dispatch(asyncSetLoading(["sectionLoading", false]));
     }
   };
 
@@ -98,11 +98,11 @@ export const AdminAuthProvider = ({ children }) => {
 
       //確保登出時清除 token
       document.cookie =
-        'D3Token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/';
+        "D3Token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/";
 
       // 清除狀態
       setIsLoggedIn(false);
-      navigate('/admin/login'); // 登出後導向登入頁面
+      navigate("/admin/login"); // 登出後導向登入頁面
     } catch (error) {
       console.error(error);
     } finally {

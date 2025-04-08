@@ -1,5 +1,5 @@
+// 外部資源
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react';
 import { Modal } from 'bootstrap';
 import { useDispatch } from 'react-redux';
@@ -16,26 +16,9 @@ const DelOrdersModal = ({
   getOrders,
   deleteMode,
 }) => {
-  const navigate = useNavigate(); // 檢查使用者登入狀態
   const dispatch = useDispatch();
   // eslint-disable-next-line no-unused-vars
   const [isScreenLoading, setIsScreenLoading] = useState(false);
-
-  // 檢查用戶是否登入
-  const checkUserLogin = async () => {
-    try {
-      await axios.post(`${baseUrl}/api/user/check`);
-    } catch (error) {
-      dispatch(
-        createToast({
-          success: false,
-          message: '請先登入',
-        })
-      );
-      navigate('/admin/login');
-      console.error(error);
-    }
-  };
 
   useEffect(() => {
     const token = document.cookie.replace(
@@ -43,7 +26,6 @@ const DelOrdersModal = ({
       '$1'
     );
     axios.defaults.headers.common['Authorization'] = token; //設定 axios token
-    checkUserLogin(); // 檢查用戶登入狀態
   }, []);
 
   const delOrdersModalRef = useRef(null); // 透過 useRef 取得刪除確認 Modal 的 DOM

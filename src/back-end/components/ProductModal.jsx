@@ -210,7 +210,7 @@ const ProductModal = ({
   // 編輯商品 API
   const updateProduct = async (formData) => {
     try {
-      const res = await axios.put(
+      await axios.put(
         `${baseUrl}/api/${apiPath}/admin/product/${formData.id}`,
         {
           data: {
@@ -508,7 +508,7 @@ const ProductModal = ({
                             required: "此欄位必填！",
                             pattern: {
                               value: /^[\u4e00-\u9fa5]+$/,
-                              message: "請確認「單位」的格式是否正確",
+                              message: "請確認輸入的「單位」格式是否正確",
                             },
                           }}
                           render={({ field }) => (
@@ -541,7 +541,7 @@ const ProductModal = ({
                             required: "此欄位必填！",
                             pattern: {
                               value: /^[0-9]+$/,
-                              message: "請確認輸入的內容格式是否正確",
+                              message: "請確認輸入的「數量」格式是否正確",
                             },
                           }}
                           render={({ field }) => (

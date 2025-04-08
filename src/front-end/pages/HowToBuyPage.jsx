@@ -53,26 +53,25 @@ const HowToBuyPage = () => {
     }
   };
 // 監聽滾動事件：點擊 GoToTop 時，左側的「配送方式」錨點會亮起
-  useEffect(() => {
-    const handleScroll = () => {
-      if (shippingRef.current && returnPolicyRef.current) {
-        const shippingPosition = shippingRef.current.getBoundingClientRect().top;
-        const returnPosition = returnPolicyRef.current.getBoundingClientRect().top;
-        
-        const threshold = 200;
-        
-        if (returnPosition < threshold) {
-          setActiveLink("return-policy");
-        } 
-        else {
-          setActiveLink("shipping");
-        }
-      }
-    };
+useEffect(() => {
+  const handleScroll = () => {
+    if (shippingRef.current && returnPolicyRef.current) {
+      const shippingPosition = shippingRef.current.getBoundingClientRect().top;
+      const returnPosition = returnPolicyRef.current.getBoundingClientRect().top;
+      const threshold = 200;
 
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []); 
+      if (returnPosition < threshold) {
+        setActiveLink("return-policy");
+      } else if (shippingPosition < threshold) {
+        setActiveLink("shipping");
+      }
+    }
+  };
+
+  window.addEventListener("scroll", handleScroll);
+  return () => window.removeEventListener("scroll", handleScroll);
+}, []);
+
 
   return (
     <>

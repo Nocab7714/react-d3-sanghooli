@@ -1,10 +1,10 @@
 // 外部資源
-import axios from 'axios';
-import { useEffect, useRef, useState } from 'react';
-import { Modal } from 'bootstrap';
-import { useDispatch } from 'react-redux';
-import { createToast } from '../../slices/toastSlice';
-import PropTypes from 'prop-types';
+import axios from "axios";
+import { useEffect, useRef, useState } from "react";
+import { Modal } from "bootstrap";
+import { useDispatch } from "react-redux";
+import { createToast } from "../../slices/toastSlice";
+import PropTypes from "prop-types";
 
 // 環境變數
 const { VITE_BASE_URL: baseUrl, VITE_API_PATH: apiPath } = import.meta.env;
@@ -14,7 +14,7 @@ const DelProductModal = ({ tempProduct, isOpen, setIsOpen, getProducts }) => {
   const delProductModalRef = useRef(null);
 
   // eslint-disable-next-line no-unused-vars
-  const [toast, setToast] = useState({ show: false, title: '', icon: '' });
+  const [toast, setToast] = useState({ show: false, title: "", icon: "" });
 
   const dispatch = useDispatch();
 
@@ -50,15 +50,15 @@ const DelProductModal = ({ tempProduct, isOpen, setIsOpen, getProducts }) => {
       dispatch(
         createToast({
           success: true,
-          message: '此筆產品已完成刪除！',
+          message: "此筆產品已完成刪除！",
         })
       );
-      setToast({ show: true, title: res.data.message, icon: 'success' });
+      setToast({ show: true, title: res.data.message, icon: "success" });
     } catch (error) {
       dispatch(
         createToast({
           success: false,
-          message: '刪除此筆產品失敗，請確認權限後，再試一次！',
+          message: "刪除此筆產品失敗，請確認權限後，再試一次！",
         })
       );
       console.error(error);
@@ -75,7 +75,7 @@ const DelProductModal = ({ tempProduct, isOpen, setIsOpen, getProducts }) => {
       dispatch(
         createToast({
           success: false,
-          message: '刪除產品失敗，請稍作等待後，再重新嘗試操作！',
+          message: "刪除產品失敗，請稍作等待後，再重新嘗試操作！",
         })
       );
       console.error(error);
@@ -90,7 +90,7 @@ const DelProductModal = ({ tempProduct, isOpen, setIsOpen, getProducts }) => {
         className="modal fade"
         id="delProductModal"
         tabIndex="-1"
-        style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
+        style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
       >
         <div className="modal-dialog">
           <div className="modal-content">
