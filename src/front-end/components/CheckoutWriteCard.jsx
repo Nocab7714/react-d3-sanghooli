@@ -118,157 +118,161 @@ export default function CheckoutWriteCard({
     <>
       <div className="row mb-3">
         <div className="col-lg-8">
-          <h4>自製賀卡傳遞心意</h4>
-          <div className="d-flex overflow-auto">
-            {cardOptions.map((card) => (
-              <CheckboxRadio
-                key={card.id}
-                register={register}
-                errors={errors}
-                id={card.id}
-                name="cardType"
-                labelText={card.title}
-                type="radio"
-                img={card.imgUrl}
-                rules={{
-                  required: '（ 必填 ）',
-                }}
-                value={card.imgUrl}
-              />
-            ))}
-          </div>
-          <div className="row">
-            <div className="col-xl-8">
-              <div
-                className="p-6 rounded-4"
-                style={{
-                  // backgroundImage: `url(${watchForm.cardType})`,
-                  backgroundImage: `url(${watchForm.cardType || cardOptions[0].imgUrl})`,
-                  backgroundPosition: 'center',
-                  backgroundSize: 'cover',
-                }}
-              >
-                <Input
+          <div className='border-bottom border-bottom-lg-0 pb-5'>
+            <h4 className='mb-2'>自製賀卡傳遞心意</h4>
+            <div className="d-flex overflow-auto mb-3">
+              {cardOptions.map((card) => (
+                <CheckboxRadio
+                  key={card.id}
                   register={register}
                   errors={errors}
-                  id="cardRecipient"
-                  labelText="Dear"
-                  type="text"
-                  placeholder="收禮人暱稱"
+                  id={card.id}
+                  name="cardType"
+                  labelText={card.title}
+                  type="radio"
+                  img={card.imgUrl}
                   rules={{
                     required: '（ 必填 ）',
                   }}
-                  inputClass={`bg-white bg-opacity-75 ${watchForm.cardFont}`}
+                  value={card.imgUrl}
                 />
-                <Textarea
-                  register={register}
-                  errors={errors}
-                  id="cardContent"
-                  labelText=""
-                  labelClassName="d-none"
-                  placeholder="寫下祝福的話"
-                  textareaClassName={`bg-white bg-opacity-75 p-8 ${watchForm.cardFont}`}
-                  rows="5"
-                  rules={{
-                    required: '（ 必填 ）',
-                  }}
-                />
-                <Input
-                  register={register}
-                  errors={errors}
-                  id="cardFrom"
-                  labelText="From"
-                  type="text"
-                  placeholder="我的暱稱"
-                  rules={{
-                    required: '（ 必填 ）',
-                  }}
-                  layoutClass="w-50 ms-auto"
-                  inputClass={`bg-white bg-opacity-75 ${watchForm.cardFont}`}
-                />
-              </div>
+              ))}
             </div>
-            <div className="col-xl-4">
-              <div className="pt-6">
-                <Select
-                  register={register}
-                  errors={errors}
-                  id="cardFont"
-                  rules={{}}
-                  labelText="字體"
-                  selectClassName={watchForm.cardFont}
+            <div className="row">
+              <div className="col-xl-8">
+                <div
+                  className="p-6 rounded-4"
+                  style={{
+                    // backgroundImage: `url(${watchForm.cardType})`,
+                    backgroundImage: `url(${watchForm.cardType || cardOptions[0].imgUrl})`,
+                    backgroundPosition: 'center',
+                    backgroundSize: 'cover',
+                  }}
                 >
-                  {fontOptions.map((font) => (
-                    <option
-                      key={font.font}
-                      value={font.font}
-                      className={font.font}
-                    >
-                      {font.name}
-                    </option>
-                  ))}
-                </Select>
+                  <Input
+                    register={register}
+                    errors={errors}
+                    id="cardRecipient"
+                    labelText="Dear"
+                    type="text"
+                    placeholder="收禮人暱稱"
+                    rules={{
+                      required: '（ 必填 ）',
+                    }}
+                    inputClass={`bg-white bg-opacity-75 ${watchForm.cardFont}`}
+                  />
+                  <Textarea
+                    register={register}
+                    errors={errors}
+                    id="cardContent"
+                    labelText=""
+                    labelClassName="d-none"
+                    placeholder="寫下祝福的話"
+                    textareaClassName={`bg-white bg-opacity-75 p-8 ${watchForm.cardFont}`}
+                    rows="5"
+                    rules={{
+                      required: '（ 必填 ）',
+                    }}
+                  />
+                  <Input
+                    register={register}
+                    errors={errors}
+                    id="cardFrom"
+                    labelText="From"
+                    type="text"
+                    placeholder="我的暱稱"
+                    rules={{
+                      required: '（ 必填 ）',
+                    }}
+                    layoutClass="w-50 ms-auto"
+                    inputClass={`bg-white bg-opacity-75 ${watchForm.cardFont}`}
+                  />
+                </div>
+              </div>
+              <div className="col-xl-4">
+                <div className="pt-3 pt-xl-6">
+                  <Select
+                    register={register}
+                    errors={errors}
+                    id="cardFont"
+                    rules={{}}
+                    labelText="字體"
+                    selectClassName={watchForm.cardFont}
+                  >
+                    {fontOptions.map((font) => (
+                      <option
+                        key={font.font}
+                        value={font.font}
+                        className={font.font}
+                      >
+                        {font.name}
+                      </option>
+                    ))}
+                  </Select>
+                </div>
               </div>
             </div>
           </div>
         </div>
         <div className="col-lg-4">
-          <h4>禮品包裝服務</h4>
-          <div className="accordion" id="accordionWrappingOptions">
-            {wrappingOptions.map((wrapping) => (
-              <div key={wrapping.id} className="accordion-item">
-                <h2 className="accordion-header">
+          <div className='mt-5'>
+            <h4 className='mb-2'>禮品包裝服務</h4>
+            <div className="accordion" id="accordionWrappingOptions">
+              {wrappingOptions.map((wrapping) => (
+                <div key={wrapping.id} className="accordion-item">
+                  <h2 className="accordion-header">
+                    <div
+                      className={`accordion-button p-0  ${
+                        watchForm.wrapping === wrapping.title ? '' : 'collapsed'
+                      }`}
+                      data-bs-toggle="collapse"
+                      data-bs-target={`#${wrapping.id}`}
+                      aria-expanded={
+                        watchForm.wrapping === wrapping.title ? 'true' : 'false'
+                      }
+                      aria-controls={wrapping.id}
+                    >
+                      <div className="form-check w-100 mb-0 lh-normal ps-8">
+                        <input
+                          {...register('wrapping')}
+                          type="radio"
+                          id={wrapping.title}
+                          className="form-check-input mt-3"
+                          value={wrapping.title}
+                        />
+                        <label
+                          htmlFor={wrapping.title}
+                          className="form-check-label w-100 py-2"
+                        >
+                          {wrapping.title}
+                        </label>
+                      </div>
+                    </div>
+                  </h2>
                   <div
-                    className={`accordion-button p-0  ${
-                      watchForm.wrapping === wrapping.title ? '' : 'collapsed'
+                    id={wrapping.id}
+                    className={`accordion-collapse collapse ${
+                      wrapping.title === '免費包裝' ? 'show' : ''
                     }`}
-                    data-bs-toggle="collapse"
-                    data-bs-target={`#${wrapping.id}`}
-                    aria-expanded={
-                      watchForm.wrapping === wrapping.title ? 'true' : 'false'
-                    }
-                    aria-controls={wrapping.id}
+                    data-bs-parent="#accordionWrappingOptions"
                   >
-                    <div className="form-check w-100 mb-0 lh-normal ps-8">
-                      <input
-                        {...register('wrapping')}
-                        type="radio"
-                        id={wrapping.title}
-                        className="form-check-input mt-3"
-                        value={wrapping.title}
+                    <div className="accordion-body">
+                      <img
+                        className="img-fluid mb-3"
+                        src={wrapping.imgUrl}
+                        alt={wrapping.title}
                       />
-                      <label
-                        htmlFor={wrapping.title}
-                        className="form-check-label w-100 py-2"
-                      >
-                        {wrapping.title}
-                      </label>
+                      <p className="mb-3">服務細項說明</p>
+                      <ul className="list-unstyled d-flex flex-column gap-2">
+                        <li>包裝耗材：{wrapping.material}</li>
+                        <li>禮盒尺寸 (cm)：{wrapping.size}</li>
+                        <li>備註：{wrapping.note}</li>
+                      </ul>
                     </div>
                   </div>
-                </h2>
-                <div
-                  id={wrapping.id}
-                  className={`accordion-collapse collapse ${
-                    wrapping.title === '免費包裝' ? 'show' : ''
-                  }`}
-                  data-bs-parent="#accordionWrappingOptions"
-                >
-                  <div className="accordion-body">
-                    <img
-                      className="img-fluid mb-3"
-                      src={wrapping.imgUrl}
-                      alt={wrapping.title}
-                    />
-                    <p className="mb-3">服務細項說明</p>
-                    <ul className="list-unstyled d-flex flex-column gap-2">
-                      <li>包裝耗材：{wrapping.material}</li>
-                      <li>禮盒尺寸 (cm)：{wrapping.size}</li>
-                      <li>備註：{wrapping.note}</li>
-                    </ul>
-                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       </div>
