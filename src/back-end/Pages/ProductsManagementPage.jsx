@@ -1,7 +1,7 @@
 // 外部資源
 import axios from "axios";
 import ReactHelmetAsync from "../../plugins/ReactHelmetAsync";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useDispatch } from "react-redux";
 import PaginationBackend from "../components/PaginationBackend";
 import { createToast } from "../../slices/toastSlice";
@@ -36,45 +36,44 @@ const defaultModalState = {
 
 const ProductsManagementPage = () => {
   const dispatch = useDispatch();
+  const [productList, setProductList] = useState([]); //先給 productList 一個狀態：後續會從API撈回資料塞回productList 中
 
+  // 使用useCallback包裝getProducts函數
+  const getProducts = useCallback(
+    async (page = 1) => {
+      dispatch(asyncSetLoading(["sectionLoading", true]));
+      try {
+        const res = await axios.get(
+          `${baseUrl}/api/${apiPath}/admin/products?page=${page}`
+        );
+        setProductList(res.data.products);
+
+        //從 產品 API 取得頁面資訊getProduct，並存進狀態中（把res.data.Pagination 塞進去 setPageInfo 裡面）
+        setPageInfo(res.data.pagination);
+      } catch (error) {
+        dispatch(
+          createToast({
+            success: false,
+            message: "取得產品資訊失敗，請稍作等待後，再重新嘗試操作！",
+          })
+        );
+        console.error(error);
+      } finally {
+        dispatch(asyncSetLoading(["sectionLoading", false]));
+      }
+    },
+    [dispatch]
+  ); // 加入函數內部使用到的外部依賴
+
+  // 在useEffect中使用getProducts，並將其加入依賴數組
   useEffect(() => {
     const token = document.cookie.replace(
       /(?:(?:^|.*;\s*)D3Token\s*=\s*([^;]*).*$)|^.*$/,
       "$1"
     );
-    axios.defaults.headers.common["Authorization"] = token; //將 token 帶到 axios 上：後續的axios就會帶上這行token
+    axios.defaults.headers.common["Authorization"] = token;
     getProducts();
-  }, []);
-
-  const [productList, setProductList] = useState([]); //先給 productList 一個狀態：後續會從API撈回資料塞回productList 中
-
-  //在登入成功時，呼叫：管理控制台 - 產品（Products）> Get API
-  const getProducts = async (page = 1) => {
-    dispatch(asyncSetLoading(["sectionLoading", true]));
-    try {
-      const res = await axios.get(
-        `${baseUrl}/api/${apiPath}/admin/products?page=${page}`
-      );
-      setProductList(res.data.products);
-
-      //從 產品 API 取得頁面資訊getProduct，並存進狀態中（把res.data.Pagination 塞進去 setPageInfo 裡面）
-      setPageInfo(res.data.pagination);
-    } catch (error) {
-      dispatch(
-        createToast({
-          success: false,
-          message: "取得產品資訊失敗，請稍作等待後，再重新嘗試操作！",
-        })
-      );
-      console.error(error);
-    } finally {
-      dispatch(asyncSetLoading(["sectionLoading", false]));
-    }
-  };
-
-  useEffect(() => {
-    getProducts();
-  }, []);
+  }, [getProducts]); // 將getProducts加入依賴數組
 
   //綁定產品 Modal 狀態:value={tempProduct.對應的變數} + onChange={handleModalInputChange}事件
   const [tempProduct, setTempProduct] = useState(defaultModalState);

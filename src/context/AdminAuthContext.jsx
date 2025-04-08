@@ -1,5 +1,6 @@
+// 外部資源
 import axios from "axios";
-import { createContext, useState, useEffect } from "react";
+import { createContext, useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import PropTypes from "prop-types";
@@ -26,7 +27,7 @@ export const AdminAuthProvider = ({ children }) => {
   const navigate = useNavigate();
 
   //驗證登入
-  const checkUserLogin = async () => {
+  const checkUserLogin = useCallback(async () => {
     try {
       // 如果 token 不存在，直接跳轉到登入頁面
       const token = document.cookie.replace(
@@ -37,21 +38,20 @@ export const AdminAuthProvider = ({ children }) => {
         navigate("/admin/login"); // 沒有 token，導向登入頁面
         return;
       }
-
-      axios.defaults.headers.common["Authorization"] = token; //將 token 帶到 axios 上
-
+      //將 token 帶到 axios 上
+      axios.defaults.headers.common["Authorization"] = token;
       await axios.post(`${baseUrl}/api/user/check`);
       setIsLoggedIn(true);
     } catch (error) {
       console.error(error);
       setIsLoggedIn(false);
     }
-  };
+  }, [navigate, setIsLoggedIn]);
 
   // 觸發 checkUserLogin 在載入時進行驗證
   useEffect(() => {
     checkUserLogin(); // 初次加載時驗證用戶登入狀態
-  }, []);
+  }, [checkUserLogin]);
 
   //處理表單輸入
   const handleInputChange = (event) => {

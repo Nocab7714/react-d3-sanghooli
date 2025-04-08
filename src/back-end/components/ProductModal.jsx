@@ -1,3 +1,4 @@
+// 外部資源
 import axios from "axios";
 import { useEffect, useRef } from "react";
 import { Modal } from "bootstrap";

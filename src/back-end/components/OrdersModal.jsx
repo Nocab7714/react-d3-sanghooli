@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { Modal } from "bootstrap";
 import { useDispatch } from "react-redux";
 import { createToast } from "../../slices/toastSlice";
@@ -76,39 +76,44 @@ const OrdersModal = ({
   };
 
   // 取得訂單詳細資料
-  const fetchOrderDetails = async (orderId) => {
-    try {
-      const res = await axios.get(`${baseUrl}/api/${apiPath}/order/${orderId}`);
-      if (res.data?.order) {
-        setModalData({
-          ...res.data.order,
-          is_paid: Boolean(res.data.order.is_paid),
-          message: res.data.order.message ?? "",
-          user: {
-            name: res.data.order.user?.name || "",
-            tel: res.data.order.user?.tel || "",
-            email: res.data.order.user?.email || "",
-            address: res.data.order.user?.address || "",
-          },
-        });
+  const fetchOrderDetails = useCallback(
+    async (orderId) => {
+      try {
+        const res = await axios.get(
+          `${baseUrl}/api/${apiPath}/order/${orderId}`
+        );
+        if (res.data?.order) {
+          setModalData({
+            ...res.data.order,
+            is_paid: Boolean(res.data.order.is_paid),
+            message: res.data.order.message ?? "",
+            user: {
+              name: res.data.order.user?.name || "",
+              tel: res.data.order.user?.tel || "",
+              email: res.data.order.user?.email || "",
+              address: res.data.order.user?.address || "",
+            },
+          });
+        }
+      } catch (error) {
+        dispatch(
+          createToast({
+            success: false,
+            message: "取得訂單資料失敗！",
+          })
+        );
+        console.error(error);
       }
-    } catch (error) {
-      dispatch(
-        createToast({
-          success: false,
-          message: "取得訂單資料失敗！",
-        })
-      );
-      console.error(error);
-    }
-  };
+    },
+    [dispatch]
+  );
 
   // 監聽 modal 開啟時獲取訂單資料
   useEffect(() => {
     if (isOpen && tempOrder?.id) {
       fetchOrderDetails(tempOrder.id);
     }
-  }, [isOpen, tempOrder?.id]);
+  }, [isOpen, tempOrder?.id, fetchOrderDetails]);
 
   // 串接更新訂單 API
   const updateOrder = async () => {
