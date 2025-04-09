@@ -1,4 +1,4 @@
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 
 const PaginationBackend = ({ pageInfo, handlePageChange }) => {
   return (
@@ -9,7 +9,7 @@ const PaginationBackend = ({ pageInfo, handlePageChange }) => {
           {/* 第一頁按鈕 */}
           <li
             className={`page-item ${
-              pageInfo.current_page === 1 ? 'disabled' : ''
+              pageInfo.current_page === 1 ? "disabled" : ""
             }`}
           >
             <button
@@ -24,7 +24,7 @@ const PaginationBackend = ({ pageInfo, handlePageChange }) => {
           </li>
 
           {/* 前一頁按鈕 */}
-          <li className={`page-item ${!pageInfo.has_pre ? 'disabled' : ''}`}>
+          <li className={`page-item ${!pageInfo.has_pre ? "disabled" : ""}`}>
             <button
               type="button"
               className="page-link"
@@ -41,7 +41,7 @@ const PaginationBackend = ({ pageInfo, handlePageChange }) => {
             <li
               key={index}
               className={`page-item ${
-                pageInfo.current_page === index + 1 && 'active'
+                pageInfo.current_page === index + 1 && "active"
               }`}
             >
               {/* 取得前頁面資料的判斷式條件 */}
@@ -57,7 +57,7 @@ const PaginationBackend = ({ pageInfo, handlePageChange }) => {
           ))}
 
           {/* 下一頁按鈕 */}
-          <li className={`page-item ${!pageInfo.has_next ? 'disabled' : ''}`}>
+          <li className={`page-item ${!pageInfo.has_next ? "disabled" : ""}`}>
             <button
               type="button"
               className="page-link"
@@ -72,7 +72,7 @@ const PaginationBackend = ({ pageInfo, handlePageChange }) => {
           {/* 最後一頁按鈕 */}
           <li
             className={`page-item ${
-              pageInfo.current_page === pageInfo.total_pages ? 'disabled' : ''
+              pageInfo.current_page === pageInfo.total_pages ? "disabled" : ""
             }`}
           >
             <button

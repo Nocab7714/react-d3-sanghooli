@@ -1,91 +1,79 @@
 // 外部資源
-import axios from 'axios';
-import ReactHelmetAsync from '../../plugins/ReactHelmetAsync';
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import PaginationBackend from '../components/PaginationBackend';
-import { createToast } from '../../slices/toastSlice';
+import axios from "axios";
+import ReactHelmetAsync from "../../plugins/ReactHelmetAsync";
+import { useEffect, useState, useCallback } from "react";
+import { useDispatch } from "react-redux";
+import PaginationBackend from "../components/PaginationBackend";
+import { createToast } from "../../slices/toastSlice";
 
 //內部資源
-import DelProductModal from '../components/DelProductModal';
-import ProductModal from '../components/ProductModal';
-import { asyncSetLoading } from '../../slices/loadingSlice';
+import DelProductModal from "../components/DelProductModal";
+import ProductModal from "../components/ProductModal";
+import { asyncSetLoading } from "../../slices/loadingSlice";
 
 // 環境變數
 const { VITE_BASE_URL: baseUrl, VITE_API_PATH: apiPath } = import.meta.env;
 
 // 產品資料初始狀態
 const defaultModalState = {
-  imageUrl: '', //主圖網址
-  title: '',
-  category: '',
-  unit: '',
-  origin_price: '',
-  price: '',
-  description: '',
+  imageUrl: "", //主圖網址
+  title: "",
+  category: "",
+  unit: "",
+  origin_price: "",
+  price: "",
+  description: "",
   content: {
-    material_contents: '', //材質/內容物
-    notes: '', //注意事項
-    origin: '', //產地
-    expiry_date: '', //保存期限shelf_life
+    material_contents: "", //材質/內容物
+    notes: "", //注意事項
+    origin: "", //產地
+    expiry_date: "", //保存期限shelf_life
   },
   is_enabled: 0,
   is_hot: 0,
-  imagesUrl: [''],
+  imagesUrl: [""],
 };
 
 const ProductsManagementPage = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
-  // 串接 API - 驗證登入:可以透過點擊按鈕的方式戳 API 來驗證使用者是否登入過
-  const checkUserLogin = async () => {
-    try {
-      await axios.post(`${baseUrl}/api/user/check`);
-    } catch (error) {
-      console.error(error);
-      navigate('/admin/login');
-    }
-  };
+  const [productList, setProductList] = useState([]); //先給 productList 一個狀態：後續會從API撈回資料塞回productList 中
 
+  // 使用useCallback包裝getProducts函數
+  const getProducts = useCallback(
+    async (page = 1) => {
+      dispatch(asyncSetLoading(["sectionLoading", true]));
+      try {
+        const res = await axios.get(
+          `${baseUrl}/api/${apiPath}/admin/products?page=${page}`
+        );
+        setProductList(res.data.products);
+
+        //從 產品 API 取得頁面資訊getProduct，並存進狀態中（把res.data.Pagination 塞進去 setPageInfo 裡面）
+        setPageInfo(res.data.pagination);
+      } catch (error) {
+        dispatch(
+          createToast({
+            success: false,
+            message: "取得產品資訊失敗，請稍作等待後，再重新嘗試操作！",
+          })
+        );
+        console.error(error);
+      } finally {
+        dispatch(asyncSetLoading(["sectionLoading", false]));
+      }
+    },
+    [dispatch]
+  ); // 加入函數內部使用到的外部依賴
+
+  // 在useEffect中使用getProducts，並將其加入依賴數組
   useEffect(() => {
     const token = document.cookie.replace(
       /(?:(?:^|.*;\s*)D3Token\s*=\s*([^;]*).*$)|^.*$/,
-      '$1'
+      "$1"
     );
-    axios.defaults.headers.common['Authorization'] = token; //將 token 帶到 axios 上：後續的axios就會帶上這行token
-    checkUserLogin(); //戳checkUserLogin API :
-  }, []);
-
-  const [productList, setProductList] = useState([]); //先給 productList 一個狀態：後續會從API撈回資料塞回productList 中
-
-  //在登入成功時，呼叫：管理控制台 - 產品（Products）> Get API
-  const getProducts = async (page = 1) => {
-    dispatch(asyncSetLoading(['sectionLoading', true]));
-    try {
-      const res = await axios.get(
-        `${baseUrl}/api/${apiPath}/admin/products?page=${page}`
-      );
-      setProductList(res.data.products);
-
-      //從 產品 API 取得頁面資訊getProduct，並存進狀態中（把res.data.Pagination 塞進去 setPageInfo 裡面）
-      setPageInfo(res.data.pagination);
-    } catch (error) {
-      dispatch(
-        createToast({
-          success: false,
-          message: '取得產品資訊失敗，請稍作等待後，再重新嘗試操作！',
-        })
-      );
-      console.error(error);
-    } finally {
-      dispatch(asyncSetLoading(['sectionLoading', false]));
-    }
-  };
-
-  useEffect(() => {
+    axios.defaults.headers.common["Authorization"] = token;
     getProducts();
-  }, []);
+  }, [getProducts]); // 將getProducts加入依賴數組
 
   //綁定產品 Modal 狀態:value={tempProduct.對應的變數} + onChange={handleModalInputChange}事件
   const [tempProduct, setTempProduct] = useState(defaultModalState);
@@ -112,14 +100,13 @@ const ProductsManagementPage = () => {
     setModalMode(mode);
 
     switch (mode) {
-      case 'create':
+      case "create":
         setTempProduct(defaultModalState);
         break;
 
-      case 'edit':
+      case "edit":
         setTempProduct(product);
         break;
-
       default:
         break;
     }
@@ -132,7 +119,7 @@ const ProductsManagementPage = () => {
   //讀取當前頁面的「頁碼」 資料的判斷式條件＆動作：
   const handlePageChange = (page) => {
     getProducts(page);
-    window.scrollTo({ top: 380, behavior: 'auto' }); // 滑動回到頁面頂部
+    window.scrollTo({ top: 380, behavior: "auto" }); // 滑動回到頁面頂部
   };
 
   return (
@@ -144,7 +131,7 @@ const ProductsManagementPage = () => {
             <div className=" titleDeco d-flex justify-content-between pt-19 pb-19 mb-8 rounded-3 ">
               <h1 className="ms-10">商品管理</h1>
               <button
-                onClick={() => handleOpenProductModal('create')}
+                onClick={() => handleOpenProductModal("create")}
                 type="button"
                 className="btn btn-primary me-10"
               >
@@ -211,7 +198,7 @@ const ProductsManagementPage = () => {
                           <div className="btn-group">
                             <button
                               onClick={() =>
-                                handleOpenProductModal('edit', product)
+                                handleOpenProductModal("edit", product)
                               }
                               type="button"
                               className="btn btn-primary btn-outline-primary-dark"
