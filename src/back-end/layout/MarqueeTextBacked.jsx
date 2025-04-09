@@ -24,7 +24,7 @@ const MarqueeTextBacked = ({ headerRef, headerHeight, setHeaderHeight }) => {
     // 監聽視窗大小變化，當跑馬燈換行時重新計算
     window.addEventListener('resize', updateHeaderHeight);
     return () => window.removeEventListener('resize', updateHeaderHeight);
-  }, [headerHeight]);
+  }, [headerHeight, headerRef, setHeaderHeight]);
 
   // 文字淡入淡出動畫
   const [index, setIndex] = useState(0);

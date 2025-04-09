@@ -118,7 +118,7 @@ function CartPage() {
     } else {
       getRecommendedProducts('all'); // 使用 'all' 類別
     }
-  }, [getRecommendedProducts]);
+  }, [getRecommendedProducts, cartCategories]);
   // 只當頁面載入時觸發 getRecommendedProducts 就好，不要每次 cartCategories 更新時觸發 getRecommendedProducts，因此不填入 cartCategories 依賴。
 
   // 使用優惠券
@@ -371,7 +371,7 @@ function CartPage() {
                             <tr key={cartItem.id}>
                               <th scope="row">
                                 <Link
-                                  to={`/single-product/${cartItem.product.id}`}
+                                  to={`/product-details/${cartItem.product.id}`}
                                   className="d-flex align-items-center gap-3 gap-lg-4"
                                 >
                                   <img
