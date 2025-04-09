@@ -5,7 +5,8 @@ import axios from 'axios';
 import { useDispatch } from 'react-redux';
 
 // 內部資源
-import orderSuccess from '../../assets/img/illustration/orderSuccess.webp';
+// import orderSuccess from '../../assets/img/illustration/orderSuccess.webp';
+import paymentCompleted from '../../assets/img/illustration/paymentCompleted.webp';
 import CartStep from '../components/CartStep';
 import NotFoundPage from './NotFoundPage';
 import { asyncSetLoading } from '../../slices/loadingSlice';
@@ -47,27 +48,29 @@ export default function SuccessPage() {
   return (
     <>
       <ReactHelmetAsync title="訂購完成" />
-      <div className="container py-lg-19">
-        {orderData === null ? (
-          <NotFoundPage />
-        ) : (
-          orderData.id && (
-            <>
-              <CartStep step={3} />
-              <div className="d-flex flex-column align-items-center gap-5 py-19">
-                <img src={orderSuccess} className="img-fluid" alt="" />
-                <h1 className="fs-4 fs-xl-1">訂單付款成功！感謝您的購買！</h1>
-                <p>訂單編號：{orderData.id}</p>
-                <Link
-                  to="/products-list"
-                  className="btn btn-lg btn-primary w-70 w-md-50 w-xl-30"
-                >
-                  繼續挑選
-                </Link>
-              </div>
-            </>
-          )
-        )}
+      <div className='bg-neutral20'>
+        <div className="container py-lg-19">
+          {orderData === null ? (
+            <NotFoundPage />
+          ) : (
+            orderData.id && (
+              <>
+                <CartStep step={3} />
+                <div className="d-flex flex-column align-items-center gap-5 pb-19">
+                  <img src={paymentCompleted} className="img-fluid" alt="paymentCompleted" style={{width: '400px'}}/>
+                  <h1 className="fs-4 fs-xl-1">訂單付款成功！感謝您的購買！</h1>
+                  <p>訂單編號：{orderData.id}</p>
+                  <Link
+                    to="/products-list"
+                    className="btn btn-lg btn-primary w-70 w-md-50 w-xl-30"
+                  >
+                    繼續挑選
+                  </Link>
+                </div>
+              </>
+            )
+          )}
+        </div>
       </div>
     </>
   );
