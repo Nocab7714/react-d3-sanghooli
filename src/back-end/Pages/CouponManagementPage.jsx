@@ -2,7 +2,7 @@
 import ReactHelmetAsync from '../../plugins/ReactHelmetAsync'
 import axios from 'axios'
 import { useForm } from 'react-hook-form'
-import { useNavigate } from 'react-router-dom'
+// import { useNavigate } from 'react-router-dom'
 import { useEffect, useRef, useState } from 'react'
 import PaginationBackend from '../components/PaginationBackend'
 import { createToast } from '../../slices/toastSlice'
@@ -15,7 +15,7 @@ import { asyncSetLoading } from '../../slices/loadingSlice'
 const { VITE_BASE_URL: baseUrl, VITE_API_PATH: apiPath } = import.meta.env
 
 const CouponManagementPage = () => {
-  const navigate = useNavigate()
+  // const navigate = useNavigate()
   const dispatch = useDispatch() // 用於觸發 toast
   // 優惠券列表、分頁資訊
   const [couponList, setCouponList] = useState([])
@@ -77,16 +77,6 @@ const CouponManagementPage = () => {
     closeModal()
   }
 
-  // 驗證登入
-  const checkUserLogin = async () => {
-    try {
-      await axios.post(`${baseUrl}/api/user/check`)
-    } catch (error) {
-      navigate('/admin/login')
-      console.error(error)
-    }
-  }
-
   // 取出 Cookie 中的 Token，設置到 axios headers
   useEffect(() => {
     const token = document.cookie.replace(
@@ -94,7 +84,6 @@ const CouponManagementPage = () => {
       '$1'
     )
     axios.defaults.headers.common['Authorization'] = token
-    checkUserLogin()
     getCoupons()
   }, [])
 
