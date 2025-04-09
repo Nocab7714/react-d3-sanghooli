@@ -6,7 +6,8 @@ import axios from 'axios';
 import { useDispatch } from 'react-redux';
 
 // 內部資源
-import orderFail from '../../assets/img/illustration/orderFail.webp';
+// import orderFail from '../../assets/img/illustration/orderFail.webp';
+import paymentFailed from '../../assets/img/illustration/paymentFailed.webp';
 import NotFoundPage from './NotFoundPage';
 import { asyncSetLoading } from '../../slices/loadingSlice';
 import ReactHelmetAsync from '../../plugins/ReactHelmetAsync';
@@ -37,7 +38,7 @@ export default function PaymentPage() {
 
   const payOrder = async (orderId) => {
     try {
-      const url = `${BASE_URL}/api/${API_PATH}/pay/${orderId}`;
+      const url = `${BASE_URL}/api/${API_PATH}/payy/${orderId}`;
       await axios.post(url);
       navigate(`/success/${orderId}`);
     } catch (error) {
@@ -144,7 +145,7 @@ export default function PaymentPage() {
           <div className="container py-lg-19">
             <CartStep step={3} />
             <div className="d-flex flex-column align-items-center gap-5 mb-20">
-              <img src={orderFail} className="img-fluid" alt="" />
+              <img src={paymentFailed} className="img-fluid" alt="paymentFailed" style={{width: '400px'}}/>
               <h1>付款失敗！</h1>
               <p className="w-50">
                 可能是網路連線問題導致交易失敗，請確認網路環境連線狀態是否穩定。
