@@ -76,7 +76,6 @@ const routes = [
         path: 'wish-list',
         element: <WishListPage />,
       },
-      { path: 'member-login', element: <MemberLogin /> },
     ],
   },
   {
