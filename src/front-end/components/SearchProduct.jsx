@@ -354,7 +354,7 @@ const ProductsListPage = () => {
                         </li>
                       ))
                     ) : (
-                      <div className="col-12 text-center py-6">
+                      <div className="text-center py-6">
                         <p className="text-muted fs-5">沒有找到對應的商品</p>
                       </div>
                     )}
