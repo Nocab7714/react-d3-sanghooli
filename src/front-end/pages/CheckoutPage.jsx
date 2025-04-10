@@ -69,14 +69,14 @@ export default function CheckoutPage() {
       alert({
         icon: 'success',
         title: '已建立訂單',
-      })
+      });
       navigate(`/payment/${response.data.orderId}`);
     } catch (error) {
       console.error(error.response.data);
       alert({
         icon: 'error',
         title: '訂單建立失敗',
-      })
+      });
     }
   };
 
@@ -310,7 +310,9 @@ export default function CheckoutPage() {
                         labelText={
                           <>
                             我已閱讀並同意本網站的
-                            <Link to="/privacy-policy" target="_blank">隱私權服務條款</Link>
+                            <Link to="/privacy-policy" target="_blank">
+                              隱私權服務條款
+                            </Link>
                           </>
                         }
                         type="checkbox"

@@ -118,8 +118,8 @@ export default function CheckoutWriteCard({
     <>
       <div className="row mb-3">
         <div className="col-lg-8">
-          <div className='border-bottom border-bottom-lg-0 pb-5'>
-            <h4 className='mb-2'>自製賀卡傳遞心意</h4>
+          <div className="border-bottom border-bottom-lg-0 pb-5">
+            <h4 className="mb-2">自製賀卡傳遞心意</h4>
             <div className="d-flex overflow-auto mb-3">
               {cardOptions.map((card) => (
                 <CheckboxRadio
@@ -144,7 +144,9 @@ export default function CheckoutWriteCard({
                   className="p-6 rounded-4"
                   style={{
                     // backgroundImage: `url(${watchForm.cardType})`,
-                    backgroundImage: `url(${watchForm.cardType || cardOptions[0].imgUrl})`,
+                    backgroundImage: `url(${
+                      watchForm.cardType || cardOptions[0].imgUrl
+                    })`,
                     backgroundPosition: 'center',
                     backgroundSize: 'cover',
                   }}
@@ -215,8 +217,8 @@ export default function CheckoutWriteCard({
           </div>
         </div>
         <div className="col-lg-4">
-          <div className='mt-5'>
-            <h4 className='mb-2'>禮品包裝服務</h4>
+          <div className="mt-5">
+            <h4 className="mb-2">禮品包裝服務</h4>
             <div className="accordion" id="accordionWrappingOptions">
               {wrappingOptions.map((wrapping) => (
                 <div key={wrapping.id} className="accordion-item">

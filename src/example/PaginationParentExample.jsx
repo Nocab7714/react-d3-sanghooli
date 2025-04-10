@@ -30,6 +30,7 @@ const PaginationParentExample = () => {
 
   useEffect(() => {
     fetchPageData(paginationData.current_page);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

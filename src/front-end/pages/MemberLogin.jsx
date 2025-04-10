@@ -1,9 +1,9 @@
 // 暫時保留登入頁面切版，未來視情況開發
 
-import Breadcrumb from '../components/Breadcrumb.jsx'
-import ReactHelmetAsync from '../../plugins/ReactHelmetAsync'
-import { Link } from 'react-router-dom'
-import { useForm } from 'react-hook-form'
+import Breadcrumb from '../components/Breadcrumb.jsx';
+import ReactHelmetAsync from '../../plugins/ReactHelmetAsync';
+import { Link } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
 
 const breadcrumbItem = [
   {
@@ -14,18 +14,18 @@ const breadcrumbItem = [
     page: '登入',
     link: '/member-login',
   },
-]
+];
 
 function MemberLogin() {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm()
+  } = useForm();
 
   const onSubmit = (data) => {
-    console.log(data) // 處理登入邏輯
-  }
+    console.log(data); // 處理登入邏輯
+  };
 
   return (
     <>
@@ -137,7 +137,7 @@ function MemberLogin() {
         </div>
       </div>
     </>
-  )
+  );
 }
 
-export default MemberLogin
+export default MemberLogin;

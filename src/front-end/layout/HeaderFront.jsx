@@ -67,7 +67,7 @@ const HeaderFront = () => {
               </li> */}
               {/* 登入狀態 navbar 顯示 - 會員名稱*/}
               <li className="nav-item  position-relative me-4 me-md-1">
-                <div className="nav-link link-neutral80" >
+                <div className="nav-link link-neutral80">
                   <span className="material-symbols-outlined material-filled align-middle fs-3 ">
                     face
                   </span>

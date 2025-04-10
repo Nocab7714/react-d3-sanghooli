@@ -1,9 +1,9 @@
 // 外部資源
-import { useContext, useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import ReactHelmetAsync from "../../plugins/ReactHelmetAsync";
-import { useForm } from "react-hook-form";
-import { AdminAuthContext } from "../../context/AdminAuthContext";
+import { useContext, useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import ReactHelmetAsync from '../../plugins/ReactHelmetAsync';
+import { useForm } from 'react-hook-form';
+import { AdminAuthContext } from '../../context/AdminAuthContext';
 
 function AdminLoginPage() {
   // 透過 Context 取得 handleLogin 與 isLoggedIn
@@ -29,7 +29,7 @@ function AdminLoginPage() {
   };
   useEffect(() => {
     if (isLoggedIn) {
-      navigate("/admin/orders"); // 直接導向管理頁面
+      navigate('/admin/orders'); // 直接導向管理頁面
     }
   }, [isLoggedIn, navigate]);
 
@@ -49,16 +49,16 @@ function AdminLoginPage() {
               <input
                 type="email"
                 className={`form-control ${
-                  errors.username ? "is-invalid" : " "
+                  errors.username ? 'is-invalid' : ' '
                 }`} // 根據錯誤顯示樣式
                 id="email"
                 name="username"
                 placeholder="name@example.com"
-                {...register("username", {
-                  required: "Email為必填欄位", // 驗證必填
+                {...register('username', {
+                  required: 'Email為必填欄位', // 驗證必填
                   pattern: {
                     value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-                    message: "請檢查Email格式，輸入是否正確", // 驗證Email格式
+                    message: '請檢查Email格式，輸入是否正確', // 驗證Email格式
                   },
                 })}
               />
@@ -74,12 +74,12 @@ function AdminLoginPage() {
               <input
                 type="password"
                 className={`form-control ${
-                  errors.password ? "is-invalid" : ""
+                  errors.password ? 'is-invalid' : ''
                 }`}
                 id="password"
                 name="password"
                 placeholder="Password"
-                {...register("password", { required: "密碼為必填欄位" })}
+                {...register('password', { required: '密碼為必填欄位' })}
               />
               <label htmlFor="password">Password</label>
               {errors.password && (
@@ -93,7 +93,7 @@ function AdminLoginPage() {
               className="btn btn-primary mt-3"
               disabled={isLoading} // 登入後禁用按鈕，避免重複提交
             >
-              {isLoading ? "登入中…" : "登入"}
+              {isLoading ? '登入中…' : '登入'}
             </button>
           </form>
         </div>

@@ -70,14 +70,14 @@ function CartPage() {
         title: '刪除成功',
         text: `「${cartTitle}」已從購物車移除`,
         confirmText: '確認',
-      })
+      });
     } catch (error) {
       console.error(error);
       await alert({
         icon: 'error',
         title: '刪除失敗',
-        text: '請稍後再試一次'
-      })
+        text: '請稍後再試一次',
+      });
     } finally {
       dispatch(asyncSetLoading(['sectionLoading', false]));
     }
@@ -218,8 +218,8 @@ function CartPage() {
             await alert({
               icon: 'error',
               title: '移除失敗',
-              text: '優惠券移除失敗，進入結帳流程前，請再次確認購物車品項是否正確'
-            })
+              text: '優惠券移除失敗，進入結帳流程前，請再次確認購物車品項是否正確',
+            });
             successfullyReset = false;
             break;
           }
@@ -246,7 +246,7 @@ function CartPage() {
         icon: 'error',
         title: '移除失敗',
         text: '優惠券移除失敗，請與客服人員聯繫',
-      })
+      });
     }
   }, [dispatch, reset, alert]);
 
@@ -301,7 +301,9 @@ function CartPage() {
                           <button
                             type="button"
                             className="btn border-0 p-1"
-                            onClick={() => deleteCartOne(cartItem.id, cartItem.product.title)}
+                            onClick={() =>
+                              deleteCartOne(cartItem.id, cartItem.product.title)
+                            }
                           >
                             <span className="material-symbols-outlined">
                               delete
@@ -478,7 +480,12 @@ function CartPage() {
                                 <button
                                   type="button"
                                   className="btn border-0 p-1"
-                                  onClick={() => deleteCartOne(cartItem.id, cartItem.product.title)}
+                                  onClick={() =>
+                                    deleteCartOne(
+                                      cartItem.id,
+                                      cartItem.product.title
+                                    )
+                                  }
                                 >
                                   <span className="material-symbols-outlined">
                                     delete

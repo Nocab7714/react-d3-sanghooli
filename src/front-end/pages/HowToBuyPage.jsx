@@ -1,22 +1,22 @@
 // 外部資源
-import { useState, useRef, useEffect } from "react";
-import Breadcrumb from "../components/Breadcrumb.jsx";
-import ReactHelmetAsync from "../../plugins/ReactHelmetAsync";
+import { useState, useRef, useEffect } from 'react';
+import Breadcrumb from '../components/Breadcrumb.jsx';
+import ReactHelmetAsync from '../../plugins/ReactHelmetAsync';
 
 //視麵包屑breadcrumb 階層保留對應資料
 const breadcrumbItem = [
   {
-    page: "首頁",
-    link: "/",
+    page: '首頁',
+    link: '/',
   },
   {
-    page: "購物流程與常見Q&A",
-    link: "/how-to-buy",
+    page: '購物流程與常見Q&A',
+    link: '/how-to-buy',
   },
 ];
 
 const HowToBuyPage = () => {
-  const [activeLink, setActiveLink] = useState("shipping"); // 預設選中 "配送方式"
+  const [activeLink, setActiveLink] = useState('shipping'); // 預設選中 "配送方式"
 
   //將錨點改為 Ref 方式設定
   const shippingRef = useRef(null);
@@ -29,7 +29,7 @@ const HowToBuyPage = () => {
     // 獲取頁面頂部到視窗頂部的距離
     const headerOffset = 156; // 假設頁面頂部有固定導航欄高度(根據實際情況調整)
 
-    if (id === "shipping" && shippingRef.current) {
+    if (id === 'shipping' && shippingRef.current) {
       // 計算元素位置
       const elementPosition = shippingRef.current.getBoundingClientRect().top;
       // 計算滾動位置 (當前滾動位置 + 元素位置 - 頂部偏移)
@@ -38,9 +38,9 @@ const HowToBuyPage = () => {
 
       window.scrollTo({
         top: offsetPosition,
-        behavior: "smooth",
+        behavior: 'smooth',
       });
-    } else if (id === "return-policy" && returnPolicyRef.current) {
+    } else if (id === 'return-policy' && returnPolicyRef.current) {
       const elementPosition =
         returnPolicyRef.current.getBoundingClientRect().top;
       const offsetPosition =
@@ -48,30 +48,31 @@ const HowToBuyPage = () => {
 
       window.scrollTo({
         top: offsetPosition,
-        behavior: "smooth",
+        behavior: 'smooth',
       });
     }
   };
-// 監聽滾動事件：點擊 GoToTop 時，左側的「配送方式」錨點會亮起
-useEffect(() => {
-  const handleScroll = () => {
-    if (shippingRef.current && returnPolicyRef.current) {
-      const shippingPosition = shippingRef.current.getBoundingClientRect().top;
-      const returnPosition = returnPolicyRef.current.getBoundingClientRect().top;
-      const threshold = 200;
+  // 監聽滾動事件：點擊 GoToTop 時，左側的「配送方式」錨點會亮起
+  useEffect(() => {
+    const handleScroll = () => {
+      if (shippingRef.current && returnPolicyRef.current) {
+        const shippingPosition =
+          shippingRef.current.getBoundingClientRect().top;
+        const returnPosition =
+          returnPolicyRef.current.getBoundingClientRect().top;
+        const threshold = 200;
 
-      if (returnPosition < threshold) {
-        setActiveLink("return-policy");
-      } else if (shippingPosition < threshold) {
-        setActiveLink("shipping");
+        if (returnPosition < threshold) {
+          setActiveLink('return-policy');
+        } else if (shippingPosition < threshold) {
+          setActiveLink('shipping');
+        }
       }
-    }
-  };
+    };
 
-  window.addEventListener("scroll", handleScroll);
-  return () => window.removeEventListener("scroll", handleScroll);
-}, []);
-
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   return (
     <>
@@ -92,18 +93,18 @@ useEffect(() => {
             <div className="timeline ps-10">
               <a
                 className={`timeline-item fs-5 mt-4 mb-4 ms-6 me-6 ${
-                  activeLink === "shipping" ? "active" : ""
+                  activeLink === 'shipping' ? 'active' : ''
                 }`}
-                onClick={() => handleClick("shipping")}
+                onClick={() => handleClick('shipping')}
               >
                 配送方式
               </a>
 
               <a
                 className={`timeline-item fs-5 mt-4 mb-4 ms-6 me-6 ${
-                  activeLink === "return-policy" ? "active" : ""
+                  activeLink === 'return-policy' ? 'active' : ''
                 }`}
-                onClick={() => handleClick("return-policy")}
+                onClick={() => handleClick('return-policy')}
               >
                 退換貨規則
               </a>

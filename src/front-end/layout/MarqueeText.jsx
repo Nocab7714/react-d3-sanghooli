@@ -45,10 +45,8 @@ const MarqueeText = ({ headerRef, headerHeight, setHeaderHeight }) => {
 
   return (
     <>
-      <div ref={bannerRef} >
-        <div
-          className="container py-3"
-        >
+      <div ref={bannerRef}>
+        <div className="container py-3">
           <p
             className="text-center fs-7 fs-md-6"
             style={{

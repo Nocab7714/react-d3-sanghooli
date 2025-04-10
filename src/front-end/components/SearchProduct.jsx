@@ -7,7 +7,12 @@ import ReactHelmetAsync from '../../plugins/ReactHelmetAsync';
 import ProductCard from '../components/ProductCard';
 import ProductCategoryList from '../components/ProductCategoryList';
 import InputSearchDefault from '../components/form/InputSearchDefault';
-import {festivalOptions, relationOptions, categoryOptions, priceRangeOptions} from '../utils/filterOptions';
+import {
+  festivalOptions,
+  relationOptions,
+  categoryOptions,
+  priceRangeOptions,
+} from '../utils/filterOptions';
 
 const { VITE_BASE_URL: baseUrl, VITE_API_PATH: apiPath } = import.meta.env;
 

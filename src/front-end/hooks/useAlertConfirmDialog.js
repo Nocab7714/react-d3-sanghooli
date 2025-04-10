@@ -1,15 +1,15 @@
-import Swal from "sweetalert2";
+import Swal from 'sweetalert2';
 
 function useAlertConfirmDialog() {
-  const confirm = async({
+  const confirm = async ({
     title,
-    text = "",
-    icon = "question",
+    text = '',
+    icon = 'question',
     showCancel = true,
-    confirmText = "確定",
-    cancelText = "取消",
-    confirmClass = "custom-confirm-btn",
-    cancelClass = "custom-cancel-btn",
+    confirmText = '確定',
+    cancelText = '取消',
+    confirmClass = 'custom-confirm-btn',
+    cancelClass = 'custom-cancel-btn',
   }) => {
     const result = await Swal.fire({
       title,
@@ -28,7 +28,7 @@ function useAlertConfirmDialog() {
     return result.isConfirmed;
   };
 
-  const alert = async({
+  const alert = async ({
     title,
     text = '',
     icon = 'success',
@@ -44,9 +44,8 @@ function useAlertConfirmDialog() {
         popup: 'custom-alert',
         confirmButton: confirmClass,
       },
-    })
-  }
+    });
+  };
   return { confirm, alert };
-
 }
 export default useAlertConfirmDialog;

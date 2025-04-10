@@ -1,37 +1,37 @@
 // 外部資源
-import axios from "axios";
-import ReactHelmetAsync from "../../plugins/ReactHelmetAsync";
-import { useEffect, useState, useCallback } from "react";
-import { useDispatch } from "react-redux";
-import PaginationBackend from "../components/PaginationBackend";
-import { createToast } from "../../slices/toastSlice";
+import axios from 'axios';
+import ReactHelmetAsync from '../../plugins/ReactHelmetAsync';
+import { useEffect, useState, useCallback } from 'react';
+import { useDispatch } from 'react-redux';
+import PaginationBackend from '../components/PaginationBackend';
+import { createToast } from '../../slices/toastSlice';
 
 //內部資源
-import DelProductModal from "../components/DelProductModal";
-import ProductModal from "../components/ProductModal";
-import { asyncSetLoading } from "../../slices/loadingSlice";
+import DelProductModal from '../components/DelProductModal';
+import ProductModal from '../components/ProductModal';
+import { asyncSetLoading } from '../../slices/loadingSlice';
 
 // 環境變數
 const { VITE_BASE_URL: baseUrl, VITE_API_PATH: apiPath } = import.meta.env;
 
 // 產品資料初始狀態
 const defaultModalState = {
-  imageUrl: "", //主圖網址
-  title: "",
-  category: "",
-  unit: "",
-  origin_price: "",
-  price: "",
-  description: "",
+  imageUrl: '', //主圖網址
+  title: '',
+  category: '',
+  unit: '',
+  origin_price: '',
+  price: '',
+  description: '',
   content: {
-    material_contents: "", //材質/內容物
-    notes: "", //注意事項
-    origin: "", //產地
-    expiry_date: "", //保存期限shelf_life
+    material_contents: '', //材質/內容物
+    notes: '', //注意事項
+    origin: '', //產地
+    expiry_date: '', //保存期限shelf_life
   },
   is_enabled: 0,
   is_hot: 0,
-  imagesUrl: [""],
+  imagesUrl: [''],
 };
 
 const ProductsManagementPage = () => {
@@ -41,7 +41,7 @@ const ProductsManagementPage = () => {
   // 使用useCallback包裝getProducts函數
   const getProducts = useCallback(
     async (page = 1) => {
-      dispatch(asyncSetLoading(["sectionLoading", true]));
+      dispatch(asyncSetLoading(['sectionLoading', true]));
       try {
         const res = await axios.get(
           `${baseUrl}/api/${apiPath}/admin/products?page=${page}`
@@ -54,12 +54,12 @@ const ProductsManagementPage = () => {
         dispatch(
           createToast({
             success: false,
-            message: "取得產品資訊失敗，請稍作等待後，再重新嘗試操作！",
+            message: '取得產品資訊失敗，請稍作等待後，再重新嘗試操作！',
           })
         );
         console.error(error);
       } finally {
-        dispatch(asyncSetLoading(["sectionLoading", false]));
+        dispatch(asyncSetLoading(['sectionLoading', false]));
       }
     },
     [dispatch]
@@ -69,9 +69,9 @@ const ProductsManagementPage = () => {
   useEffect(() => {
     const token = document.cookie.replace(
       /(?:(?:^|.*;\s*)D3Token\s*=\s*([^;]*).*$)|^.*$/,
-      "$1"
+      '$1'
     );
-    axios.defaults.headers.common["Authorization"] = token;
+    axios.defaults.headers.common['Authorization'] = token;
     getProducts();
   }, [getProducts]); // 將getProducts加入依賴數組
 
@@ -100,11 +100,11 @@ const ProductsManagementPage = () => {
     setModalMode(mode);
 
     switch (mode) {
-      case "create":
+      case 'create':
         setTempProduct(defaultModalState);
         break;
 
-      case "edit":
+      case 'edit':
         setTempProduct(product);
         break;
       default:
@@ -119,7 +119,7 @@ const ProductsManagementPage = () => {
   //讀取當前頁面的「頁碼」 資料的判斷式條件＆動作：
   const handlePageChange = (page) => {
     getProducts(page);
-    window.scrollTo({ top: 380, behavior: "auto" }); // 滑動回到頁面頂部
+    window.scrollTo({ top: 380, behavior: 'auto' }); // 滑動回到頁面頂部
   };
 
   return (
@@ -131,7 +131,7 @@ const ProductsManagementPage = () => {
             <div className=" titleDeco d-flex justify-content-between pt-19 pb-19 mb-8 rounded-3 ">
               <h1 className="ms-10">商品管理</h1>
               <button
-                onClick={() => handleOpenProductModal("create")}
+                onClick={() => handleOpenProductModal('create')}
                 type="button"
                 className="btn btn-primary me-10"
               >
@@ -198,7 +198,7 @@ const ProductsManagementPage = () => {
                           <div className="btn-group">
                             <button
                               onClick={() =>
-                                handleOpenProductModal("edit", product)
+                                handleOpenProductModal('edit', product)
                               }
                               type="button"
                               className="btn btn-primary btn-outline-primary-dark"
