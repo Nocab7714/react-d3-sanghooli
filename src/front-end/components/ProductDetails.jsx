@@ -87,7 +87,7 @@ const ProductDetails = ({ product, productId }) => {
                 kid_star
               </span>
               <span className="fs-6 fs-md-5 fw-semibold me-4 ">5.0</span>
-              <span className="fs-7  text-neutral60">(5則評價)</span>
+              <span className="fs-7  text-neutral60">(6則評價)</span>
             </div>
             {/* product-description */}
             <p className="text-neutral60 mb-6 mb-md-8">{product.description}</p>
