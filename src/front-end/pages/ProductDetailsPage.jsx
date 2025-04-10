@@ -55,7 +55,7 @@ const ProductDetailsPage = () => {
       }
     };
     getProduct();
-  }, [productId]);
+  }, [productId, dispatch, navigate]);
 
   //  取得隨機 10 筆商品（將隨機商品資料傳入商品輪播使用）
   const products = useSelector((state) => state.products.products);

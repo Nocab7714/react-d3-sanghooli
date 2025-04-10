@@ -16,11 +16,37 @@
   }
 }
 
+// 圖片容器和圖片懸停效果
+.product-image-container {
+  width: 100%;
+  height: 0;
+  padding-bottom: 100%; // 創建一個正方形的容器
+  position: relative;
+  overflow: hidden;
+  border-radius: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.product-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+  will-change: transform;
+}
+
 // .product-card 用於觸發 card-bg 的 hover 背景效果
 .product-card {
   &:hover {
     .card-bg {
       opacity: 1;
+    }
+
+    .product-image {
+      transform: scale(1.1);
     }
   }
 }
@@ -41,7 +67,15 @@
   transition: opacity 0.2s ease-in-out;
 }
 
-.hot-sale {
-  top: 5px;
-  left: 12px;
+// 熱銷標籤設定 - 左上角超出
+.position-relative {
+  .hot-sale {
+    position: absolute;
+    top: -20px;
+    left: -10px;
+    z-index: 10;
+    pointer-events: none;
+    width: 48px;
+    height: 48px;
+  }
 }

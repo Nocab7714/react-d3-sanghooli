@@ -1,7 +1,6 @@
 // 外部資源
 import axios from 'axios';
 import { useEffect, useState, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import PaginationBackend from '../components/PaginationBackend';
 import OrdersModal from '../components/OrdersModal';
@@ -26,23 +25,6 @@ const OrdersManagementPage = () => {
   const [pageInfo, setPageInfo] = useState({});
 
   const dispatch = useDispatch();
-  const navigate = useNavigate();
-
-  // 檢查用戶是否登入
-  const checkUserLogin = async () => {
-    try {
-      await axios.post(`${baseUrl}/api/user/check`);
-    } catch (error) {
-      dispatch(
-        createToast({
-          success: false,
-          message: '請先登入',
-        })
-      );
-      navigate('/admin/login');
-      console.error(error);
-    }
-  };
 
   // 獲取訂單列表函數 - 使用 useCallback 以便於在依賴項中使用
   const getOrders = useCallback(
@@ -77,8 +59,8 @@ const OrdersManagementPage = () => {
       '$1'
     );
     axios.defaults.headers.common['Authorization'] = token;
-    checkUserLogin().then(() => getOrders());
-  }, [getOrders, navigate]);
+    getOrders();
+  }, [getOrders]); // 添加 getOrders 作為依賴項
 
   // 打開刪除訂單的 Modal
   const handleOpenDelOrdersModal = (order, mode) => {

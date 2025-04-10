@@ -8,7 +8,6 @@ import FooterFront from './FooterFront.jsx';
 import GoToTop from '../components/GoToTop.jsx';
 import ScreenLoading from '../../plugins/ScreenLoading';
 import AutoScrollToTop from '../../plugins/AutoScrollToTop.jsx';
-import Alert from '../../plugins/Alert.jsx';
 import SectionLoading from '../../plugins/SectionLoading.jsx';
 import Toast from '../../plugins/Toast.jsx';
 import { asyncGetCart } from '../../slices/cartSlice.js';
@@ -32,7 +31,6 @@ function LayoutFront() {
       <FooterFront />
       <GoToTop />
       <ScreenLoading />
-      <Alert />
       <Toast />
     </>
   );

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import { Modal } from 'bootstrap';
 import { useDispatch } from 'react-redux';
 import { createToast } from '../../slices/toastSlice';
@@ -76,39 +76,44 @@ const OrdersModal = ({
   };
 
   // 取得訂單詳細資料
-  const fetchOrderDetails = async (orderId) => {
-    try {
-      const res = await axios.get(`${baseUrl}/api/${apiPath}/order/${orderId}`);
-      if (res.data?.order) {
-        setModalData({
-          ...res.data.order,
-          is_paid: Boolean(res.data.order.is_paid),
-          message: res.data.order.message ?? '',
-          user: {
-            name: res.data.order.user?.name || '',
-            tel: res.data.order.user?.tel || '',
-            email: res.data.order.user?.email || '',
-            address: res.data.order.user?.address || '',
-          },
-        });
+  const fetchOrderDetails = useCallback(
+    async (orderId) => {
+      try {
+        const res = await axios.get(
+          `${baseUrl}/api/${apiPath}/order/${orderId}`
+        );
+        if (res.data?.order) {
+          setModalData({
+            ...res.data.order,
+            is_paid: Boolean(res.data.order.is_paid),
+            message: res.data.order.message ?? '',
+            user: {
+              name: res.data.order.user?.name || '',
+              tel: res.data.order.user?.tel || '',
+              email: res.data.order.user?.email || '',
+              address: res.data.order.user?.address || '',
+            },
+          });
+        }
+      } catch (error) {
+        dispatch(
+          createToast({
+            success: false,
+            message: '取得訂單資料失敗！',
+          })
+        );
+        console.error(error);
       }
-    } catch (error) {
-      dispatch(
-        createToast({
-          success: false,
-          message: '取得訂單資料失敗！',
-        })
-      );
-      console.error(error);
-    }
-  };
+    },
+    [dispatch]
+  );
 
   // 監聽 modal 開啟時獲取訂單資料
   useEffect(() => {
     if (isOpen && tempOrder?.id) {
       fetchOrderDetails(tempOrder.id);
     }
-  }, [isOpen, tempOrder?.id]);
+  }, [isOpen, tempOrder?.id, fetchOrderDetails]);
 
   // 串接更新訂單 API
   const updateOrder = async () => {
@@ -260,7 +265,7 @@ const OrdersModal = ({
                 <div className="pb-3">
                   <form className="border-bottom border-neutral40 border-lg-0">
                     <div className="row g-3">
-                      <div className="col-12 col-md-4">
+                      <div className="col-md-4">
                         <label htmlFor="user_name" className="form-label">
                           姓名
                         </label>
@@ -275,7 +280,7 @@ const OrdersModal = ({
                         />
                       </div>
 
-                      <div className="col-12 col-md-4">
+                      <div className="col-md-4">
                         <label htmlFor="user_tel" className="form-label">
                           聯絡電話
                         </label>
@@ -290,7 +295,7 @@ const OrdersModal = ({
                         />
                       </div>
 
-                      <div className="col-12 col-md-4">
+                      <div className="col-md-4">
                         <label htmlFor="user_email" className="form-label">
                           聯絡郵箱
                         </label>
@@ -305,7 +310,7 @@ const OrdersModal = ({
                         />
                       </div>
 
-                      <div className="col-12 col-md-12 mt-5 ">
+                      <div className="col-md-12 mt-5">
                         <label htmlFor="user_address" className="form-label">
                           收件地址
                         </label>
@@ -320,7 +325,7 @@ const OrdersModal = ({
                         />
                       </div>
 
-                      <div className="col-12 col-md-12 mt-5 ">
+                      <div className="col-md-12 mt-5 ">
                         <label htmlFor="user_message" className="form-label">
                           訂單備註
                         </label>
@@ -447,7 +452,7 @@ const OrdersModal = ({
                   </table>
 
                   {/* 訂單總計 */}
-                  <div className="col-12">
+                  <div className="col">
                     {/* 計算總折扣金額 */}
                     {modalData?.products &&
                       Object.keys(modalData.products).length > 0 && (

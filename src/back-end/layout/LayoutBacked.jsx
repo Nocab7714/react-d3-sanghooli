@@ -25,17 +25,19 @@ function LayoutBacked() {
 
   return (
     <>
-      <AutoScrollToTop />
-      <HeaderBacked />
+      <div className="d-flex flex-column min-vh-100">
+        <AutoScrollToTop />
+        <HeaderBacked />
 
-      <Toast />
-      <div className="position-relative">
-        <SectionLoading />
-        <Outlet />
+        <Toast />
+        <div className="flex-grow-1 position-relative">
+          <SectionLoading />
+          <Outlet />
+        </div>
+        <FooterBacked />
+        <GoToTop />
+        <ScreenLoading />
       </div>
-      <FooterBacked />
-      <GoToTop />
-      <ScreenLoading />
     </>
   );
 }

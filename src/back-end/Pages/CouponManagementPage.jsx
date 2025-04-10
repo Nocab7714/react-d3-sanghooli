@@ -2,8 +2,7 @@
 import ReactHelmetAsync from '../../plugins/ReactHelmetAsync';
 import axios from 'axios';
 import { useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import PaginationBackend from '../components/PaginationBackend';
 import { createToast } from '../../slices/toastSlice';
 import { Modal } from 'bootstrap';
@@ -15,7 +14,7 @@ import { asyncSetLoading } from '../../slices/loadingSlice';
 const { VITE_BASE_URL: baseUrl, VITE_API_PATH: apiPath } = import.meta.env;
 
 const CouponManagementPage = () => {
-  const navigate = useNavigate();
+  // const navigate = useNavigate()
   const dispatch = useDispatch(); // 用於觸發 toast
   // 優惠券列表、分頁資訊
   const [couponList, setCouponList] = useState([]);
@@ -37,6 +36,29 @@ const CouponManagementPage = () => {
     setValue,
   } = useForm();
 
+  // 取得優惠券清單 - 先定義此函數
+  const getCoupons = useCallback(
+    async (page = 1) => {
+      dispatch(asyncSetLoading(['sectionLoading', true]));
+
+      try {
+        const res = await axios.get(
+          `${baseUrl}/api/${apiPath}/admin/coupons?page=${page}`
+        );
+        setCouponList(res.data.coupons);
+        setPageInfo(res.data.pagination);
+      } catch (error) {
+        dispatch(
+          createToast({ success: false, message: '取得優惠券失敗，請稍後再試' })
+        );
+        console.error(error);
+      } finally {
+        dispatch(asyncSetLoading(['sectionLoading', false]));
+      }
+    },
+    [dispatch]
+  );
+
   // 當 tempCoupon 更新時，更新表單值
   useEffect(() => {
     if (tempCoupon) {
@@ -50,7 +72,9 @@ const CouponManagementPage = () => {
         const date = new Date(tempCoupon.due_date);
         const formattedDate = `${date.getFullYear()}-${String(
           date.getMonth() + 1
-        ).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+        ).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}T${String(
+          date.getHours()
+        ).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
         setValue('due_date', formattedDate);
       }
     }
@@ -75,16 +99,6 @@ const CouponManagementPage = () => {
     closeModal();
   };
 
-  // 驗證登入
-  const checkUserLogin = async () => {
-    try {
-      await axios.post(`${baseUrl}/api/user/check`);
-    } catch (error) {
-      navigate('/admin/login');
-      console.error(error);
-    }
-  };
-
   // 取出 Cookie 中的 Token，設置到 axios headers
   useEffect(() => {
     const token = document.cookie.replace(
@@ -92,29 +106,8 @@ const CouponManagementPage = () => {
       '$1'
     );
     axios.defaults.headers.common['Authorization'] = token;
-    checkUserLogin();
     getCoupons();
-  }, []);
-
-  // 取得優惠券清單
-  const getCoupons = async (page = 1) => {
-    dispatch(asyncSetLoading(['sectionLoading', true]));
-
-    try {
-      const res = await axios.get(
-        `${baseUrl}/api/${apiPath}/admin/coupons?page=${page}`
-      );
-      setCouponList(res.data.coupons);
-      setPageInfo(res.data.pagination);
-    } catch (error) {
-      dispatch(
-        createToast({ success: false, message: '取得優惠券失敗，請稍後再試' })
-      );
-      console.error(error);
-    } finally {
-      dispatch(asyncSetLoading(['sectionLoading', false]));
-    }
-  };
+  }, [getCoupons]);
 
   // 分頁點擊
   const handlePageChange = (page) => {
@@ -267,9 +260,7 @@ const CouponManagementPage = () => {
                           <td>{data.code}</td>
                           <td>{data.percent}%</td>
                           <td>
-                            {new Date(data.due_date).toLocaleDateString(
-                              'zh-TW'
-                            )}
+                            {new Date(data.due_date).toLocaleString('zh-TW')}
                           </td>
                           <td>
                             {data.is_enabled ? (
@@ -376,10 +367,6 @@ const CouponManagementPage = () => {
                     }`}
                     {...register('code', {
                       required: '優惠券代碼為必填',
-                      pattern: {
-                        value: /^[A-Z0-9]{4,12}$/,
-                        message: '代碼須為4-12位大寫英文字母或數字',
-                      },
                     })}
                   />
                   {errors.code && (
@@ -412,7 +399,7 @@ const CouponManagementPage = () => {
                 <div className="mb-3">
                   <label className="form-label">使用期限</label>
                   <input
-                    type="date"
+                    type="datetime-local"
                     className={`form-control ${
                       errors.due_date ? 'is-invalid' : ''
                     }`}
@@ -420,9 +407,10 @@ const CouponManagementPage = () => {
                       required: '使用期限為必填',
                       validate: (value) => {
                         const today = new Date();
-                        today.setHours(0, 0, 0, 0);
                         const selectedDate = new Date(value);
-                        return selectedDate >= today || '日期不能早於今天';
+                        return (
+                          selectedDate >= today || '日期和時間不能早於現在'
+                        );
                       },
                     })}
                   />

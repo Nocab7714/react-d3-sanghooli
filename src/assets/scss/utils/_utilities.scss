@@ -136,16 +136,21 @@ $utilities: map-merge(
     ),
     // scss-docs-end utils-position
     // scss-docs-start utils-borders
-    "border": (
-      property: border,
-      state: hover, // *custom
-      responsive: true, // *custom
-      values: (
-        null: var(--#{$prefix}border-width) var(--#{$prefix}border-style) var(--#{$prefix}border-color),
-        0: 0,
-      )
-    ),
-    "border-top": (
+    'border':
+      (
+        property: border,
+        state: hover,
+        // *custom
+        responsive: true,
+        // *custom
+        values:
+          (
+            null: var(--#{$prefix}border-width) var(--#{$prefix}border-style)
+              var(--#{$prefix}border-color),
+            0: 0,
+          ),
+      ),
+    'border-top': (
       property: border-top,
       values: (
         null: var(--#{$prefix}border-width) var(--#{$prefix}border-style)
@@ -164,11 +169,14 @@ $utilities: map-merge(
     ),
     'border-bottom': (
       property: border-bottom,
-      values: (
-        null: var(--#{$prefix}border-width) var(--#{$prefix}border-style)
-          var(--#{$prefix}border-color),
-        0: 0,
-      ),
+      responsive: true,
+      // *custom
+      values:
+        (
+          null: var(--#{$prefix}border-width) var(--#{$prefix}border-style)
+            var(--#{$prefix}border-color),
+          0: 0,
+        ),
     ),
     'border-start': (
       property: border-left,
@@ -181,7 +189,8 @@ $utilities: map-merge(
     ),
     'border-color': (
       property: border-color,
-      state: hover, // *custom
+      state: hover,
+      // *custom
       class: border,
       local-vars: (
         'border-opacity': 1,
@@ -212,20 +221,24 @@ $utilities: map-merge(
     // scss-docs-end utils-borders
     // Sizing utilities
     // scss-docs-start utils-sizing
-    "width": (
-      responsive: true, // custom*
-      property: width,
-      class: w,
-      values: (
-        25: 25%,
-        30: 30%, // *custom
-        50: 50%,
-        70: 70%, // *custom
-        75: 75%,
-        100: 100%,
-        auto: auto
-      )
-    ),
+    'width':
+      (
+        responsive: true,
+        // custom*
+        property: width,
+        class: w,
+        values: (
+          25: 25%,
+          30: 30%,
+          // *custom
+          50: 50%,
+          70: 70%,
+          // *custom
+          75: 75%,
+          100: 100%,
+          auto: auto,
+        ),
+      ),
     'max-width': (
       property: max-width,
       class: mw,
@@ -589,7 +602,8 @@ $utilities: map-merge(
         ),
       ),
     'font-size': (
-      responsive: true, // custom*
+      responsive: true,
+      // custom*
       rfs: true,
       property: font-size,
       class: fs,
@@ -621,7 +635,8 @@ $utilities: map-merge(
         sm: $line-height-sm,
         base: $line-height-base,
         lg: $line-height-lg,
-        normal: normal,  // *custom
+        normal: normal,
+        // *custom
       ),
     ),
     'text-align': (
@@ -758,22 +773,32 @@ $utilities: map-merge(
     ),
     // scss-docs-end utils-links
     // scss-docs-start utils-bg-color
-    "background-color": (
-      property: background-color,
-      class: bg,
-      local-vars: (
-        "bg-opacity": 1
+    'background-color':
+      (
+        property: background-color,
+        class: bg,
+        local-vars: (
+          'bg-opacity': 1,
+        ),
+        values:
+          map-merge(
+            $utilities-bg-colors,
+            (
+              'transparent': transparent,
+              'body-secondary':
+                rgba(
+                  var(--#{$prefix}secondary-bg-rgb),
+                  var(--#{$prefix}bg-opacity)
+                ),
+              'body-tertiary':
+                rgba(
+                  var(--#{$prefix}tertiary-bg-rgb),
+                  var(--#{$prefix}bg-opacity)
+                ),
+            )
+          ),
       ),
-      values: map-merge(
-        $utilities-bg-colors,
-        (
-          "transparent": transparent,
-          "body-secondary": rgba(var(--#{$prefix}secondary-bg-rgb), var(--#{$prefix}bg-opacity)),
-          "body-tertiary": rgba(var(--#{$prefix}tertiary-bg-rgb), var(--#{$prefix}bg-opacity)),
-        )
-      )
-    ),
-    "bg-opacity": (
+    'bg-opacity': (
       css-var: true,
       class: bg-opacity,
       values: (

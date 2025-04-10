@@ -1,8 +1,10 @@
+// 外部資源
 import axios from 'axios';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { Modal } from 'bootstrap';
 import { useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
+import { useForm, Controller } from 'react-hook-form';
 
 import { createToast } from '../../slices/toastSlice';
 
@@ -61,156 +63,140 @@ const ProductModal = ({
   getProducts,
 }) => {
   const dispatch = useDispatch();
-  //不希望Modal改到tempProduct：再建立新的狀態，預設值帶入tempProduct
-  const [modalData, setModalData] = useState({
-    ...tempProduct,
-    tages: tempProduct?.tages || [], //確保 tages 不為 undefined
+  const productModalRef = useRef(null);
+  const fileInputRef = useRef(null);
+
+  // 設定 React Hook Form
+  const {
+    control,
+    handleSubmit,
+    reset,
+    setValue,
+    watch,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      title: '',
+      category: '',
+      unit: '',
+      qty: '',
+      origin_price: '',
+      price: '',
+      description: '',
+      content: {
+        material_contents: '',
+        expiry_date: '',
+        origin: '',
+        notes: '',
+      },
+      imageUrl: '',
+      imagesUrl: [],
+      is_hot: false,
+      is_enabled: false,
+      tages: [],
+    },
   });
 
-  useEffect(() => {
-    if (modalMode === 'create') {
-      // 重新把ModalData設成最新的值 -> 清空表單資料
-      setModalData({
-        title: '',
-        category: '',
-        unit: '',
-        qty: '',
-        origin_price: '',
-        price: '',
-        description: '',
-        // 新增 content 屬性
-        content: {
-          material_contents: '',
-          expiry_date: '',
-          origin: '',
-          notes: '',
-        },
-        imageUrl: '',
-        imagesUrl: [], // 初始值設為空陣列
-        is_hot: false,
-        is_enabled: false,
-        tages: [], // 避免 undefined
-      });
-    } else {
-      // 編輯模式帶入商品資料
-      setModalData({
-        ...tempProduct,
-        // 修改useEffect初始化(modalData):在 useEffect 裡加上 is_hot 預設值false，避免 undefined
-        is_hot: tempProduct.is_hot ?? false,
-        tages: tempProduct?.tages || [],
-      });
-    }
-  }, [tempProduct]); //當tempPeoduct更新後，重新讓setModalData也更新一份
+  // 監聽 imagesUrl 以便控制新增和刪除按鈕
+  const imagesUrl = watch('imagesUrl');
 
-  //以下為將ProductModal 邏輯對應的函式動作
-  const productModalRef = useRef(null); //透過 useRef 取得 DOM
-
-  //透過 useEffect 的 hook，在頁面渲染後取得 productModalRef的 DOM元素
+  // 初始化 Modal 及監聽開關狀態
   useEffect(() => {
     new Modal(productModalRef.current, {
-      backdrop: false, // 點擊Modal灰色區塊不進行關閉
+      backdrop: false,
     });
-    Modal.getInstance(productModalRef.current); //取得Modal實例:Modal.getInstance(ref)
+    Modal.getInstance(productModalRef.current);
   }, []);
 
-  //新增useEffect 判斷Modal開關狀態:如果是「開」的判斷式，並且在陣列帶入[isOpen]
   useEffect(() => {
     if (isOpen) {
       const modalInstance = Modal.getInstance(productModalRef.current);
       modalInstance.show();
     }
-  }, [isOpen]); //當isOpen有更新時， 判斷是否需要開modal
+  }, [isOpen]);
 
-  {
-    /* 點擊Ｍodal的取消＆Ｘ按鈕會進行關閉 */
-  }
-  //宣告handleCloseProductModal(變數)：進行開關產品的Modal：
+  // 當 Modal 開啟時，根據模式重置表單
+  useEffect(() => {
+    if (isOpen) {
+      if (modalMode === 'create') {
+        reset({
+          title: '',
+          category: '',
+          unit: '',
+          qty: '',
+          origin_price: '',
+          price: '',
+          description: '',
+          content: {
+            material_contents: '',
+            expiry_date: '',
+            origin: '',
+            notes: '',
+          },
+          imageUrl: '',
+          imagesUrl: [],
+          is_hot: false,
+          is_enabled: false,
+          tages: [],
+        });
+      } else {
+        // 編輯模式：設定表單初始值
+        reset({
+          ...tempProduct,
+          is_hot: tempProduct.is_hot ?? false,
+          is_enabled: tempProduct.is_enabled ?? false,
+          tages: tempProduct?.tages || [],
+          content: tempProduct.content || {
+            material_contents: '',
+            expiry_date: '',
+            origin: '',
+            notes: '',
+          },
+          imagesUrl: tempProduct.imagesUrl || [],
+        });
+      }
+    }
+  }, [isOpen, modalMode, tempProduct, reset]);
+
+  // 關閉 Modal
   const handleCloseProductModal = () => {
     const modalInstance = Modal.getInstance(productModalRef.current);
-    //拿到Modal實例後，即可透過modalInstance.hide(); 關閉Modal
     modalInstance.hide();
-    setIsOpen(false); //判斷Modal開關狀態:如果是「關」的調整方式
-  };
-
-  const handleModalInputChange = (e) => {
-    const { value, name, checked, type } = e.target;
-
-    // 如果修改的是 content 內的屬性
-    if (
-      ['material_contents', 'expiry_date', 'origin', 'notes'].includes(name)
-    ) {
-      setModalData({
-        ...modalData,
-        content: {
-          ...modalData.content, // 保留 content 內的其他屬性
-          [name]: value,
-        },
-      });
-    } else {
-      // 如果修改的是 content 內的屬性
-      setModalData({
-        //展開TempProduct->改為：modalData
-        ...modalData,
-        //當值(type)為 checkbox 時，就會傳入`checked`值 ; 若type不為 checkbox 時，就會將`value`傳入`name`的屬性裡
-        [name]: type === 'checkbox' ? checked : value,
-      });
+    setIsOpen(false);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
     }
   };
 
-  const handleImageChange = (e, index) => {
-    const { value } = e.target;
-
-    const newImages = [...modalData.imagesUrl];
-
-    newImages[index] = value;
-
-    setModalData({
-      ...modalData, //展開TempProduct -> 改為modalData
-      imagesUrl: newImages,
-    });
-  };
-
-  {
-    /* 新增按鈕顯示條件：點擊時對陣列「新增」一個空字串 */
-  }
+  // 新增圖片欄位
   const handleAddImage = () => {
-    const newImages = [...modalData.imagesUrl, ' ']; //複製imagesUrl到newImages的新陣列裡
-
-    setModalData({
-      ...modalData,
-      imagesUrl: newImages,
-    });
+    const currentImages = watch('imagesUrl') || [];
+    setValue('imagesUrl', [...currentImages, '']);
   };
 
-  {
-    /* 刪除按鈕顯示條件：點擊時預設「移除」陣列中最後一個欄位 */
-  }
+  // 移除最後一個圖片欄位
   const handleRemoveImage = () => {
-    const newImages = [...modalData.imagesUrl]; //複製imagesUrl到newImages的新陣列裡
-
+    const currentImages = watch('imagesUrl') || [];
+    const newImages = [...currentImages];
     newImages.pop();
-
-    setModalData({
-      ...modalData,
-      imagesUrl: newImages,
-    });
+    setValue('imagesUrl', newImages);
   };
 
-  {
-    /* 串接新增商品 API */
-  }
-  const createProduct = async () => {
+  // 新增商品 API
+  const createProduct = async (formData) => {
     try {
       const res = await axios.post(`${baseUrl}/api/${apiPath}/admin/product`, {
         data: {
-          ...modalData,
-          origin_price: Number(modalData.origin_price),
-          price: Number(modalData.price),
-          is_enabled: modalData.is_enabled ? 1 : 0,
-          is_hot: modalData.is_hot ? 1 : 0,
+          ...formData,
+          origin_price: Number(formData.origin_price),
+          price: Number(formData.price),
+          qty: Number(formData.qty),
+          is_enabled: formData.is_enabled ? 1 : 0,
+          is_hot: formData.is_hot ? 1 : 0,
         },
       });
       dispatch(createToast(res.data));
+      return true;
     } catch (error) {
       dispatch(
         createToast({
@@ -218,33 +204,33 @@ const ProductModal = ({
           message: `新增產品失敗！${error.response.data.message} `,
         })
       );
+      return false;
     }
   };
 
-  {
-    /* 串接編輯商品 API */
-  }
-  const updateProduct = async () => {
+  // 編輯商品 API
+  const updateProduct = async (formData) => {
     try {
-      const res = await axios.put(
-        `${baseUrl}/api/${apiPath}/admin/product/${modalData.id}`,
+      await axios.put(
+        `${baseUrl}/api/${apiPath}/admin/product/${formData.id}`,
         {
           data: {
-            ...modalData,
-            origin_price: Number(modalData.origin_price),
-            price: Number(modalData.price),
-            is_enabled: modalData.is_enabled ? 1 : 0,
-            is_hot: modalData.is_hot ? 1 : 0, //熱銷產品 is_hot
+            ...formData,
+            origin_price: Number(formData.origin_price),
+            price: Number(formData.price),
+            qty: Number(formData.qty),
+            is_enabled: formData.is_enabled ? 1 : 0,
+            is_hot: formData.is_hot ? 1 : 0,
           },
         }
       );
-      dispatch(createToast(res.data.message));
       dispatch(
         createToast({
           success: true,
           message: '商品資訊已編輯更新成功',
         })
       );
+      return true;
     } catch (error) {
       dispatch(
         createToast({
@@ -253,65 +239,50 @@ const ProductModal = ({
         })
       );
       console.error(error);
+      return false;
     }
   };
 
-  // 更新 tages 的 onChange 處理
-  const handleTagChange = (event) => {
-    const { value, checked } = event.target;
-
-    setModalData((prevData) => ({
-      ...prevData,
-      tages: checked
-        ? [...(prevData?.tages || []), value] // 如果被勾選，新增進去，並確保 prevData?.tages 不為 undefined
-        : prevData?.tages?.filter((tag) => tag !== value) || [], // 否則移除，且避免 `filter` 出錯
-    }));
-  };
-
-  {
-    /* 點擊Modal 的「確認」按鈕條件：會呼叫 「新增產品」的API指令 */
-  }
-  const handlUpdateProduct = async () => {
-    if (!modalData.title || !modalData.category || !modalData.price) {
+  // 表單提交處理
+  const onSubmit = async (data) => {
+    if (!data.title || !data.category || !data.price) {
       dispatch(
         createToast({
           success: false,
           message: '請填寫完整的產品資訊！',
         })
       );
-      return; // 如果欄位不完整，直接顯示錯誤，不執行 API
+      return;
     }
 
     const apiCall = modalMode === 'create' ? createProduct : updateProduct;
     try {
-      await apiCall();
-      getProducts();
-      handleCloseProductModal(); //新增完產品，點擊[確認]按鈕後，要關閉 Modal 視窗(只在成功時關閉 Modal)
-      dispatch(
-        createToast({
-          success: true,
-          message: '產品已成功更新！',
-        })
-      );
+      const success = await apiCall(data);
+      if (success) {
+        getProducts();
+        handleCloseProductModal();
+        dispatch(
+          createToast({
+            success: true,
+            message: '產品已成功更新！',
+          })
+        );
+      }
     } catch (error) {
-      // 失敗時僅顯示錯誤訊息，不關閉 Modal
-      const { success, message } = error.response.data.message;
       dispatch(
         createToast({
-          success,
-          message: `更新產品失敗，請檢查輸入內容！${message}`,
+          success: false,
+          message: `更新產品失敗，請檢查輸入內容！`,
         })
       );
+      console.error(error);
     }
   };
 
-  // 撰寫主圖的圖片上傳功能：handleFileChange 監聽事件的函式
+  // 主圖的圖片上傳功能
   const handleFileChange = async (e) => {
-    const file = e.target.files[0]; //獲取使用者選擇的第一個檔案
-
-    //使用FormData格式上傳
+    const file = e.target.files[0];
     const formData = new FormData();
-    //加入file-to-upload的欄位，並存入使用者選擇的檔案（file)
     formData.append('file-to-upload', file);
 
     try {
@@ -326,13 +297,8 @@ const ProductModal = ({
         })
       );
 
-      const uploadedImagerl = res.data.imageUrl;
-
-      //如果 uploadedImagerl 上傳成功，將它 set 到 tempProduct->改為modalData 裡的 imageUrl
-      setModalData({
-        ...modalData, //複製一個tempProduct->改為modalData
-        imageUrl: uploadedImagerl, //欄位代上imageUrl：值代入上傳的圖片uploadedImagerl
-      });
+      const uploadedImageUrl = res.data.imageUrl;
+      setValue('imageUrl', uploadedImageUrl);
     } catch (error) {
       dispatch(
         createToast({
@@ -346,8 +312,6 @@ const ProductModal = ({
 
   return (
     <>
-      {/* //加入產品 Modal */}
-
       <div
         ref={productModalRef}
         id="productModal"
@@ -357,7 +321,6 @@ const ProductModal = ({
         <div className="modal-dialog modal-dialog-centered modal-xl">
           <div className="modal-content border-0 shadow">
             <div className="modal-header border-bottom">
-              {/* 調整產品 Modal 的標題、傳入的值 */}
               <h5 className="modal-title fs-4">
                 {modalMode === 'create' ? '新增產品' : '編輯產品'}
               </h5>
@@ -369,405 +332,561 @@ const ProductModal = ({
               ></button>
             </div>
 
-            <div className="modal-body p-4">
-              <div className="row g-4">
-                <div className="col-md-4">
-                  {/* 主圖的圖片上傳功能 */}
-                  <div className="mb-5">
-                    <label htmlFor="fileInput" className="form-label">
-                      {' '}
-                      圖片上傳{' '}
-                    </label>
-                    <input
-                      type="file"
-                      accept=".jpg,.jpeg,.png"
-                      className="form-control"
-                      id="fileInput"
-                      onChange={handleFileChange}
-                    />
-                  </div>
-
-                  <div className="mb-2">
-                    <label htmlFor="primary-image" className="form-label">
-                      主要商品形象圖
-                    </label>
-                    <div className="input-group mb-3">
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <div className="modal-body p-4">
+                <div className="row g-4">
+                  <div className="col-md-4">
+                    {/* 主圖的圖片上傳功能 */}
+                    <div className="mb-5">
+                      <label htmlFor="fileInput" className="form-label">
+                        圖片上傳
+                      </label>
                       <input
-                        value={modalData.imageUrl}
-                        onChange={handleModalInputChange}
-                        name="imageUrl"
-                        type="text"
-                        id="primary-image"
+                        type="file"
+                        accept=".jpg,.jpeg,.png"
                         className="form-control"
-                        placeholder="請輸入圖片連結"
+                        id="fileInput"
+                        onChange={handleFileChange}
+                        ref={fileInputRef}
                       />
                     </div>
-                    <img
-                      src={modalData.imageUrl}
-                      alt={modalData.title}
-                      className="img-fluid rounded-4"
-                    />
-                  </div>
 
-                  {/* 副圖 */}
-                  <div className="border border-2 border-dashed rounded-3 p-3">
-                    {modalData.imagesUrl?.map((image, index) => (
-                      <div key={index} className="mb-2">
-                        <label
-                          htmlFor={`imagesUrl-${index + 1}`}
-                          className="form-label"
-                        >
-                          更多商品圖 {index + 1}
-                        </label>
-                        <input
-                          value={image}
-                          onChange={(e) => handleImageChange(e, index)}
-                          id={`imagesUrl-${index + 1}`}
-                          type="text"
-                          placeholder={`請輸入圖片 ${index + 1}連結`}
-                          className="form-control mb-2 rounded-4"
+                    <div className="mb-2">
+                      <label htmlFor="primary-image" className="form-label">
+                        主要商品形象圖
+                      </label>
+                      <div className="input-group mb-3">
+                        <Controller
+                          name="imageUrl"
+                          control={control}
+                          render={({ field }) => (
+                            <input
+                              {...field}
+                              type="text"
+                              id="primary-image"
+                              className="form-control"
+                              placeholder="請輸入圖片連結"
+                            />
+                          )}
                         />
-                        {image && (
-                          <img
-                            src={image}
-                            alt=""
-                            className="img-fluid mb-2 rounded-4 "
-                          />
-                        )}
                       </div>
-                    ))}
-
-                    {/* 撰寫產品 Modal 多圖按鈕顯示邏輯 */}
-                    <div className="btn-group w-100">
-                      {modalData.imagesUrl?.length < 5 &&
-                        modalData.imagesUrl[modalData.imagesUrl.length - 1] !==
-                          '' && (
-                          <button
-                            onClick={handleAddImage}
-                            className="btn btn-primary w-100"
-                          >
-                            新增圖片
-                          </button>
-                        )}
-
-                      {modalData.imagesUrl?.length >= 1 && (
-                        <button
-                          onClick={handleRemoveImage}
-                          className="btn btn-outline-danger w-100"
-                        >
-                          取消圖片
-                        </button>
+                      {watch('imageUrl') && (
+                        <img
+                          src={watch('imageUrl')}
+                          alt={watch('title')}
+                          className="img-fluid rounded-4"
+                        />
                       )}
                     </div>
-                  </div>
-                </div>
 
-                <div className="col-md-8">
-                  <div className="mb-3">
-                    <label htmlFor="title" className="form-label">
-                      標題
-                    </label>
-                    <input
-                      value={modalData.title}
-                      onChange={handleModalInputChange}
-                      name="title"
-                      id="title"
-                      type="text"
-                      className="form-control"
-                      placeholder="請輸入標題"
-                    />
+                    {/* 副圖 */}
+                    <div className="border border-2 border-dashed rounded-3 p-3">
+                      {imagesUrl?.map((image, index) => (
+                        <div key={index} className="mb-2">
+                          <label
+                            htmlFor={`imagesUrl-${index + 1}`}
+                            className="form-label"
+                          >
+                            更多商品圖 {index + 1}
+                          </label>
+                          <Controller
+                            name={`imagesUrl.${index}`}
+                            control={control}
+                            render={({ field }) => (
+                              <input
+                                {...field}
+                                id={`imagesUrl-${index + 1}`}
+                                type="text"
+                                placeholder={`請輸入圖片 ${index + 1}連結`}
+                                className="form-control mb-2 rounded-4"
+                              />
+                            )}
+                          />
+                          {image && (
+                            <img
+                              src={image}
+                              alt=""
+                              className="img-fluid mb-2 rounded-4"
+                            />
+                          )}
+                        </div>
+                      ))}
+
+                      {/* 多圖按鈕 */}
+                      <div className="btn-group w-100">
+                        {imagesUrl?.length < 5 &&
+                          (!imagesUrl.length ||
+                            imagesUrl[imagesUrl.length - 1] !== '') && (
+                            <button
+                              type="button"
+                              onClick={handleAddImage}
+                              className="btn btn-primary w-100"
+                            >
+                              新增圖片
+                            </button>
+                          )}
+
+                        {imagesUrl?.length >= 1 && (
+                          <button
+                            type="button"
+                            onClick={handleRemoveImage}
+                            className="btn btn-outline-danger w-100"
+                          >
+                            取消圖片
+                          </button>
+                        )}
+                      </div>
+                    </div>
                   </div>
 
-                  <div className="row gx-4 gx-md-6 mb-4 mb-lg-6">
-                    <div className="col-6 col-md-4">
-                      <label htmlFor="category" className="form-label">
-                        禮物類別
+                  <div className="col-md-8">
+                    <div className="mb-3">
+                      <label htmlFor="title" className="form-label">
+                        標題
                       </label>
-                      <select
-                        className="form-select"
-                        name="category"
-                        value={modalData.category}
-                        onChange={handleModalInputChange}
-                      >
-                        <option value="">商品分類</option>
-                        {categoryOptions.map((option) => (
-                          <option key={option} value={option}>
-                            {option}
-                          </option>
+                      <Controller
+                        name="title"
+                        control={control}
+                        rules={{ required: '此欄位必填！' }}
+                        render={({ field }) => (
+                          <input
+                            {...field}
+                            id="title"
+                            type="text"
+                            className={`form-control ${
+                              errors.title ? 'is-invalid' : ''
+                            }`}
+                            placeholder="請輸入標題"
+                          />
+                        )}
+                      />
+                      {errors.title && (
+                        <div className="invalid-feedback">
+                          {errors.title.message}
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="row gx-4 gx-md-6 mb-4 mb-lg-6">
+                      <div className="col-6 col-md-4">
+                        <label htmlFor="category" className="form-label">
+                          禮物類別
+                        </label>
+                        <Controller
+                          name="category"
+                          control={control}
+                          rules={{ required: '此欄位必填！' }}
+                          render={({ field }) => (
+                            <select
+                              {...field}
+                              className={`form-select ${
+                                errors.category ? 'is-invalid' : ''
+                              }`}
+                            >
+                              <option value="">商品分類</option>
+                              {categoryOptions.map((option) => (
+                                <option key={option} value={option}>
+                                  {option}
+                                </option>
+                              ))}
+                            </select>
+                          )}
+                        />
+                        {errors.category && (
+                          <div className="invalid-feedback">
+                            {errors.category.message}
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="col-6 col-md-4">
+                        <label htmlFor="unit" className="form-label">
+                          單位
+                        </label>
+                        <Controller
+                          name="unit"
+                          control={control}
+                          rules={{
+                            required: '此欄位必填！',
+                            pattern: {
+                              value: /^[\u4e00-\u9fa5]+$/,
+                              message: '請確認輸入的「單位」格式是否正確',
+                            },
+                          }}
+                          render={({ field }) => (
+                            <input
+                              {...field}
+                              id="unit"
+                              type="text"
+                              className={`form-control ${
+                                errors.unit ? 'is-invalid' : ''
+                              }`}
+                              placeholder="請輸入單位 (限中文)"
+                            />
+                          )}
+                        />
+                        {errors.unit && (
+                          <div className="invalid-feedback">
+                            {errors.unit.message}
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="col-6 col-md-4">
+                        <label htmlFor="qty" className="form-label">
+                          商品庫存數量
+                        </label>
+                        <Controller
+                          name="qty"
+                          control={control}
+                          rules={{
+                            required: '此欄位必填！',
+                            pattern: {
+                              value: /^[0-9]+$/,
+                              message: '請確認輸入的「數量」格式是否正確',
+                            },
+                          }}
+                          render={({ field }) => (
+                            <input
+                              {...field}
+                              id="qty"
+                              type="text"
+                              className={`form-control ${
+                                errors.qty ? 'is-invalid' : ''
+                              }`}
+                              placeholder="請輸入庫存數量 (限數值)"
+                            />
+                          )}
+                        />
+                        {errors.qty && (
+                          <div className="invalid-feedback">
+                            {errors.qty.message}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="row g-3 mb-5">
+                      <div className="col-6">
+                        <label htmlFor="origin_price" className="form-label">
+                          原價
+                        </label>
+                        <Controller
+                          name="origin_price"
+                          control={control}
+                          rules={{ required: '此欄位必填！' }}
+                          render={({ field }) => (
+                            <input
+                              {...field}
+                              id="origin_price"
+                              type="number"
+                              className={`form-control text-neutral60 ${
+                                errors.origin_price ? 'is-invalid' : ''
+                              }`}
+                              placeholder="請輸入原價"
+                            />
+                          )}
+                        />
+                        {errors.origin_price && (
+                          <div className="invalid-feedback">
+                            {errors.origin_price.message}
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="col-6">
+                        <label htmlFor="price" className="form-label">
+                          售價
+                        </label>
+                        <Controller
+                          name="price"
+                          control={control}
+                          rules={{ required: '此欄位必填！' }}
+                          render={({ field }) => (
+                            <input
+                              {...field}
+                              id="price"
+                              type="number"
+                              className={`form-control ${
+                                errors.price ? 'is-invalid' : ''
+                              }`}
+                              placeholder="請輸入售價"
+                            />
+                          )}
+                        />
+                        {errors.price && (
+                          <div className="invalid-feedback">
+                            {errors.price.message}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* tag: 節慶 / 場合 */}
+                    <div className="mt-10">
+                      <h3 className="card-title fs-5 border-bottom border-neutral40 fw-semibold pb-4 mb-4">
+                        節慶 / 場合
+                      </h3>
+                    </div>
+
+                    <div className="mb-5">
+                      <div className="row">
+                        {festivalOptions.map((option) => (
+                          <div
+                            key={option}
+                            className="form-check col-6 col-md-3 mb-2"
+                          >
+                            <div className="form-check text-neutral60">
+                              <Controller
+                                name="tages"
+                                control={control}
+                                render={({ field }) => (
+                                  <input
+                                    type="checkbox"
+                                    className="form-check-input"
+                                    id={`festival-${option}`}
+                                    value={option}
+                                    checked={field.value?.includes(option)}
+                                    onChange={(e) => {
+                                      const checked = e.target.checked;
+                                      const newValue = checked
+                                        ? [...(field.value || []), option]
+                                        : (field.value || []).filter(
+                                            (tag) => tag !== option
+                                          );
+                                      field.onChange(newValue);
+                                    }}
+                                  />
+                                )}
+                              />
+                              <label
+                                className="form-check-label"
+                                htmlFor={`festival-${option}`}
+                              >
+                                {option}
+                              </label>
+                            </div>
+                          </div>
                         ))}
-                      </select>
+                      </div>
                     </div>
 
-                    <div className="col-6 col-md-4">
-                      <label htmlFor="unit" className="form-label">
-                        單位
-                      </label>
-                      <input
-                        value={modalData.unit}
-                        onChange={handleModalInputChange}
-                        name="unit"
-                        id="unit"
-                        type="text"
-                        className="form-control"
-                        placeholder="請輸入單位"
-                      />
+                    {/* tag: 送禮關係 */}
+                    <div className="mt-10">
+                      <h3 className="card-title fs-5 border-bottom border-neutral40 fw-semibold pb-4 mb-4">
+                        送禮關係
+                      </h3>
                     </div>
 
-                    <div className="col-6 col-md-4">
-                      <label htmlFor="qty" className="form-label">
-                        商品庫存數量
-                      </label>
-                      <input
-                        value={modalData.qty}
-                        onChange={handleModalInputChange}
-                        name="qty"
-                        id="qty"
-                        type="text"
-                        className="form-control"
-                        placeholder="請輸入商品庫存數量"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="row g-3 mb-5">
-                    <div className="col-6">
-                      <label htmlFor="origin_price" className="form-label">
-                        原價
-                      </label>
-                      <input
-                        value={modalData.origin_price}
-                        onChange={handleModalInputChange}
-                        name="origin_price"
-                        id="origin_price"
-                        type="number"
-                        className="form-control text-neutral60"
-                        placeholder="請輸入原價"
-                      />
-                    </div>
-
-                    <div className="col-6">
-                      <label htmlFor="price" className="form-label">
-                        售價
-                      </label>
-                      <input
-                        value={modalData.price}
-                        onChange={handleModalInputChange}
-                        name="price"
-                        id="price"
-                        type="number"
-                        className="form-control"
-                        placeholder="請輸入售價"
-                      />
-                    </div>
-                  </div>
-
-                  {/* tag: 節慶 / 場合 */}
-                  <div className="mt-10">
-                    <h3 className="card-title fs-5 border-bottom border-neutral40 fw-semibold pb-4 mb-4">
-                      節慶 / 場合
-                    </h3>
-                  </div>
-
-                  <div className="col-12 mb-5">
-                    <div className="row">
-                      {festivalOptions.map((option) => (
-                        <div
-                          key={option}
-                          className="form-check col-6 col-md-3 mb-2"
-                        >
-                          <div className="form-check text-neutral60">
-                            <input
-                              type="checkbox"
-                              className="form-check-input"
-                              id={`festival-${option}`}
-                              value={option}
-                              checked={modalData.tages?.includes(option)} // 確認 `tages` 中是否包含此選項
-                              onChange={handleTagChange}
-                            />
-                            <label
-                              className="form-check-label"
-                              htmlFor={`festival-${option}`}
-                            >
-                              {option}
-                            </label>
+                    <div className="mb-5">
+                      <div className="row">
+                        {relationOptions.map((option) => (
+                          <div
+                            key={option}
+                            className="form-check col-6 col-md-3 mb-2"
+                          >
+                            <div className="form-check text-neutral60">
+                              <Controller
+                                name="tages"
+                                control={control}
+                                render={({ field }) => (
+                                  <input
+                                    type="checkbox"
+                                    className="form-check-input"
+                                    id={`relation-${option}`}
+                                    value={option}
+                                    checked={field.value?.includes(option)}
+                                    onChange={(e) => {
+                                      const checked = e.target.checked;
+                                      const newValue = checked
+                                        ? [...(field.value || []), option]
+                                        : (field.value || []).filter(
+                                            (tag) => tag !== option
+                                          );
+                                      field.onChange(newValue);
+                                    }}
+                                  />
+                                )}
+                              />
+                              <label
+                                className="form-check-label"
+                                htmlFor={`relation-${option}`}
+                              >
+                                {option}
+                              </label>
+                            </div>
                           </div>
-                        </div>
-                      ))}
+                        ))}
+                      </div>
                     </div>
-                  </div>
 
-                  {/* tag: 送禮關係 */}
-                  <div className="mt-10">
-                    <h3 className="card-title fs-5 border-bottom border-neutral40 fw-semibold pb-4 mb-4">
-                      送禮關係
-                    </h3>
-                  </div>
-
-                  <div className="col-12 mb-5">
-                    <div className="row">
-                      {relationOptions.map((option) => (
-                        <div
-                          key={option}
-                          className="form-check col-6 col-md-3 mb-2"
-                        >
-                          <div className="form-check text-neutral60">
-                            <input
-                              type="checkbox"
-                              className="form-check-input "
-                              id={`relation-${option}`}
-                              value={option}
-                              checked={modalData.tages?.includes(option)}
-                              onChange={handleTagChange}
-                            />
-                            <label
-                              className="form-check-label"
-                              htmlFor={`relation-${option}`}
-                            >
-                              {option}
-                            </label>
-                          </div>
-                        </div>
-                      ))}
+                    <div className="mb-3">
+                      <label htmlFor="description" className="form-label">
+                        商品說明
+                      </label>
+                      <Controller
+                        name="description"
+                        control={control}
+                        render={({ field }) => (
+                          <textarea
+                            {...field}
+                            id="description"
+                            className="form-control"
+                            rows={4}
+                            placeholder="請輸入商品說明內容"
+                          ></textarea>
+                        )}
+                      />
                     </div>
-                  </div>
 
-                  <div className="mb-3">
-                    <label htmlFor="description" className="form-label">
-                      商品說明
-                    </label>
-                    <textarea
-                      value={modalData.description}
-                      onChange={handleModalInputChange}
-                      name="description"
-                      id="description"
-                      className="form-control"
-                      rows={4}
-                      placeholder="請輸入商品說明內容"
-                    ></textarea>
-                  </div>
+                    <div className="mt-10">
+                      <h3 className="card-title fs-5 border-bottom border-neutral40 fw-semibold pb-4 mb-4">
+                        商品資訊
+                      </h3>
+                    </div>
 
-                  <div className="mt-10">
-                    <h3 className="card-title fs-5 border-bottom border-neutral40 fw-semibold pb-4 mb-4">
-                      商品資訊
-                    </h3>
-                  </div>
+                    <div className="mb-3">
+                      <label htmlFor="material_contents" className="form-label">
+                        材質/內容物
+                      </label>
+                      <Controller
+                        name="content.material_contents"
+                        control={control}
+                        render={({ field }) => (
+                          <textarea
+                            {...field}
+                            id="material_contents"
+                            rows={4}
+                            className="form-control"
+                            placeholder="請輸入商品的材質/內容物資訊"
+                          ></textarea>
+                        )}
+                      />
+                    </div>
 
-                  <div className="mb-3">
-                    <label htmlFor="material_contents" className="form-label">
-                      材質/內容物
-                    </label>
-                    <textarea
-                      value={modalData.content.material_contents}
-                      onChange={handleModalInputChange}
-                      name="material_contents"
-                      id="material_contents"
-                      type="text"
-                      rows={4}
-                      className="form-control"
-                      placeholder="請輸入商品的材質/內容物資訊"
-                    ></textarea>
-                  </div>
+                    <div className="mb-3">
+                      <label htmlFor="expiry_date" className="form-label">
+                        保存期限
+                      </label>
+                      <Controller
+                        name="content.expiry_date"
+                        control={control}
+                        render={({ field }) => (
+                          <input
+                            {...field}
+                            id="expiry_date"
+                            type="text"
+                            className="form-control"
+                            placeholder="可以輸入保存期限或方法內容"
+                          />
+                        )}
+                      />
+                    </div>
 
-                  <div className="mb-3">
-                    <label htmlFor="expiry_date" className="form-label">
-                      保存期限
-                    </label>
-                    <input
-                      value={modalData.content.expiry_date}
-                      onChange={handleModalInputChange}
-                      name="expiry_date"
-                      id="expiry_date"
-                      type="text"
-                      className="form-control"
-                      placeholder="可以輸入保存期限或方法內容"
-                    />
-                  </div>
+                    <div className="mb-3">
+                      <label htmlFor="origin" className="form-label">
+                        產地
+                      </label>
+                      <Controller
+                        name="content.origin"
+                        control={control}
+                        render={({ field }) => (
+                          <input
+                            {...field}
+                            id="origin"
+                            type="text"
+                            className="form-control"
+                            placeholder="請輸入商品產地資訊"
+                          />
+                        )}
+                      />
+                    </div>
 
-                  <div className="mb-3">
-                    <label htmlFor="origin" className="form-label">
-                      產地
-                    </label>
-                    <input
-                      value={modalData.content.origin}
-                      onChange={handleModalInputChange}
-                      name="origin"
-                      id="origin"
-                      type="text"
-                      className="form-control"
-                      placeholder="請輸入商品產地資訊"
-                    />
-                  </div>
+                    <div className="mb-3">
+                      <label htmlFor="notes" className="form-label">
+                        注意事項
+                      </label>
+                      <Controller
+                        name="content.notes"
+                        control={control}
+                        render={({ field }) => (
+                          <textarea
+                            {...field}
+                            id="notes"
+                            rows={4}
+                            className="form-control"
+                            placeholder="請輸入商品或使用上的注意事項內容"
+                          ></textarea>
+                        )}
+                      />
+                    </div>
 
-                  <div className="mb-3">
-                    <label htmlFor="material_contents" className="form-label">
-                      注意事項
-                    </label>
-                    <textarea
-                      value={modalData.content.notes}
-                      onChange={handleModalInputChange}
-                      name="notes"
-                      id="notes"
-                      type="text"
-                      rows={4}
-                      className="form-control"
-                      placeholder="請輸入商品或使用上的注意事項內容"
-                    ></textarea>
-                  </div>
+                    <div className="form-check">
+                      <Controller
+                        name="is_enabled"
+                        control={control}
+                        render={({ field }) => (
+                          <input
+                            {...field}
+                            type="checkbox"
+                            className="form-check-input"
+                            id="isEnabled"
+                            checked={field.value}
+                            onChange={(e) => field.onChange(e.target.checked)}
+                          />
+                        )}
+                      />
+                      <label className="form-check-label" htmlFor="isEnabled">
+                        是否啟用
+                      </label>
+                    </div>
 
-                  <div className="form-check">
-                    <input
-                      checked={modalData.is_enabled}
-                      onChange={handleModalInputChange}
-                      name="is_enabled"
-                      type="checkbox"
-                      className="form-check-input"
-                      id="isEnabled"
-                    />
-                    <label className="form-check-label" htmlFor="isEnabled">
-                      是否啟用
-                    </label>
-                  </div>
-
-                  {/* 是否為熱銷產品 is_hot */}
-                  <div className="form-check">
-                    <input
-                      checked={modalData.is_hot}
-                      onChange={handleModalInputChange}
-                      name="is_hot"
-                      type="checkbox"
-                      className="form-check-input"
-                      id="isHotProduct"
-                    />
-                    <label className="form-check-label" htmlFor="isHotProduct">
-                      是否為熱銷商品
-                    </label>
+                    <div className="form-check">
+                      <Controller
+                        name="is_hot"
+                        control={control}
+                        render={({ field }) => (
+                          <input
+                            {...field}
+                            type="checkbox"
+                            className="form-check-input"
+                            id="isHotProduct"
+                            checked={field.value}
+                            onChange={(e) => field.onChange(e.target.checked)}
+                          />
+                        )}
+                      />
+                      <label
+                        className="form-check-label"
+                        htmlFor="isHotProduct"
+                      >
+                        是否為熱銷商品
+                      </label>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
 
-            <div className="modal-footer border-top bg-light">
-              <button
-                onClick={handleCloseProductModal}
-                type="button"
-                className="btn btn-outline-neutral60 fs-6"
-              >
-                取消
-              </button>
-              <button
-                onClick={handlUpdateProduct}
-                type="button"
-                className="btn btn-primary fs-6"
-              >
-                確認
-              </button>
-            </div>
+              <div className="modal-footer border-top bg-light">
+                <button
+                  onClick={handleCloseProductModal}
+                  type="button"
+                  className="btn btn-outline-neutral60 fs-6"
+                >
+                  取消
+                </button>
+                <button type="submit" className="btn btn-primary fs-6">
+                  確認
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       </div>
     </>
   );
 };
+
 export default ProductModal;
 
 ProductModal.propTypes = {

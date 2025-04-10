@@ -12,9 +12,9 @@ import CheckboxRadio from '../components/form/CheckboxRadio';
 import CartStep from '../components/CartStep';
 import { asyncGetCart } from '../../slices/cartSlice';
 import EmptyBasket from '../components/EmptyBasket';
-import { createAlert } from '../../slices/alertSlice';
 import CheckoutWriteCard from '../components/CheckoutWriteCard';
 import ReactHelmetAsync from '../../plugins/ReactHelmetAsync';
+import useAlertConfirmDialog from '../hooks/useAlertConfirmDialog';
 
 // 環境變數
 const BASE_URL = import.meta.env.VITE_BASE_URL;
@@ -60,16 +60,23 @@ export default function CheckoutPage() {
   });
 
   // 客戶購物 - 結帳
+  const { alert } = useAlertConfirmDialog();
   const checkout = async (data) => {
     try {
       const url = `${BASE_URL}/api/${API_PATH}/order`;
       const response = await axios.post(url, data);
       dispatch(asyncGetCart());
-      dispatch(createAlert(response.data));
+      alert({
+        icon: 'success',
+        title: '已建立訂單',
+      });
       navigate(`/payment/${response.data.orderId}`);
     } catch (error) {
       console.error(error.response.data);
-      dispatch(createAlert(error.response.data));
+      alert({
+        icon: 'error',
+        title: '訂單建立失敗',
+      });
     }
   };
 
@@ -172,18 +179,16 @@ export default function CheckoutPage() {
                             required: '（ 必填！請填寫正確且完整的地址 ）',
                           }}
                         />
+                        <Textarea
+                          register={register}
+                          errors={errors}
+                          id="message"
+                          labelText={<span>訂單備註＿給賣家的訊息</span>}
+                          placeholder="下列商品須提供客製化細節，請依照備註須知內容填寫。填寫時，別忘了標示是哪一件商品的備註內容。"
+                          rules={{}}
+                          rows="5"
+                        />
                       </div>
-                      <Textarea
-                        register={register}
-                        errors={errors}
-                        id="message"
-                        labelText={<span>訂單備註＿給賣家的訊息</span>}
-                        placeholder="下列商品須提供客製化細節，請依照備註須知內容填寫。填寫時，別忘了標示是哪一件商品的備註內容。"
-                        rules={{}}
-                        labelClassName="bg-primary py-5 px-8 d-block mb-0 fs-5 fs-md-4 fw-semibold fw-md-bold"
-                        textareaClassName="border-primary rounded-top-0 rounded-bottom-4 p-8"
-                        rows="5"
-                      />
                     </div>
                     <div className="col-lg-4">
                       <div className="mt-6 mt-lg-0 mt-xl-0 bg-white">
@@ -268,33 +273,35 @@ export default function CheckoutPage() {
                       </div>
                     </div>
                   </div>
-                  <CheckboxRadio
-                    register={register}
-                    errors={errors}
-                    id="isWriteCard"
-                    name="isWriteCard"
-                    labelText={
-                      <>
-                        是否填寫電子賀卡
-                        <span className="text-neutral40 fs-7 ms-2">
-                          勾選後請在下方處填寫挑選＆挑選
-                        </span>
-                      </>
-                    }
-                    type="checkbox"
-                    rules={{}}
-                  />
-                  {watchForm.isWriteCard && (
-                    <CheckoutWriteCard
-                      register={register}
-                      errors={errors}
-                      setValue={setValue}
-                      clearErrors={clearErrors}
-                      watchForm={watchForm}
-                    />
-                  )}
-                  <div className="row">
-                    <div className="col-lg-8">
+                  <div className="row mt-3">
+                    <div className="col-12">
+                      <CheckboxRadio
+                        register={register}
+                        errors={errors}
+                        id="isWriteCard"
+                        name="isWriteCard"
+                        labelText={
+                          <>
+                            是否填寫電子賀卡
+                            <span className="text-neutral40 fs-7 ms-2">
+                              勾選後請在下方處填寫挑選＆挑選
+                            </span>
+                          </>
+                        }
+                        type="checkbox"
+                        rules={{}}
+                      />
+                      {watchForm.isWriteCard && (
+                        <CheckoutWriteCard
+                          register={register}
+                          errors={errors}
+                          setValue={setValue}
+                          clearErrors={clearErrors}
+                          watchForm={watchForm}
+                        />
+                      )}
+                    </div>
+                    <div className="col-12">
                       <CheckboxRadio
                         register={register}
                         errors={errors}
@@ -303,7 +310,9 @@ export default function CheckoutPage() {
                         labelText={
                           <>
                             我已閱讀並同意本網站的
-                            <Link to="/privacy-policy">隱私權服務條款</Link>
+                            <Link to="/privacy-policy" target="_blank">
+                              隱私權服務條款
+                            </Link>
                           </>
                         }
                         type="checkbox"
@@ -311,6 +320,10 @@ export default function CheckoutPage() {
                           required: '（ 必填 ）',
                         }}
                       />
+                    </div>
+                  </div>
+                  <div className="row">
+                    <div className="col-lg-8">
                       <div className="d-flex flex-wrap flex-xl-nowrap gap-5">
                         <Link
                           to="/cart"

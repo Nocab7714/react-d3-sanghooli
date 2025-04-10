@@ -64,6 +64,7 @@ const ProductPurchaseOptions = ({ productId, product }) => {
               productQty={productQty}
               setProductQty={setProductQty}
               productStockQty={productStockQty}
+              inputSize="m"
             />
             <span className="fs-6 text-neutral60">
               庫存尚有{Number(product.qty)}件

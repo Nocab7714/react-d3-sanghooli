@@ -14,3 +14,8 @@ createRoot(document.getElementById('root')).render(
     <RouterProvider router={router} />
   </Provider>
 );
+
+// 檢測字體加載
+document.fonts.ready.then(() => {
+  document.documentElement.classList.add('fonts-loaded');
+});

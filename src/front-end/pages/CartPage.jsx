@@ -11,8 +11,8 @@ import EmptyBasket from '../components/EmptyBasket';
 import CartStep from '../components/CartStep';
 import { asyncGetCart } from '../../slices/cartSlice';
 import { asyncSetLoading } from '../../slices/loadingSlice';
-import { createAlert } from '../../slices/alertSlice';
 import ReactHelmetAsync from '../../plugins/ReactHelmetAsync';
+import useAlertConfirmDialog from '../hooks/useAlertConfirmDialog';
 
 // 環境變數
 const BASE_URL = import.meta.env.VITE_BASE_URL;
@@ -46,14 +46,38 @@ function CartPage() {
     }
   };
 
-  const deleteCartOne = async (cartId) => {
-    dispatch(asyncSetLoading(['sectionLoading', true]));
+  const { confirm, alert } = useAlertConfirmDialog();
+  const deleteCartOne = async (cartId, cartTitle) => {
+    const isConfirmed = await confirm({
+      title: `確定刪除「${cartTitle}」？`,
+      text: '刪除後將無法復原',
+      icon: 'warning',
+      confirmText: '刪除',
+      cancelText: '取消',
+    });
+
+    if (!isConfirmed) return;
+
     try {
+      dispatch(asyncSetLoading(['sectionLoading', true]));
       const url = `${BASE_URL}/api/${API_PATH}/cart/${cartId}`;
       await axios.delete(url);
       dispatch(asyncGetCart());
+
+      // 顯示刪除成功提示
+      await alert({
+        icon: 'success',
+        title: '刪除成功',
+        text: `「${cartTitle}」已從購物車移除`,
+        confirmText: '確認',
+      });
     } catch (error) {
       console.error(error);
+      await alert({
+        icon: 'error',
+        title: '刪除失敗',
+        text: '請稍後再試一次',
+      });
     } finally {
       dispatch(asyncSetLoading(['sectionLoading', false]));
     }
@@ -118,7 +142,7 @@ function CartPage() {
     } else {
       getRecommendedProducts('all'); // 使用 'all' 類別
     }
-  }, [getRecommendedProducts]);
+  }, [getRecommendedProducts, cartCategories]);
   // 只當頁面載入時觸發 getRecommendedProducts 就好，不要每次 cartCategories 更新時觸發 getRecommendedProducts，因此不填入 cartCategories 依賴。
 
   // 使用優惠券
@@ -191,14 +215,11 @@ function CartPage() {
           } catch (error) {
             console.error(error);
 
-            const { success } = error.response.data;
-            dispatch(
-              createAlert({
-                success,
-                message:
-                  '優惠券移除失敗，進入結帳流程前，請再次確認購物車品項是否正確',
-              })
-            );
+            await alert({
+              icon: 'error',
+              title: '移除失敗',
+              text: '優惠券移除失敗，進入結帳流程前，請再次確認購物車品項是否正確',
+            });
             successfullyReset = false;
             break;
           }
@@ -221,14 +242,13 @@ function CartPage() {
         text: '優惠券移除失敗，請與客服人員聯繫！',
         className: 'text-secondary',
       });
-      dispatch(
-        createAlert({
-          success: false,
-          message: '優惠券移除失敗，請與客服人員聯繫',
-        })
-      );
+      await alert({
+        icon: 'error',
+        title: '移除失敗',
+        text: '優惠券移除失敗，請與客服人員聯繫',
+      });
     }
-  }, [dispatch, reset]);
+  }, [dispatch, reset, alert]);
 
   useEffect(() => {
     if (coupon) {
@@ -281,7 +301,9 @@ function CartPage() {
                           <button
                             type="button"
                             className="btn border-0 p-1"
-                            onClick={() => deleteCartOne(cartItem.id)}
+                            onClick={() =>
+                              deleteCartOne(cartItem.id, cartItem.product.title)
+                            }
                           >
                             <span className="material-symbols-outlined">
                               delete
@@ -371,7 +393,7 @@ function CartPage() {
                             <tr key={cartItem.id}>
                               <th scope="row">
                                 <Link
-                                  to={`/single-product/${cartItem.product.id}`}
+                                  to={`/product-details/${cartItem.product.id}`}
                                   className="d-flex align-items-center gap-3 gap-lg-4"
                                 >
                                   <img
@@ -458,7 +480,12 @@ function CartPage() {
                                 <button
                                   type="button"
                                   className="btn border-0 p-1"
-                                  onClick={() => deleteCartOne(cartItem.id)}
+                                  onClick={() =>
+                                    deleteCartOne(
+                                      cartItem.id,
+                                      cartItem.product.title
+                                    )
+                                  }
                                 >
                                   <span className="material-symbols-outlined">
                                     delete
@@ -472,7 +499,7 @@ function CartPage() {
                     </div>
                     <div className="col-lg-4">
                       {/* 訂單明細 */}
-                      <div className="bg-white rounded-4 mt-6 mt-sm-0">
+                      <div className="bg-white rounded-4 mt-6 mt-lg-0">
                         <div className="p-4 border-bottom p-md-8">
                           <h5 className="mb-5 fs-md-4 mb-md-6">訂單明細</h5>
                           <div className="d-flex justify-content-between align-items-center fs-7 mb-4">

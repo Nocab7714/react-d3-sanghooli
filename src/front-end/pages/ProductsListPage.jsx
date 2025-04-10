@@ -55,12 +55,8 @@ const ProductsListPage = () => {
   );
 
   // 使用分頁 hook
-  const {
-    setCurrentPage,
-    paginatedItems,
-    paginationData,
-    hasPagination,
-  } = usePagination(filteredProducts);
+  const { setCurrentPage, paginatedItems, paginationData, hasPagination } =
+    usePagination(filteredProducts);
 
   // 處理分頁切換
   const handlePageChange = (newPage) => {

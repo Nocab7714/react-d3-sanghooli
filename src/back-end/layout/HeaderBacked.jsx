@@ -47,7 +47,13 @@ const HeaderBacked = () => {
   return (
     <>
       {/* 固定在頂部的 Navbar：登入狀態 navbar */}
-      <div className="fixed-top">
+      <div
+        className="fixed-top bg-white"
+        style={{
+          background:
+            'linear-gradient(90deg, rgba(255, 238, 219, 0) 0%, #FFEEDB 50%, rgba(255, 238, 219, 0) 100%)',
+        }}
+      >
         <MarqueeTextBacked
           headerRef={headerRef}
           headerHeight={headerHeight}
@@ -63,9 +69,9 @@ const HeaderBacked = () => {
           }}
         >
           {/* 品牌 LOGO */}
-          <div className="container-fluid">
+          <div className="container">
             <Link
-              className="navbar-brand py-0 active d-flex align-items-center ms-10"
+              className="navbar-brand py-0 active d-flex align-items-center"
               to={isLoggedIn ? '/admin/orders' : '/admin/login'} // 根據登入狀態變換路徑
             >
               <img
@@ -97,18 +103,18 @@ const HeaderBacked = () => {
 
             {/* 導覽列內容 */}
             <div className="collapse navbar-collapse" id="navbarNavDropdown">
-              <ul className="header-Backedpage-links list-unstyled d-flex flex-column flex-md-row align-items-center my-4 my-md-6 ms-auto">
+              <ul className="header-Backedpage-links list-unstyled d-flex flex-column flex-md-row align-items-center mb-3 my-4 my-md-0 ms-auto">
                 {/* 根據登入狀態顯示不同選單，登入狀態 navbar 顯示_使用 .map() 渲染導覽列按鈕 */}
                 {(isLoggedIn ? loggedInRoutes : guestRoutes).map((item) => (
                   <li
                     key={item.path}
-                    className="nav-item position-relative me-4 me-md-1 adminNav-deco gap-3 py-2"
+                    className="nav-item position-relative me-4 me-md-1 adminNav-deco py-2"
                   >
                     {/* NavLink負責頁面切換： */}
                     <NavLink
                       to={item.path}
                       className={({ isActive }) =>
-                        `d-inline-block fs-6 link-neutral60 px-4 py-3 mx-0 mx-md-1 gap-3 ${
+                        `d-inline-block fs-6 link-neutral60 px-4 py-2 ${
                           isActive ? 'active' : ''
                         }`
                       }
@@ -120,16 +126,16 @@ const HeaderBacked = () => {
                 ))}
 
                 {/* 登出按鈕 */}
-                <li className="nav-item align-items-center">
+                <span className="nav-item align-items-center position-relative mx-3 me-md-1">
                   {isLoggedIn && (
                     <button
                       onClick={handleLogoutAndShowToast}
-                      className="btn btn-primary pe-8 ps-8"
+                      className="btn btn-primary pe-8 ps-8 my-4"
                     >
                       登出
                     </button>
                   )}
-                </li>
+                </span>
               </ul>
             </div>
           </div>

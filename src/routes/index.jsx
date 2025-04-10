@@ -13,7 +13,6 @@ import CheckoutPage from '../front-end/pages/CheckoutPage.jsx';
 import PaymentPage from '../front-end/pages/PaymentPage.jsx';
 import SuccessPage from '../front-end/pages/SuccessPage.jsx';
 import WishListPage from '../front-end/pages/WishListPage.jsx';
-import MemberLogin from '../front-end/pages/MemberLogin.jsx';
 
 // 後台
 import LayoutBacked from '../back-end/layout/LayoutBacked.jsx';
@@ -76,7 +75,6 @@ const routes = [
         path: 'wish-list',
         element: <WishListPage />,
       },
-      { path: 'member-login', element: <MemberLogin /> },
     ],
   },
   {
