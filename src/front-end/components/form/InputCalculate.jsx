@@ -36,6 +36,7 @@ const InputCalculate = ({
           value={productQty}
           aria-label="product quantity"
           disabled={productQty <= 0}
+          style={{ height: inputSize === 'm' ? '46px' : '' }}
           readOnly
         />
         <button
