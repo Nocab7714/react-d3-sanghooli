@@ -34,7 +34,7 @@ function MemberLogin() {
         <div className="row justify-content-center">
           {/* <!-- 麵包屑Breadcrumbs --> */}
           <Breadcrumb breadcrumbItem={breadcrumbItem} />
-          <div className="col-lg-6 col-12">
+          <div className="col-lg-6">
             <h3 className="text-center mb-10 mt-10">已經是會員了?</h3>
             <form className="mb-22" onSubmit={handleSubmit(onSubmit)}>
               {/* 電子郵件 */}
