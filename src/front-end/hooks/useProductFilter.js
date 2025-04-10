@@ -1,7 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 const useProductFilter = (products, initialFilters = {}) => {
   const [searchValue, setSearchValue] = useState(
+    initialFilters.searchValue || ''
+  );
+  const [appliedSearchValue, setAppliedSearchValue] = useState(
     initialFilters.searchValue || ''
   );
   const [festival, setFestival] = useState(initialFilters.festival || '');
@@ -14,19 +17,20 @@ const useProductFilter = (products, initialFilters = {}) => {
   // 更新篩選條件
   useEffect(() => {
     setSearchValue(initialFilters.searchValue || '');
+    setAppliedSearchValue(initialFilters.searchValue || '');
     setFestival(initialFilters.festival || '');
     setRelation(initialFilters.relation || '');
     setCategory(initialFilters.category || '');
     setPriceRange(initialFilters.priceRange || '');
   }, [initialFilters]);
 
-  const handleFilterProducts = () => {
+  const handleFilterProducts = useCallback(() => {
     let result = [...products];
 
     // 定義篩選條件
     const filters = {
       searchValue: (product) =>
-        searchValue ? product.title.includes(searchValue) : true,
+        appliedSearchValue ? product.title.includes(appliedSearchValue) : true,
       festival: (product) =>
         festival ? product.tages?.includes(festival) : true,
       relation: (product) =>
@@ -58,19 +62,29 @@ const useProductFilter = (products, initialFilters = {}) => {
     }
 
     setFilteredProducts(result);
-  };
+  }, [
+    appliedSearchValue,
+    festival,
+    relation,
+    category,
+    priceRange,
+    sortOption,
+    products,
+  ]);
 
-  // 當篩選條件變更時，自動執行篩選 (但不包括 searchValue)
+  // 當篩選條件變更時，自動執行篩選
   useEffect(() => {
     handleFilterProducts();
-  }, [festival, relation, category, priceRange, sortOption, products]);
-
-  // 當 searchValue 變為空白時，自動恢復所有商品
-  useEffect(() => {
-    if (searchValue === '') {
-      handleFilterProducts();
-    }
-  }, [searchValue]);
+  }, [
+    festival,
+    relation,
+    category,
+    priceRange,
+    sortOption,
+    products,
+    appliedSearchValue,
+    handleFilterProducts,
+  ]);
 
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
@@ -99,11 +113,15 @@ const useProductFilter = (products, initialFilters = {}) => {
 
   const handleSearchValueChange = (value) => {
     setSearchValue(value);
+    // 當搜尋欄位清空時，自動重設 appliedSearchValue 並觸發篩選
+    if (value === '') {
+      setAppliedSearchValue('');
+    }
   };
 
   const handleSearch = () => {
     // 明確執行搜尋（當按下 Enter 或點擊搜尋按鈕時調用）
-    handleFilterProducts();
+    setAppliedSearchValue(searchValue);
   };
 
   return {

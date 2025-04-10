@@ -67,14 +67,14 @@ const HeaderFront = () => {
               </li> */}
               {/* 登入狀態 navbar 顯示 - 會員名稱*/}
               <li className="nav-item  position-relative me-4 me-md-1">
-                <NavLink className="nav-link link-neutral80" to="/member-login">
+                <div className="nav-link link-neutral80" >
                   <span className="material-symbols-outlined material-filled align-middle fs-3 ">
                     face
                   </span>
                   <span className=" align-middle ms-2 d-none d-md-inline-block">
                     周大俠 先生
                   </span>
-                </NavLink>
+                </div>
               </li>
               <li className="nav-item  position-relative me-4 me-md-1">
                 <NavLink className="nav-link link-neutral80" to="/wish-list">
