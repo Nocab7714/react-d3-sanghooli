@@ -38,7 +38,7 @@ export default function PaymentPage() {
 
   const payOrder = async (orderId) => {
     try {
-      const url = `${BASE_URL}/api/${API_PATH}/payy/${orderId}`;
+      const url = `${BASE_URL}/api/${API_PATH}/pay/${orderId}`;
       await axios.post(url);
       navigate(`/success/${orderId}`);
     } catch (error) {
