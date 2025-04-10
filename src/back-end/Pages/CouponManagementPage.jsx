@@ -2,8 +2,7 @@
 import ReactHelmetAsync from '../../plugins/ReactHelmetAsync'
 import axios from 'axios'
 import { useForm } from 'react-hook-form'
-// import { useNavigate } from 'react-router-dom'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, useCallback } from 'react'
 import PaginationBackend from '../components/PaginationBackend'
 import { createToast } from '../../slices/toastSlice'
 import { Modal } from 'bootstrap'
@@ -36,6 +35,26 @@ const CouponManagementPage = () => {
     reset,
     setValue,
   } = useForm()
+
+  // 取得優惠券清單 - 先定義此函數
+  const getCoupons = useCallback(async (page = 1) => {
+    dispatch(asyncSetLoading(['sectionLoading', true]))
+  
+    try {
+      const res = await axios.get(
+        `${baseUrl}/api/${apiPath}/admin/coupons?page=${page}`
+      )
+      setCouponList(res.data.coupons)
+      setPageInfo(res.data.pagination)
+    } catch (error) {
+      dispatch(
+        createToast({ success: false, message: '取得優惠券失敗，請稍後再試' })
+      )
+      console.error(error)
+    } finally {
+      dispatch(asyncSetLoading(['sectionLoading', false]))
+    }
+  }, [dispatch])
 
   // 當 tempCoupon 更新時，更新表單值
   useEffect(() => {
@@ -85,27 +104,7 @@ const CouponManagementPage = () => {
     )
     axios.defaults.headers.common['Authorization'] = token
     getCoupons()
-  }, [])
-
-  // 取得優惠券清單
-  const getCoupons = async (page = 1) => {
-    dispatch(asyncSetLoading(['sectionLoading', true]))
-
-    try {
-      const res = await axios.get(
-        `${baseUrl}/api/${apiPath}/admin/coupons?page=${page}`
-      )
-      setCouponList(res.data.coupons)
-      setPageInfo(res.data.pagination)
-    } catch (error) {
-      dispatch(
-        createToast({ success: false, message: '取得優惠券失敗，請稍後再試' })
-      )
-      console.error(error)
-    } finally {
-      dispatch(asyncSetLoading(['sectionLoading', false]))
-    }
-  }
+  }, [getCoupons])
 
   // 分頁點擊
   const handlePageChange = (page) => {

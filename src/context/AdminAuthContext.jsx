@@ -13,6 +13,7 @@ import { asyncSetLoading } from "../slices/loadingSlice";
 const { VITE_BASE_URL: baseUrl } = import.meta.env;
 
 // 建立 Context
+// eslint-disable-next-line react-refresh/only-export-components
 export const AdminAuthContext = createContext(null);
 
 export const AdminAuthProvider = ({ children }) => {

@@ -275,6 +275,7 @@ const ProductModal = ({
           message: `更新產品失敗，請檢查輸入內容！`,
         })
       );
+      console.error(error);
     }
   };
 

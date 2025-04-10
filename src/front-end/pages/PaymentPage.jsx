@@ -1,12 +1,11 @@
 // 外部資源
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import CartStep from '../components/CartStep';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
 
 // 內部資源
-// import orderFail from '../../assets/img/illustration/orderFail.webp';
 import paymentFailed from '../../assets/img/illustration/paymentFailed.webp';
 import NotFoundPage from './NotFoundPage';
 import { asyncSetLoading } from '../../slices/loadingSlice';
@@ -23,7 +22,7 @@ export default function PaymentPage() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const getOrder = async (orderId) => {
+  const getOrder = useCallback(async (orderId) => {
     dispatch(asyncSetLoading(['sectionLoading', true]));
     try {
       const url = `${BASE_URL}/api/${API_PATH}/order/${orderId}`;
@@ -34,7 +33,7 @@ export default function PaymentPage() {
     } finally {
       dispatch(asyncSetLoading(['sectionLoading', false]));
     }
-  };
+  }, [dispatch]);
 
   const payOrder = async (orderId) => {
     try {
@@ -48,7 +47,7 @@ export default function PaymentPage() {
   };
   useEffect(() => {
     getOrder(orderId);
-  }, [orderId]);
+  }, [orderId, getOrder]);
 
   return (
     <>
