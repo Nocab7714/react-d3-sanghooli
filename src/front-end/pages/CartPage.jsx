@@ -200,7 +200,7 @@ function CartPage() {
         let successfullyReset = true;
         for (const cart of savedCarts) {
           try {
-            const url = `${BASE_URL}/api/${API_PATH}/cartt`;
+            const url = `${BASE_URL}/api/${API_PATH}/cart`;
             const data = {
               data: {
                 product_id: cart.product_id,
