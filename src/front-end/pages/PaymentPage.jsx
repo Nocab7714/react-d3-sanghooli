@@ -22,18 +22,21 @@ export default function PaymentPage() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const getOrder = useCallback(async (orderId) => {
-    dispatch(asyncSetLoading(['sectionLoading', true]));
-    try {
-      const url = `${BASE_URL}/api/${API_PATH}/order/${orderId}`;
-      const response = await axios.get(url);
-      setOrderData(response.data.order);
-    } catch (error) {
-      console.error(error.response);
-    } finally {
-      dispatch(asyncSetLoading(['sectionLoading', false]));
-    }
-  }, [dispatch]);
+  const getOrder = useCallback(
+    async (orderId) => {
+      dispatch(asyncSetLoading(['sectionLoading', true]));
+      try {
+        const url = `${BASE_URL}/api/${API_PATH}/order/${orderId}`;
+        const response = await axios.get(url);
+        setOrderData(response.data.order);
+      } catch (error) {
+        console.error(error.response);
+      } finally {
+        dispatch(asyncSetLoading(['sectionLoading', false]));
+      }
+    },
+    [dispatch]
+  );
 
   const payOrder = async (orderId) => {
     try {
@@ -144,7 +147,12 @@ export default function PaymentPage() {
           <div className="container py-lg-19">
             <CartStep step={3} />
             <div className="d-flex flex-column align-items-center gap-5 mb-20">
-              <img src={paymentFailed} className="img-fluid" alt="paymentFailed" style={{width: '400px'}}/>
+              <img
+                src={paymentFailed}
+                className="img-fluid"
+                alt="paymentFailed"
+                style={{ width: '400px' }}
+              />
               <h1>付款失敗！</h1>
               <p className="w-50">
                 可能是網路連線問題導致交易失敗，請確認網路環境連線狀態是否穩定。

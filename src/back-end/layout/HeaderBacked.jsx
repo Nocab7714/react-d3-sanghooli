@@ -1,20 +1,20 @@
-import { NavLink, Link } from "react-router-dom";
-import { useRef, useState, useEffect, useContext } from "react";
-import { useDispatch } from "react-redux";
+import { NavLink, Link } from 'react-router-dom';
+import { useRef, useState, useEffect, useContext } from 'react';
+import { useDispatch } from 'react-redux';
 
-import logo from "@/assets/img/illustration/backendlogo-SANGHOOLI.webp";
-import MarqueeTextBacked from "./MarqueeTextBacked";
-import { AdminAuthContext } from "../../context/AdminAuthContext";
+import logo from '@/assets/img/illustration/backendlogo-SANGHOOLI.webp';
+import MarqueeTextBacked from './MarqueeTextBacked';
+import { AdminAuthContext } from '../../context/AdminAuthContext';
 
 //內部資源
-import { createToast } from "../../slices/toastSlice";
+import { createToast } from '../../slices/toastSlice';
 
 //定義未登入與登入的選單（路由）
-const guestRoutes = [{ path: "/", name: "網站前台" }];
+const guestRoutes = [{ path: '/', name: '網站前台' }];
 const loggedInRoutes = [
-  { path: "/admin/orders", name: "訂單管理" },
-  { path: "/admin/products", name: "商品管理" },
-  { path: "/admin/coupon", name: "優惠券管理" },
+  { path: '/admin/orders', name: '訂單管理' },
+  { path: '/admin/products', name: '商品管理' },
+  { path: '/admin/coupon', name: '優惠券管理' },
 ];
 
 const HeaderBacked = () => {
@@ -39,7 +39,7 @@ const HeaderBacked = () => {
     dispatch(
       createToast({
         success: true,
-        message: "成功登出，正在跳轉至登入頁面",
+        message: '成功登出，正在跳轉至登入頁面',
       })
     );
   };
@@ -51,7 +51,7 @@ const HeaderBacked = () => {
         className="fixed-top bg-white"
         style={{
           background:
-            "linear-gradient(90deg, rgba(255, 238, 219, 0) 0%, #FFEEDB 50%, rgba(255, 238, 219, 0) 100%)",
+            'linear-gradient(90deg, rgba(255, 238, 219, 0) 0%, #FFEEDB 50%, rgba(255, 238, 219, 0) 100%)',
         }}
       >
         <MarqueeTextBacked
@@ -63,16 +63,16 @@ const HeaderBacked = () => {
           ref={headerRef}
           className="navbar navbar-expand-md bg-white shadow-sm "
           style={{
-            paddingTop: "14px",
-            paddingBottom: "14px",
-            boxShadow: "0px 0px 12px 0px #00000014",
+            paddingTop: '14px',
+            paddingBottom: '14px',
+            boxShadow: '0px 0px 12px 0px #00000014',
           }}
         >
           {/* 品牌 LOGO */}
           <div className="container">
             <Link
               className="navbar-brand py-0 active d-flex align-items-center"
-              to={isLoggedIn ? "/admin/orders" : "/admin/login"} // 根據登入狀態變換路徑
+              to={isLoggedIn ? '/admin/orders' : '/admin/login'} // 根據登入狀態變換路徑
             >
               <img
                 className="d-block d-md-none"
@@ -115,7 +115,7 @@ const HeaderBacked = () => {
                       to={item.path}
                       className={({ isActive }) =>
                         `d-inline-block fs-6 link-neutral60 px-4 py-2 ${
-                          isActive ? "active" : ""
+                          isActive ? 'active' : ''
                         }`
                       }
                       aria-current="page"

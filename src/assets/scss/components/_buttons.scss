@@ -7,26 +7,26 @@
     border-color: $primary-dark;
   }
 
-  &:disabled{
+  &:disabled {
     background: $neutral20;
     color: $neutral40;
-    border-color:  $neutral20;
+    border-color: $neutral20;
   }
 
-  &:active{
+  &:active {
     color: $neutral80 !important;
   }
 }
 
-.btn-outline-neutral60{
+.btn-outline-neutral60 {
   &:hover {
-    border-color:  $primary-dark;
+    border-color: $primary-dark;
     color: white;
-    border-color:  $neutral20;
+    border-color: $neutral20;
   }
-  &:disabled{
+  &:disabled {
     background: $neutral20;
     color: $neutral40;
-    border-color:  $neutral20;
+    border-color: $neutral20;
   }
 }

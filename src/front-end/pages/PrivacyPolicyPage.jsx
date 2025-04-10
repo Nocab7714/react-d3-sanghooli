@@ -1,22 +1,22 @@
 // 外部資源
-import { useState, useRef, useEffect } from "react";
-import Breadcrumb from "../components/Breadcrumb.jsx";
-import ReactHelmetAsync from "../../plugins/ReactHelmetAsync";
+import { useState, useRef, useEffect } from 'react';
+import Breadcrumb from '../components/Breadcrumb.jsx';
+import ReactHelmetAsync from '../../plugins/ReactHelmetAsync';
 
 //視 麵包屑breadcrumb 階層保留對應資料
 const breadcrumbItem = [
   {
-    page: "首頁",
-    link: "/",
+    page: '首頁',
+    link: '/',
   },
   {
-    page: "隱私權服務條款",
-    link: "/privacy-policy",
+    page: '隱私權服務條款',
+    link: '/privacy-policy',
   },
 ];
 
 const PrivacyPolicyPage = () => {
-  const [activeLink, setActiveLink] = useState("privacy-policy"); // 預設選中 "隱私權政策"
+  const [activeLink, setActiveLink] = useState('privacy-policy'); // 預設選中 "隱私權政策"
 
   //將錨點改為 Ref 方式設定
   const privacyPolicyRef = useRef(null);
@@ -28,7 +28,7 @@ const PrivacyPolicyPage = () => {
     // 獲取頁面頂部到視窗頂部的距離
     const headerOffset = 156; // 假設頁面頂部有固定導航欄高度(根據實際情況調整)
 
-    if (id === "privacy-policy" && privacyPolicyRef.current) {
+    if (id === 'privacy-policy' && privacyPolicyRef.current) {
       // 計算元素位置
       const elementPosition =
         privacyPolicyRef.current.getBoundingClientRect().top;
@@ -38,9 +38,9 @@ const PrivacyPolicyPage = () => {
 
       window.scrollTo({
         top: offsetPosition,
-        behavior: "smooth",
+        behavior: 'smooth',
       });
-    } else if (id === "service-policy" && servicePolicyRef.current) {
+    } else if (id === 'service-policy' && servicePolicyRef.current) {
       const elementPosition =
         servicePolicyRef.current.getBoundingClientRect().top;
       const offsetPosition =
@@ -48,7 +48,7 @@ const PrivacyPolicyPage = () => {
 
       window.scrollTo({
         top: offsetPosition,
-        behavior: "smooth",
+        behavior: 'smooth',
       });
     }
   };
@@ -63,16 +63,15 @@ const PrivacyPolicyPage = () => {
           servicePolicyRef.current.getBoundingClientRect().top;
 
         if (servicePosition < 200) {
-          setActiveLink("service-policy");
-        }
-        else if (privacyPosition < 200 || window.scrollY < 200) {
-          setActiveLink("privacy-policy");
+          setActiveLink('service-policy');
+        } else if (privacyPosition < 200 || window.scrollY < 200) {
+          setActiveLink('privacy-policy');
         }
       }
     };
 
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   return (
@@ -94,18 +93,18 @@ const PrivacyPolicyPage = () => {
             <div className="timeline ps-10">
               <a
                 className={`timeline-item fs-5 mt-4 mb-4 ms-6 me-6 ${
-                  activeLink === "privacy-policy" ? "active" : ""
+                  activeLink === 'privacy-policy' ? 'active' : ''
                 }`}
-                onClick={() => handleClick("privacy-policy")}
+                onClick={() => handleClick('privacy-policy')}
               >
                 隱私權政策
               </a>
 
               <a
                 className={`timeline-item fs-5 mt-4 mb-4 ms-6 me-6 ${
-                  activeLink === "service-policy" ? "active" : ""
+                  activeLink === 'service-policy' ? 'active' : ''
                 }`}
-                onClick={() => handleClick("service-policy")}
+                onClick={() => handleClick('service-policy')}
               >
                 服務條款
               </a>
@@ -216,11 +215,11 @@ const PrivacyPolicyPage = () => {
                   <strong className="text-black">訂單處理</strong>
                   <ul>
                     <li className="mt-2 mb-2">
-                      {" "}
+                      {' '}
                       訂單一經確認即進入處理流程，若需修改或取消，請於訂單未出貨前聯繫客服。
                     </li>
                     <li className="mt-2 mb-4">
-                      {" "}
+                      {' '}
                       若因供應商或其他不可抗力因素導致商品無法供應，我們將主動通知並安排退款或替代方案。
                     </li>
                   </ul>

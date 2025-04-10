@@ -1,10 +1,10 @@
-import axios from "axios";
-import { useEffect, useRef, useState, useCallback } from "react";
-import { Modal } from "bootstrap";
-import { useDispatch } from "react-redux";
-import { createToast } from "../../slices/toastSlice";
-import { asyncSetLoading } from "../../slices/loadingSlice";
-import PropTypes from "prop-types";
+import axios from 'axios';
+import { useEffect, useRef, useState, useCallback } from 'react';
+import { Modal } from 'bootstrap';
+import { useDispatch } from 'react-redux';
+import { createToast } from '../../slices/toastSlice';
+import { asyncSetLoading } from '../../slices/loadingSlice';
+import PropTypes from 'prop-types';
 
 // 環境變數
 const { VITE_BASE_URL: baseUrl, VITE_API_PATH: apiPath } = import.meta.env;
@@ -25,8 +25,8 @@ const OrdersModal = ({
 
   // 訂單狀態選項
   const isPaidOptions = [
-    { value: true, label: "已付款" },
-    { value: false, label: "未付款" },
+    { value: true, label: '已付款' },
+    { value: false, label: '未付款' },
   ];
 
   //只在 isOpen 開啟時，才確保 modalData 會更新
@@ -35,7 +35,7 @@ const OrdersModal = ({
       setModalData({
         ...tempOrder,
         is_paid: Boolean(tempOrder.is_paid), // 確保 is_paid 是布林值
-        message: tempOrder.message ?? "", // 確保 message 不為 null (統一使用 message)
+        message: tempOrder.message ?? '', // 確保 message 不為 null (統一使用 message)
       });
     }
   }, [isOpen, tempOrder]);
@@ -58,13 +58,13 @@ const OrdersModal = ({
 
   const handleModalInputChange = (e) => {
     const { value, name } = e.target;
-    const newValue = name === "is_paid" ? value === "true" : value;
+    const newValue = name === 'is_paid' ? value === 'true' : value;
 
     setModalData((prevData) => ({
       ...prevData,
-      ...(name === "message"
+      ...(name === 'message'
         ? { [name]: newValue }
-        : name === "is_paid"
+        : name === 'is_paid'
         ? { [name]: newValue }
         : {
             user: {
@@ -86,12 +86,12 @@ const OrdersModal = ({
           setModalData({
             ...res.data.order,
             is_paid: Boolean(res.data.order.is_paid),
-            message: res.data.order.message ?? "",
+            message: res.data.order.message ?? '',
             user: {
-              name: res.data.order.user?.name || "",
-              tel: res.data.order.user?.tel || "",
-              email: res.data.order.user?.email || "",
-              address: res.data.order.user?.address || "",
+              name: res.data.order.user?.name || '',
+              tel: res.data.order.user?.tel || '',
+              email: res.data.order.user?.email || '',
+              address: res.data.order.user?.address || '',
             },
           });
         }
@@ -99,7 +99,7 @@ const OrdersModal = ({
         dispatch(
           createToast({
             success: false,
-            message: "取得訂單資料失敗！",
+            message: '取得訂單資料失敗！',
           })
         );
         console.error(error);
@@ -117,7 +117,7 @@ const OrdersModal = ({
 
   // 串接更新訂單 API
   const updateOrder = async () => {
-    dispatch(asyncSetLoading(["sectionLoading", true]));
+    dispatch(asyncSetLoading(['sectionLoading', true]));
     setIsScreenLoading(true);
     try {
       await axios.put(`${baseUrl}/api/${apiPath}/admin/order/${modalData.id}`, {
@@ -130,7 +130,7 @@ const OrdersModal = ({
       dispatch(
         createToast({
           success: true,
-          message: "訂單已成功更新！",
+          message: '訂單已成功更新！',
         })
       );
       handleCloseOrdersModal();
@@ -138,12 +138,12 @@ const OrdersModal = ({
       dispatch(
         createToast({
           success: false,
-          message: "更新訂單失敗！",
+          message: '更新訂單失敗！',
         })
       );
       console.error(error);
     } finally {
-      dispatch(asyncSetLoading(["sectionLoading", false]));
+      dispatch(asyncSetLoading(['sectionLoading', false]));
       setIsScreenLoading(false);
     }
   };
@@ -184,7 +184,7 @@ const OrdersModal = ({
         ref={ordersModalRef}
         id="ordersModal"
         className="modal"
-        style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
+        style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
       >
         <div className="modal-dialog modal-dialog-centered modal-xl">
           <div className="modal-content border-0 shadow">
@@ -212,7 +212,7 @@ const OrdersModal = ({
                     訂單編號
                   </label>
                   <input
-                    value={modalData?.id || ""}
+                    value={modalData?.id || ''}
                     name="id"
                     id="order_id"
                     type="text"
@@ -270,7 +270,7 @@ const OrdersModal = ({
                           姓名
                         </label>
                         <input
-                          value={modalData?.user?.name || ""}
+                          value={modalData?.user?.name || ''}
                           onChange={handleModalInputChange}
                           name="name"
                           id="user_name"
@@ -285,7 +285,7 @@ const OrdersModal = ({
                           聯絡電話
                         </label>
                         <input
-                          value={modalData?.user?.tel || ""}
+                          value={modalData?.user?.tel || ''}
                           onChange={handleModalInputChange}
                           name="tel"
                           id="user_tel"
@@ -300,7 +300,7 @@ const OrdersModal = ({
                           聯絡郵箱
                         </label>
                         <input
-                          value={modalData?.user?.email || ""}
+                          value={modalData?.user?.email || ''}
                           onChange={handleModalInputChange}
                           name="email"
                           id="user_email"
@@ -315,7 +315,7 @@ const OrdersModal = ({
                           收件地址
                         </label>
                         <input
-                          value={modalData?.user?.address || ""}
+                          value={modalData?.user?.address || ''}
                           onChange={handleModalInputChange}
                           name="address"
                           id="user_address"
@@ -330,7 +330,7 @@ const OrdersModal = ({
                           訂單備註
                         </label>
                         <textarea
-                          value={modalData?.message || ""}
+                          value={modalData?.message || ''}
                           onChange={handleModalInputChange}
                           name="message"
                           id="user_messages"
@@ -408,7 +408,7 @@ const OrdersModal = ({
                                 {item.product?.price !==
                                   item.product?.origin_price && (
                                   <del className="text-neutral40 fs-7">
-                                    NT${" "}
+                                    NT${' '}
                                     {item.product?.origin_price?.toLocaleString()}
                                   </del>
                                 )}
@@ -419,7 +419,7 @@ const OrdersModal = ({
                                 <p className="text-neutral80">
                                   {item.coupon
                                     ? item.coupon?.code
-                                    : "未使用優惠券"}
+                                    : '未使用優惠券'}
                                 </p>
                                 {item.coupon && (
                                   <p className="h6 text-neutral80">
@@ -433,7 +433,7 @@ const OrdersModal = ({
 
                               {/* 小計 */}
                               <td className="text-center">
-                                NT${" "}
+                                NT${' '}
                                 {(
                                   item.product?.price * item.qty
                                 ).toLocaleString()}
@@ -460,7 +460,7 @@ const OrdersModal = ({
                           <div className="d-flex justify-content-end align-items-center mb-4 pe-8">
                             <p className="me-12 ">小計</p>
                             <p className="fw-bold">
-                              NT${" "}
+                              NT${' '}
                               <span>
                                 {(() => {
                                   // 計算總小計：每個商品的原價 (item.product?.price * item.qty)
@@ -587,7 +587,7 @@ const OrdersModal = ({
                 className="btn btn-primary btn-outline-primary fs-6"
                 disabled={isScreenLoading}
               >
-                {isScreenLoading ? "更新中..." : "確認修改"}
+                {isScreenLoading ? '更新中...' : '確認修改'}
               </button>
             </div>
           </div>

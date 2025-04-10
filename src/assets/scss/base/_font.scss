@@ -5,22 +5,16 @@
 // Noto Sans、Merienda、Silkscreen、Fontdiner Swanky
 @import url('https://fonts.googleapis.com/css2?family=Fontdiner+Swanky&family=Merienda:wght@300..900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Silkscreen:wght@400;700&display=swap');
 
-
 // Material icon 設定
 .material-symbols-outlined {
-  font-variation-settings:
-  'FILL' 0,
-  'wght' 400,
-  'GRAD' 0,
-  'opsz' 24;
-  
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+
   // 初始隱藏
   visibility: hidden;
 }
 
 .material-filled {
-  font-variation-settings:
-  'FILL' 1,
+  font-variation-settings: 'FILL' 1;
 }
 
 html.fonts-loaded .material-symbols-outlined {
@@ -29,15 +23,15 @@ html.fonts-loaded .material-symbols-outlined {
 }
 
 // 卡片字體
-.ff-noto-sans{
-  font-family: "Noto Sans", sans-serif;
+.ff-noto-sans {
+  font-family: 'Noto Sans', sans-serif;
 }
-.ff-merienda{
-  font-family: "Merienda", sans-serif, cursive;
+.ff-merienda {
+  font-family: 'Merienda', sans-serif, cursive;
 }
-.ff-silkscreen{
-  font-family: "Silkscreen", sans-serif;
+.ff-silkscreen {
+  font-family: 'Silkscreen', sans-serif;
 }
-.ff-fontdiner-swanky{
-  font-family: "Fontdiner Swanky", sans-serif, serif;
+.ff-fontdiner-swanky {
+  font-family: 'Fontdiner Swanky', sans-serif, serif;
 }

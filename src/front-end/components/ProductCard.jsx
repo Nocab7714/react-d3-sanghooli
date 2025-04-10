@@ -4,7 +4,7 @@ import { formatNumber } from '../../utils/formatNumber';
 import { useDispatch, useSelector } from 'react-redux';
 import { asyncToggleWishList } from '../../slices/wishListSlice';
 import PropTypes from 'prop-types';
-// import './_product-card.scss'; 
+// import './_product-card.scss';
 
 // props 備註說明
 // product 為傳入單項商品資料
@@ -17,17 +17,14 @@ const ProductCard = ({ product, showIsHot = false }) => {
 
   return (
     <div className="position-relative">
-      {showIsHot && product.is_hot ?(
+      {showIsHot && product.is_hot ? (
         <div className="hot-sale">
-          <img
-            src={crownIcon}
-            alt="crown svg"
-            height="48"
-            width="48"
-          />
+          <img src={crownIcon} alt="crown svg" height="48" width="48" />
         </div>
-      ) : ''}
-      
+      ) : (
+        ''
+      )}
+
       <button
         onClick={() => {
           dispatch(asyncToggleWishList(product.id));
@@ -43,7 +40,7 @@ const ProductCard = ({ product, showIsHot = false }) => {
           favorite
         </span>
       </button>
-      
+
       <Link to={`/product-details/${product.id}`} className="product-card">
         <div className="card border-0 position-relative">
           <div className="card-bg"></div>
@@ -60,9 +57,7 @@ const ProductCard = ({ product, showIsHot = false }) => {
             <span className="fs-7 fw-normal text-neutral60 mb-2">
               {product.category}
             </span>
-            <p className="card-title fw-semibold fs-6 mb-3">
-              {product.title}
-            </p>
+            <p className="card-title fw-semibold fs-6 mb-3">{product.title}</p>
             <div className="d-flex justify-content-between">
               <p className="fs-7 text-primary-dark">
                 NT$

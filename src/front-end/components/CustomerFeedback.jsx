@@ -193,7 +193,9 @@ const CustomerFeedback = () => {
                         <span className="material-symbols-outlined material-filled text-primary fs-6 fs-md-5 me-2 me-md-4 ">
                           kid_star
                         </span>
-                        <span className="fs-7 fs-md-6 fw-semibold me-4 ">5.0</span>
+                        <span className="fs-7 fs-md-6 fw-semibold me-4 ">
+                          5.0
+                        </span>
                       </div>
                       <h3 className="card-title fs-6 fs-md-5 fw-semibold mb-4 mb-md-6">
                         送禮首選，絕對驚艷！
@@ -211,7 +213,9 @@ const CustomerFeedback = () => {
                         />
                         <div>
                           <h4 className="fs-7 fw-normal">WineLover</h4>
-                          <time className="fs-7 text-neutral60">2024/11/15</time>
+                          <time className="fs-7 text-neutral60">
+                            2024/11/15
+                          </time>
                         </div>
                       </div>
                     </div>
@@ -236,7 +240,9 @@ const CustomerFeedback = () => {
                         <span className="material-symbols-outlined material-filled text-primary fs-6 fs-md-5 me-2 me-md-4 ">
                           kid_star
                         </span>
-                        <span className="fs-7 fs-md-6 fw-semibold me-4 ">5.0</span>
+                        <span className="fs-7 fs-md-6 fw-semibold me-4 ">
+                          5.0
+                        </span>
                       </div>
                       <h3 className="card-title fs-6 fs-md-5 fw-semibold mb-4 mb-md-6">
                         極致享受，值得擁有！
@@ -254,7 +260,9 @@ const CustomerFeedback = () => {
                         />
                         <div>
                           <h4 className="fs-7 fw-normal">Sophie1234</h4>
-                          <time className="fs-7 text-neutral60">2024/11/10</time>
+                          <time className="fs-7 text-neutral60">
+                            2024/11/10
+                          </time>
                         </div>
                       </div>
                     </div>
@@ -279,7 +287,9 @@ const CustomerFeedback = () => {
                         <span className="material-symbols-outlined material-filled text-neutral40 fs-6 fs-md-5 me-2 me-md-4 ">
                           kid_star
                         </span>
-                        <span className="fs-7 fs-md-6 fw-semibold me-4 ">4.0</span>
+                        <span className="fs-7 fs-md-6 fw-semibold me-4 ">
+                          4.0
+                        </span>
                       </div>
                       <h3 className="card-title fs-6 fs-md-5 fw-semibold mb-4 mb-md-6">
                         高CP值的禮品選擇！
@@ -297,7 +307,9 @@ const CustomerFeedback = () => {
                         />
                         <div>
                           <h4 className="fs-7 fw-normal">JohnWineGuy</h4>
-                          <time className="fs-7 text-neutral60">2024/11/05</time>
+                          <time className="fs-7 text-neutral60">
+                            2024/11/05
+                          </time>
                         </div>
                       </div>
                     </div>

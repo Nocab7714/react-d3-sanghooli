@@ -1,58 +1,58 @@
 // 外部資源
-import axios from "axios";
-import { useEffect, useRef } from "react";
-import { Modal } from "bootstrap";
-import { useDispatch } from "react-redux";
-import PropTypes from "prop-types";
-import { useForm, Controller } from "react-hook-form";
+import axios from 'axios';
+import { useEffect, useRef } from 'react';
+import { Modal } from 'bootstrap';
+import { useDispatch } from 'react-redux';
+import PropTypes from 'prop-types';
+import { useForm, Controller } from 'react-hook-form';
 
-import { createToast } from "../../slices/toastSlice";
+import { createToast } from '../../slices/toastSlice';
 
 // 環境變數
 const { VITE_BASE_URL: baseUrl, VITE_API_PATH: apiPath } = import.meta.env;
 
 //商品分類選單的選項
 const categoryOptions = [
-  "食品與飲品",
-  "電子與實用",
-  "花卉與植物",
-  "美妝與保養",
-  "服飾與配件",
-  "文具與書籍",
-  "居家與生活",
-  "嬰幼兒與兒童",
+  '食品與飲品',
+  '電子與實用',
+  '花卉與植物',
+  '美妝與保養',
+  '服飾與配件',
+  '文具與書籍',
+  '居家與生活',
+  '嬰幼兒與兒童',
 ];
 
 const festivalOptions = [
-  "畢業季",
-  "生日",
-  "婚禮",
-  "喬遷",
-  "情人節",
-  "母親節",
-  "父親節",
-  "兒童滿月",
-  "春節",
-  "兒童節",
-  "中秋節",
-  "聖誕節",
+  '畢業季',
+  '生日',
+  '婚禮',
+  '喬遷',
+  '情人節',
+  '母親節',
+  '父親節',
+  '兒童滿月',
+  '春節',
+  '兒童節',
+  '中秋節',
+  '聖誕節',
 ];
 
 const relationOptions = [
-  "父母",
-  "父親",
-  "母親",
-  "祖父母",
-  "子女",
-  "男性朋友",
-  "女性朋友",
-  "男性情人",
-  "女性情人",
-  "丈夫",
-  "妻子",
-  "師長",
-  "同事",
-  "商業夥伴",
+  '父母',
+  '父親',
+  '母親',
+  '祖父母',
+  '子女',
+  '男性朋友',
+  '女性朋友',
+  '男性情人',
+  '女性情人',
+  '丈夫',
+  '妻子',
+  '師長',
+  '同事',
+  '商業夥伴',
 ];
 
 const ProductModal = ({
@@ -76,20 +76,20 @@ const ProductModal = ({
     formState: { errors },
   } = useForm({
     defaultValues: {
-      title: "",
-      category: "",
-      unit: "",
-      qty: "",
-      origin_price: "",
-      price: "",
-      description: "",
+      title: '',
+      category: '',
+      unit: '',
+      qty: '',
+      origin_price: '',
+      price: '',
+      description: '',
       content: {
-        material_contents: "",
-        expiry_date: "",
-        origin: "",
-        notes: "",
+        material_contents: '',
+        expiry_date: '',
+        origin: '',
+        notes: '',
       },
-      imageUrl: "",
+      imageUrl: '',
       imagesUrl: [],
       is_hot: false,
       is_enabled: false,
@@ -98,7 +98,7 @@ const ProductModal = ({
   });
 
   // 監聽 imagesUrl 以便控制新增和刪除按鈕
-  const imagesUrl = watch("imagesUrl");
+  const imagesUrl = watch('imagesUrl');
 
   // 初始化 Modal 及監聽開關狀態
   useEffect(() => {
@@ -118,22 +118,22 @@ const ProductModal = ({
   // 當 Modal 開啟時，根據模式重置表單
   useEffect(() => {
     if (isOpen) {
-      if (modalMode === "create") {
+      if (modalMode === 'create') {
         reset({
-          title: "",
-          category: "",
-          unit: "",
-          qty: "",
-          origin_price: "",
-          price: "",
-          description: "",
+          title: '',
+          category: '',
+          unit: '',
+          qty: '',
+          origin_price: '',
+          price: '',
+          description: '',
           content: {
-            material_contents: "",
-            expiry_date: "",
-            origin: "",
-            notes: "",
+            material_contents: '',
+            expiry_date: '',
+            origin: '',
+            notes: '',
           },
-          imageUrl: "",
+          imageUrl: '',
           imagesUrl: [],
           is_hot: false,
           is_enabled: false,
@@ -147,10 +147,10 @@ const ProductModal = ({
           is_enabled: tempProduct.is_enabled ?? false,
           tages: tempProduct?.tages || [],
           content: tempProduct.content || {
-            material_contents: "",
-            expiry_date: "",
-            origin: "",
-            notes: "",
+            material_contents: '',
+            expiry_date: '',
+            origin: '',
+            notes: '',
           },
           imagesUrl: tempProduct.imagesUrl || [],
         });
@@ -164,22 +164,22 @@ const ProductModal = ({
     modalInstance.hide();
     setIsOpen(false);
     if (fileInputRef.current) {
-      fileInputRef.current.value = "";
+      fileInputRef.current.value = '';
     }
   };
 
   // 新增圖片欄位
   const handleAddImage = () => {
-    const currentImages = watch("imagesUrl") || [];
-    setValue("imagesUrl", [...currentImages, ""]);
+    const currentImages = watch('imagesUrl') || [];
+    setValue('imagesUrl', [...currentImages, '']);
   };
 
   // 移除最後一個圖片欄位
   const handleRemoveImage = () => {
-    const currentImages = watch("imagesUrl") || [];
+    const currentImages = watch('imagesUrl') || [];
     const newImages = [...currentImages];
     newImages.pop();
-    setValue("imagesUrl", newImages);
+    setValue('imagesUrl', newImages);
   };
 
   // 新增商品 API
@@ -227,7 +227,7 @@ const ProductModal = ({
       dispatch(
         createToast({
           success: true,
-          message: "商品資訊已編輯更新成功",
+          message: '商品資訊已編輯更新成功',
         })
       );
       return true;
@@ -235,7 +235,7 @@ const ProductModal = ({
       dispatch(
         createToast({
           success: false,
-          message: "商品編輯、更新失敗",
+          message: '商品編輯、更新失敗',
         })
       );
       console.error(error);
@@ -249,13 +249,13 @@ const ProductModal = ({
       dispatch(
         createToast({
           success: false,
-          message: "請填寫完整的產品資訊！",
+          message: '請填寫完整的產品資訊！',
         })
       );
       return;
     }
 
-    const apiCall = modalMode === "create" ? createProduct : updateProduct;
+    const apiCall = modalMode === 'create' ? createProduct : updateProduct;
     try {
       const success = await apiCall(data);
       if (success) {
@@ -264,7 +264,7 @@ const ProductModal = ({
         dispatch(
           createToast({
             success: true,
-            message: "產品已成功更新！",
+            message: '產品已成功更新！',
           })
         );
       }
@@ -283,7 +283,7 @@ const ProductModal = ({
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
     const formData = new FormData();
-    formData.append("file-to-upload", file);
+    formData.append('file-to-upload', file);
 
     try {
       const res = await axios.post(
@@ -293,17 +293,17 @@ const ProductModal = ({
       dispatch(
         createToast({
           success: true,
-          message: "上傳圖片成功",
+          message: '上傳圖片成功',
         })
       );
 
       const uploadedImageUrl = res.data.imageUrl;
-      setValue("imageUrl", uploadedImageUrl);
+      setValue('imageUrl', uploadedImageUrl);
     } catch (error) {
       dispatch(
         createToast({
           success: false,
-          message: "上傳圖片失敗，請確認圖片格式及大小的相關限制",
+          message: '上傳圖片失敗，請確認圖片格式及大小的相關限制',
         })
       );
       console.error(error);
@@ -316,13 +316,13 @@ const ProductModal = ({
         ref={productModalRef}
         id="productModal"
         className="modal"
-        style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
+        style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
       >
         <div className="modal-dialog modal-dialog-centered modal-xl">
           <div className="modal-content border-0 shadow">
             <div className="modal-header border-bottom">
               <h5 className="modal-title fs-4">
-                {modalMode === "create" ? "新增產品" : "編輯產品"}
+                {modalMode === 'create' ? '新增產品' : '編輯產品'}
               </h5>
               <button
                 onClick={handleCloseProductModal}
@@ -370,10 +370,10 @@ const ProductModal = ({
                           )}
                         />
                       </div>
-                      {watch("imageUrl") && (
+                      {watch('imageUrl') && (
                         <img
-                          src={watch("imageUrl")}
-                          alt={watch("title")}
+                          src={watch('imageUrl')}
+                          alt={watch('title')}
                           className="img-fluid rounded-4"
                         />
                       )}
@@ -416,7 +416,7 @@ const ProductModal = ({
                       <div className="btn-group w-100">
                         {imagesUrl?.length < 5 &&
                           (!imagesUrl.length ||
-                            imagesUrl[imagesUrl.length - 1] !== "") && (
+                            imagesUrl[imagesUrl.length - 1] !== '') && (
                             <button
                               type="button"
                               onClick={handleAddImage}
@@ -447,14 +447,14 @@ const ProductModal = ({
                       <Controller
                         name="title"
                         control={control}
-                        rules={{ required: "此欄位必填！" }}
+                        rules={{ required: '此欄位必填！' }}
                         render={({ field }) => (
                           <input
                             {...field}
                             id="title"
                             type="text"
                             className={`form-control ${
-                              errors.title ? "is-invalid" : ""
+                              errors.title ? 'is-invalid' : ''
                             }`}
                             placeholder="請輸入標題"
                           />
@@ -475,12 +475,12 @@ const ProductModal = ({
                         <Controller
                           name="category"
                           control={control}
-                          rules={{ required: "此欄位必填！" }}
+                          rules={{ required: '此欄位必填！' }}
                           render={({ field }) => (
                             <select
                               {...field}
                               className={`form-select ${
-                                errors.category ? "is-invalid" : ""
+                                errors.category ? 'is-invalid' : ''
                               }`}
                             >
                               <option value="">商品分類</option>
@@ -507,10 +507,10 @@ const ProductModal = ({
                           name="unit"
                           control={control}
                           rules={{
-                            required: "此欄位必填！",
+                            required: '此欄位必填！',
                             pattern: {
                               value: /^[\u4e00-\u9fa5]+$/,
-                              message: "請確認輸入的「單位」格式是否正確",
+                              message: '請確認輸入的「單位」格式是否正確',
                             },
                           }}
                           render={({ field }) => (
@@ -519,7 +519,7 @@ const ProductModal = ({
                               id="unit"
                               type="text"
                               className={`form-control ${
-                                errors.unit ? "is-invalid" : ""
+                                errors.unit ? 'is-invalid' : ''
                               }`}
                               placeholder="請輸入單位 (限中文)"
                             />
@@ -540,10 +540,10 @@ const ProductModal = ({
                           name="qty"
                           control={control}
                           rules={{
-                            required: "此欄位必填！",
+                            required: '此欄位必填！',
                             pattern: {
                               value: /^[0-9]+$/,
-                              message: "請確認輸入的「數量」格式是否正確",
+                              message: '請確認輸入的「數量」格式是否正確',
                             },
                           }}
                           render={({ field }) => (
@@ -552,7 +552,7 @@ const ProductModal = ({
                               id="qty"
                               type="text"
                               className={`form-control ${
-                                errors.qty ? "is-invalid" : ""
+                                errors.qty ? 'is-invalid' : ''
                               }`}
                               placeholder="請輸入庫存數量 (限數值)"
                             />
@@ -574,14 +574,14 @@ const ProductModal = ({
                         <Controller
                           name="origin_price"
                           control={control}
-                          rules={{ required: "此欄位必填！" }}
+                          rules={{ required: '此欄位必填！' }}
                           render={({ field }) => (
                             <input
                               {...field}
                               id="origin_price"
                               type="number"
                               className={`form-control text-neutral60 ${
-                                errors.origin_price ? "is-invalid" : ""
+                                errors.origin_price ? 'is-invalid' : ''
                               }`}
                               placeholder="請輸入原價"
                             />
@@ -601,14 +601,14 @@ const ProductModal = ({
                         <Controller
                           name="price"
                           control={control}
-                          rules={{ required: "此欄位必填！" }}
+                          rules={{ required: '此欄位必填！' }}
                           render={({ field }) => (
                             <input
                               {...field}
                               id="price"
                               type="number"
                               className={`form-control ${
-                                errors.price ? "is-invalid" : ""
+                                errors.price ? 'is-invalid' : ''
                               }`}
                               placeholder="請輸入售價"
                             />

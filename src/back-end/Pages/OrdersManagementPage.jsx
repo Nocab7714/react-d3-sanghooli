@@ -1,15 +1,15 @@
 // 外部資源
-import axios from "axios";
-import { useEffect, useState, useCallback } from "react";
-import { useDispatch } from "react-redux";
-import PaginationBackend from "../components/PaginationBackend";
-import OrdersModal from "../components/OrdersModal";
-import DelOrdersModal from "../components/DelOrdersModal";
+import axios from 'axios';
+import { useEffect, useState, useCallback } from 'react';
+import { useDispatch } from 'react-redux';
+import PaginationBackend from '../components/PaginationBackend';
+import OrdersModal from '../components/OrdersModal';
+import DelOrdersModal from '../components/DelOrdersModal';
 
-import C3Chart from "../components/C3Chart";
-import ReactHelmetAsync from "../../plugins/ReactHelmetAsync";
-import { createToast } from "../../slices/toastSlice";
-import { asyncSetLoading } from "../../slices/loadingSlice";
+import C3Chart from '../components/C3Chart';
+import ReactHelmetAsync from '../../plugins/ReactHelmetAsync';
+import { createToast } from '../../slices/toastSlice';
+import { asyncSetLoading } from '../../slices/loadingSlice';
 
 // 環境變數
 const { VITE_BASE_URL: baseUrl, VITE_API_PATH: apiPath } = import.meta.env;
@@ -20,7 +20,7 @@ const OrdersManagementPage = () => {
   const [isOrdersModalOpen, setIsOrdersModalOpen] = useState(false);
   const [isScreenLoading, setIsScreenLoading] = useState(false);
   const [isDelOrdersModalOpen, setIsDelOrdersModalOpen] = useState(false);
-  const [deleteMode, setDeleteMode] = useState("single");
+  const [deleteMode, setDeleteMode] = useState('single');
   const [modalMode, setModalMode] = useState(null);
   const [pageInfo, setPageInfo] = useState({});
 
@@ -29,7 +29,7 @@ const OrdersManagementPage = () => {
   // 獲取訂單列表函數 - 使用 useCallback 以便於在依賴項中使用
   const getOrders = useCallback(
     async (page = 1) => {
-      dispatch(asyncSetLoading(["sectionLoading", true]));
+      dispatch(asyncSetLoading(['sectionLoading', true]));
       try {
         const res = await axios.get(
           `${baseUrl}/api/${apiPath}/admin/orders?page=${page}`
@@ -40,12 +40,12 @@ const OrdersManagementPage = () => {
         dispatch(
           createToast({
             success: false,
-            message: "取得訂單失敗，請稍作等待後，再重新嘗試操作！",
+            message: '取得訂單失敗，請稍作等待後，再重新嘗試操作！',
           })
         );
         console.error(error);
       } finally {
-        dispatch(asyncSetLoading(["sectionLoading", false]));
+        dispatch(asyncSetLoading(['sectionLoading', false]));
         setIsScreenLoading(false);
       }
     },
@@ -56,9 +56,9 @@ const OrdersManagementPage = () => {
   useEffect(() => {
     const token = document.cookie.replace(
       /(?:(?:^|.*;\s*)D3Token\s*=\s*([^;]*).*$)|^.*$/,
-      "$1"
+      '$1'
     );
-    axios.defaults.headers.common["Authorization"] = token;
+    axios.defaults.headers.common['Authorization'] = token;
     getOrders();
   }, [getOrders]); // 添加 getOrders 作為依賴項
 
@@ -71,7 +71,7 @@ const OrdersManagementPage = () => {
 
   // 打開編輯訂單的 Modal
   const handleOpenOrdersModal = (order) => {
-    setModalMode("edit");
+    setModalMode('edit');
     setTempOrder(order);
     setIsOrdersModalOpen(true);
   };
@@ -87,14 +87,14 @@ const OrdersManagementPage = () => {
       dispatch(
         createToast({
           success: true,
-          message: "此筆訂單已完成刪除",
+          message: '此筆訂單已完成刪除',
         })
       );
     } catch (error) {
       dispatch(
         createToast({
           success: false,
-          message: "該筆訂單刪除失敗，請再試一次",
+          message: '該筆訂單刪除失敗，請再試一次',
         })
       );
       console.error(error);
@@ -113,14 +113,14 @@ const OrdersManagementPage = () => {
       dispatch(
         createToast({
           success: true,
-          message: "所有訂單已刪除",
+          message: '所有訂單已刪除',
         })
       );
     } catch (error) {
       dispatch(
         createToast({
           success: false,
-          message: "刪除訂單列表失敗，請稍後再試一次！",
+          message: '刪除訂單列表失敗，請稍後再試一次！',
         })
       );
       console.error(error);
@@ -133,7 +133,7 @@ const OrdersManagementPage = () => {
   // 處理分頁變更
   const handlePageChange = (page) => {
     getOrders(page);
-    window.scrollTo({ top: 880, behavior: "auto" });
+    window.scrollTo({ top: 880, behavior: 'auto' });
   };
 
   return (
@@ -145,12 +145,12 @@ const OrdersManagementPage = () => {
             <div className=" titleDeco d-flex justify-content-between pt-19 pb-19 mb-8 rounded-3 ">
               <h1 className="ms-10">訂單管理</h1>
               <button
-                onClick={() => handleOpenDelOrdersModal(null, "all")}
+                onClick={() => handleOpenDelOrdersModal(null, 'all')}
                 type="button"
                 className="btn btn-primary me-10"
                 disabled={isScreenLoading}
               >
-                {isScreenLoading ? "處理刪除中..." : "刪除全部訂單"}
+                {isScreenLoading ? '處理刪除中...' : '刪除全部訂單'}
               </button>
             </div>
 
@@ -219,7 +219,7 @@ const OrdersManagementPage = () => {
                                 ? new Date(
                                     order.create_at * 1000
                                   ).toLocaleString()
-                                : "時間無效"}
+                                : '時間無效'}
                             </td>
 
                             {/* 編輯資料按鈕欄位 */}
@@ -235,7 +235,7 @@ const OrdersManagementPage = () => {
                                 <button
                                   type="button"
                                   onClick={() =>
-                                    handleOpenDelOrdersModal(order, "single")
+                                    handleOpenDelOrdersModal(order, 'single')
                                   }
                                   className="btn btn-outline-danger"
                                 >

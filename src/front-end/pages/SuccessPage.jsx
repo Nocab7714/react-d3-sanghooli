@@ -48,7 +48,7 @@ export default function SuccessPage() {
   return (
     <>
       <ReactHelmetAsync title="訂購完成" />
-      <div className='bg-neutral20'>
+      <div className="bg-neutral20">
         <div className="container py-lg-19">
           {orderData === null ? (
             <NotFoundPage />
@@ -57,7 +57,12 @@ export default function SuccessPage() {
               <>
                 <CartStep step={3} />
                 <div className="d-flex flex-column align-items-center gap-5 pb-19">
-                  <img src={paymentCompleted} className="img-fluid" alt="paymentCompleted" style={{width: '400px'}}/>
+                  <img
+                    src={paymentCompleted}
+                    className="img-fluid"
+                    alt="paymentCompleted"
+                    style={{ width: '400px' }}
+                  />
                   <h1 className="fs-4 fs-xl-1">訂單付款成功！感謝您的購買！</h1>
                   <p>訂單編號：{orderData.id}</p>
                   <Link

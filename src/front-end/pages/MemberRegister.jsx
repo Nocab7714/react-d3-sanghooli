@@ -1,7 +1,9 @@
-import Breadcrumb from '../components/Breadcrumb.jsx'
-import ReactHelmetAsync from '../../plugins/ReactHelmetAsync'
-import { Link } from 'react-router-dom'
-import { useForm } from 'react-hook-form'
+// 暫時保留登入頁面切版，未來視情況開發
+
+import Breadcrumb from '../components/Breadcrumb.jsx';
+import ReactHelmetAsync from '../../plugins/ReactHelmetAsync';
+import { Link } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
 
 const breadcrumbItem = [
   {
@@ -12,7 +14,7 @@ const breadcrumbItem = [
     page: '註冊',
     link: '/member-register',
   },
-]
+];
 
 function MemberRegister() {
   const {
@@ -20,14 +22,14 @@ function MemberRegister() {
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm()
+  } = useForm();
 
   // 用於確認密碼驗證
-  const password = watch('password')
+  const password = watch('password');
 
   const onSubmit = (data) => {
-    console.log(data) // 處理註冊邏輯
-  }
+    console.log(data); // 處理註冊邏輯
+  };
 
   return (
     <>
@@ -225,7 +227,7 @@ function MemberRegister() {
         </div>
       </div>
     </>
-  )
+  );
 }
 
-export default MemberRegister
+export default MemberRegister;

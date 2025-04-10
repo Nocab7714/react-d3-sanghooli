@@ -1,12 +1,12 @@
-.titleDeco{
-    border: 1px solid $neutral40;
+.titleDeco {
+  border: 1px solid $neutral40;
 }
 
-.managementList{
-    border: 1px solid $neutral40;
-    // background-color:$primary ;
-    flex-direction: column;  // 讓內容上下排列
-    // min-height: 500px;       // 確保有足夠高度
+.managementList {
+  border: 1px solid $neutral40;
+  // background-color:$primary ;
+  flex-direction: column; // 讓內容上下排列
+  // min-height: 500px;       // 確保有足夠高度
 }
 
 // .pagination-container {
